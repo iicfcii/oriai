@@ -1,39 +1,71 @@
 import React, { Component } from 'react';
-import { Line } from 'react-konva';
+import { Line, Group } from 'react-konva';
+import { EdgeView } from './edge-view';
 
 // Visuailize Face
 export class FaceView extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      mouseover: false,
+    }
 
-    this.polygon = this.props.polygon;
+    this.face = this.props.face;
     // console.log(this.props.offset);
 
     // Scale up and offset
-    for (let i = 0; i < this.polygon.length; i += 2){
-      this.polygon[i] = this.polygon[i]*this.props.scale+this.props.offset.x;
+    this.polygon = this.props.scale(this.face.polygonFlat);
+    this.handleMouseover = () => {
+      let newState = {
+        mouseover: true,
+      }
+
+      let str = 'ID: ' + this.face.id + ' Layer: ' + this.face.layer;
+      console.log(str);
+      this.setState(newState);
     }
-    for (let i = 1; i < this.polygon.length; i += 2){
-      this.polygon[i] = this.polygon[i]*this.props.scale+this.props.offset.y;
+    this.handleMouseout = () => {
+      let newState = {
+        mouseover: false,
+      }
+
+      this.setState(newState);
     }
 
-    this.colors = ['white', 'red', 'green', 'blue'];
-    this.getColors = () => {
-      return this.colors[Math.floor(Math.random()*this.colors.length)];
+    this.getFill = () => {
+      if (this.state.mouseover){
+        return '#f0f0f0';
+      } else {
+        return '#ffffff';
+      }
     }
   }
 
   render() {
+    if (!this.face.isShown) return null;
+
+    let lines = [];
+    this.props.face.edges.forEach((edge) => {
+      lines.push(
+        <EdgeView
+          key = {edge.key}
+          edge = {edge}
+          scale = {this.props.scale}
+          setInfo = {this.props.setInfo}/>
+      );
+    });
+
     return (
-      <Line
-        points = {this.polygon}
-        stroke = 'black'
-        strokeWidth = {5}
-        closed = {true}
-        fill = {this.getColors()}
-        opacity = {0.5}
-        lineJoin = 'round'>
-      </Line>
+      <Group>
+        <Line
+          points = {this.polygon}
+          closed = {true}
+          fill = {this.getFill()}
+          onMouseover = {this.handleMouseover}
+          onMouseout = {this.handleMouseout}>
+        </Line>
+        {lines}
+      </Group>
     );
   }
 }
