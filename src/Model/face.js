@@ -38,6 +38,18 @@ export class Face {
     return points;
   }
 
+  // Return a flat list [x1, y1, x2, y2, x3, y3...] with the ratio and offset(x,y)
+  scale(ratio, x, y) {
+    let points = [];
+    this.edges.forEach((edge) => {
+      let edgeS = edge.scale(ratio, x, y);
+      points.push(edgeS[0]);
+      points.push(edgeS[1]);   
+    });
+
+    return points;
+  }
+
   // Use this to add edge to make sure edges are added in order
   addEdge(edge) {
     if (!edge.isValid()){

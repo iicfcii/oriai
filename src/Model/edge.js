@@ -24,6 +24,13 @@ export class Edge {
     return key.join('');
   }
 
+  // Return a flat list [x1, y1, x2, y2] with the ratio and offset(x,y)
+  scale(ratio, x, y) {
+    let p1 = this.p1.scale(ratio, x, y);
+    let p2 = this.p2.scale(ratio, x, y);
+    return p1.concat(p2);
+  }
+
   isValid(){
       if (this.isPointP1(this.p2.x, this.p2.y)){
         // Zero length edge

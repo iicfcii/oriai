@@ -21,33 +21,13 @@ export class Origami {
   constructor(){
     this.faces = [];
 
+    // Add the initial face
     let face = new Face(1); // Starting id is 1
     face.addEdge(new Edge(new Point(0,0),new Point(0,1)));
     face.addEdge(new Edge(new Point(0,1),new Point(1,1)));
     face.addEdge(new Edge(new Point(1,1),new Point(1,0)));
     face.addEdge(new Edge(new Point(1,0),new Point(0,0)));
     this.faces.push(face);
-    let crease1 = new Edge(new Point(0.5,0),new Point(0,0.5));
-    this.crease(this.faces[0],crease1);
-    this.fold(this.faces[0],crease1,'valley');
-    let crease2 = new Edge(new Point(1,0),new Point(0,1));
-    this.crease(this.faces[1],crease2);
-    this.fold(this.faces[2],crease2,'valley');
-    this.sortFaces();
-    console.log(this.faces);
-    this.faces[1].layer ++;
-    this.sortFaces();
-    
-    console.log('Face overlap: ',
-                this.faces[1].overlapFace(this.faces[2]),
-                this.faces[2].overlapFace(this.faces[1]),);
-
-    let testPt = new Point(0.5,0);
-    console.log('In face: ', testPt.isInFace(this.faces[2]));
-
-    let e1 = new Edge(new Point(0.5,0),new Point(0.5,0.5));
-    let e2 = new Edge(new Point(1,0),new Point(0,1));
-    console.log(e1.intersectEdge(e2));
   }
 
   get layers(){

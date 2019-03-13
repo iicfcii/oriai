@@ -10,19 +10,17 @@ export class EdgeView extends Component {
       mouseover: false,
     }
 
-    this.edge = this.props.edge;
-    // console.log(this.props.offset)
-    ;
     this.handleMouseover = () => {
       let newState = {
         mouseover: true,
       }
 
-      let str = 'p1(' + this.edge.p1.x + ', ' + this.edge.p1.y + ')' +
-               ' p2(' + this.edge.p2.x + ', ' + this.edge.p2.y + ')';
+      let str = 'p1(' + this.props.edge.p1.x + ', ' + this.props.edge.p1.y + ')' +
+               ' p2(' + this.props.edge.p2.x + ', ' + this.props.edge.p2.y + ')';
       console.log(str);
       this.setState(newState);
     }
+
     this.handleMouseout = () => {
       let newState = {
         mouseover: false,
@@ -41,10 +39,10 @@ export class EdgeView extends Component {
   }
 
   render() {
-    let p = this.props.scale([this.edge.p1.x,this.edge.p1.y,this.edge.p2.x,this.edge.p2.y]);
+    let p = this.props.edge.scale(this.props.paperLayout.ratio,this.props.paperLayout.x,this.props.paperLayout.y);
     let c = 'black';
 
-    if (!this.edge.isBound){
+    if (!this.props.edge.isBound){
       c = 'red';
     }
 

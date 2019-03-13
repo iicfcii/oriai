@@ -16,6 +16,11 @@ export class Point {
     }
   }
 
+  // Return a flat list [x, y] with the ratio and offset(x,y)
+  scale(ratio, x, y) {
+    return [this.x*ratio+x, this.y*ratio+y];
+  }
+
   // Within the rectangle defined by p1 and p2
   isWithinRect(p1, p2){
     let isWithinRange = true;
@@ -67,7 +72,7 @@ export class Point {
       }
     };
 
-    return wn == 0 ? false : true;
+    return wn === 0 ? false : true;
   }
 
 }

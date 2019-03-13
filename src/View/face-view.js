@@ -10,20 +10,16 @@ export class FaceView extends Component {
       mouseover: false,
     }
 
-    this.face = this.props.face;
-    // console.log(this.props.offset);
-
-    // Scale up and offset
-    this.polygon = this.props.scale(this.face.polygonFlat);
     this.handleMouseover = () => {
       let newState = {
         mouseover: true,
       }
 
-      let str = 'ID: ' + this.face.id + ' Layer: ' + this.face.layer;
+      let str = 'ID: ' + this.props.face.id + ' Layer: ' + this.props.face.layer;
       console.log(str);
       this.setState(newState);
     }
+
     this.handleMouseout = () => {
       let newState = {
         mouseover: false,
@@ -31,18 +27,10 @@ export class FaceView extends Component {
 
       this.setState(newState);
     }
-
-    this.getFill = () => {
-      if (this.state.mouseover){
-        return '#f0f0f0';
-      } else {
-        return '#ffffff';
-      }
-    }
   }
 
   render() {
-    if (!this.face.isShown) return null;
+    if (!this.props.face.isShown) return null;
 
     let lines = [];
     this.props.face.edges.forEach((edge) => {
@@ -50,17 +38,17 @@ export class FaceView extends Component {
         <EdgeView
           key = {edge.key}
           edge = {edge}
-          scale = {this.props.scale}
-          setInfo = {this.props.setInfo}/>
+          paperLayout = {this.props.paperLayout}/>
       );
     });
 
     return (
       <Group>
         <Line
-          points = {this.polygon}
+          points = {this.props.face.scale(this.props.paperLayout.ratio,this.props.paperLayout.x,this.props.paperLayout.y)}
           closed = {true}
-          fill = {this.getFill()}
+          fill = {'white'}
+          opacity = {this.state.mouseover? 0.9 : 1}
           onMouseover = {this.handleMouseover}
           onMouseout = {this.handleMouseout}>
         </Line>

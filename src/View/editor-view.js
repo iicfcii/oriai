@@ -1,18 +1,43 @@
 import React, { Component } from 'react';
 import { Stage, Layer, Rect, Text } from 'react-konva';
 import { Origami } from '../Model/origami';
+import { Edge } from '../Model/edge';
+import { Point } from '../Model/point';
+
 import { OrigamiView } from './origami-view';
 import { ToolView } from './tool-view';
-import { InfoView } from './tool-view';
 
 export class EditorView extends Component {
   constructor(props) {
     super(props);
     this.origami = new Origami();
-    // console.log(this.origami.faces);
-    this.scale = 400;
+
+    // Some temporary operations
+    let crease1 = new Edge(new Point(0.5,0),new Point(0,0.5));
+    this.origami.crease(this.origami.faces[0],crease1);
+    this.origami.fold(this.origami.faces[0],crease1,'valley');
+    let crease2 = new Edge(new Point(1,0),new Point(0,1));
+    this.origami.crease(this.origami.faces[1],crease2);
+    this.origami.fold(this.origami.faces[2],crease2,'valley');
+    this.origami.sortFaces();
+    console.log(this.origami.faces);
+    this.origami.faces[1].layer ++;
+    this.origami.sortFaces();
+
+    console.log('Face overlap: ',
+                this.origami.faces[1].overlapFace(this.origami.faces[2]),
+                this.origami.faces[2].overlapFace(this.origami.faces[1]),);
+
+    let testPt = new Point(0.5,0);
+    console.log('In face: ', testPt.isInFace(this.origami.faces[2]));
+
     this.w = 600;
     this.h = 600;
+    this.paperLayout = {
+      ratio: 400,
+      x: 100,
+      y: 100,
+    };
 
     this.state = {
       layer: '0',
@@ -23,7 +48,7 @@ export class EditorView extends Component {
       // console.log(event.target)
       let valStr = event.target.value;
 
-      this.origami.showLayers([parseInt(valStr)]);
+      this.origami.showLayers([parseInt(valStr,10)]);
 
       this.setState({
         layer: valStr,
@@ -35,7 +60,7 @@ export class EditorView extends Component {
       if (this.state.showAllLayers === 'OFF'){
         this.origami.changeAllLayerVisibility(true);
       } else {
-        this.origami.showLayers([parseInt(this.state.layer)]);
+        this.origami.showLayers([parseInt(this.state.layer,10)]);
       }
 
       this.setState({
@@ -81,24 +106,11 @@ export class EditorView extends Component {
     return (
       <div style = {containerStyle}>
         <div>
-          <Stage width={this.w} height={this.h}>
-            <Layer>
-              <Rect
-                x = {0}
-                y = {0}
-                width = {this.w}
-                height = {this.h}
-                fill = '#d9d9d9'>
-              </Rect>
-            </Layer>
-            <OrigamiView
-              origami = {this.origami}
-              offset = {{
-                x: this.w/2-this.scale/2,
-                y: this.h/2-this.scale/2
-              }}
-              scaleValue = {this.scale}/>
-          </Stage>
+          <OrigamiView
+            w = {600}
+            h = {600}
+            paperLayout = {this.paperLayout}
+            origami = {this.origami}/>
         </div>
         <div style = {toolStyle}>
           <div>Tools</div>
