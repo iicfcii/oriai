@@ -11,21 +11,13 @@ export class FaceView extends Component {
     }
 
     this.handleMouseover = () => {
-      let newState = {
-        mouseover: true,
-      }
-
       let str = 'ID: ' + this.props.face.id + ' Layer: ' + this.props.face.layer;
       console.log(str);
-      this.setState(newState);
+      this.setState({mouseover: true,});
     }
 
     this.handleMouseout = () => {
-      let newState = {
-        mouseover: false,
-      }
-
-      this.setState(newState);
+      this.setState({mouseover: false,});
     }
   }
 
@@ -47,7 +39,7 @@ export class FaceView extends Component {
         <Line
           points = {this.props.face.scale(this.props.paperLayout.ratio,this.props.paperLayout.x,this.props.paperLayout.y)}
           closed = {true}
-          fill = {'white'}
+          fill = {this.state.mouseover? 'grey' : 'white'}
           opacity = {this.state.mouseover? 0.9 : 1}
           onMouseover = {this.handleMouseover}
           onMouseout = {this.handleMouseout}>

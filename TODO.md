@@ -3,7 +3,9 @@ An 2D origami simulator for now.
 
 ## Basic structure
 - An origami contains faces which contains edges.
-- A fold breaks a face into two faces.
+- An edge has up to two parent faces, that is, boundary edge has one, crease edge has two(Should be correct).
+- A fold breaks a face into two faces, the edges will also be broken. 
+- Two faces can share an crease edge.
 - Each face has a layer number to indicate z axis position.
 
 ## TODO List

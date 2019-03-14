@@ -20,27 +20,35 @@ export class Origami {
   // Has a single 1*1 face initially
   constructor(){
     this.faces = [];
+    this.layers = [];
 
     // Add the initial face
     let face = new Face(1); // Starting id is 1
-    face.addEdge(new Edge(new Point(0,0),new Point(0,1)));
-    face.addEdge(new Edge(new Point(0,1),new Point(1,1)));
-    face.addEdge(new Edge(new Point(1,1),new Point(1,0)));
-    face.addEdge(new Edge(new Point(1,0),new Point(0,0)));
+    face.addEdge(new Edge(new Point(0,0),new Point(1,0), face));
+    face.addEdge(new Edge(new Point(1,0),new Point(1,1), face));
+    face.addEdge(new Edge(new Point(1,1),new Point(0,1), face));
+    face.addEdge(new Edge(new Point(0,1),new Point(0,0), face));
     this.faces.push(face);
+    this.addLayer(face.layer);
   }
 
-  get layers(){
-    let layers = [];
-    for (let i = 0; i < this.faces.length; i ++){
-      let l = this.faces[i].layer;
-      if (!layers.includes(l)){
-        layers.push(l);
-      }
+  addLayer(l) {
+    if (!this.layers.includes(l)){
+      this.layers.push(l);
     }
 
-    return layers; // May need to sort it
+    // May need to sort it
   }
+
+  get maxLayer() {
+    return Math.max(...this.layers);
+  }
+
+  get minLayer() {
+    return Math.min(...this.layers);
+  }
+
+
 
   showLayers(layers){
     this.changeAllLayerVisibility(false)
@@ -71,121 +79,129 @@ export class Origami {
     });
   }
 
-  // Crease single face
-  // to create more faces
-  // Two endpoints of crease line has to lay on edge
-  crease(face, edge) {
+
+  // Return a list of broken creases for next crease to figure out the new parents
+  // face: face of a origami to be creased, will be removed after new ones are generated
+  // edge: proposed creasing line
+  // creases: list of broken creases to be fixed
+  singleCrease(face, edge, creases){
+    // Assumed order
     let p1 = edge.p1;
     let p2 = edge.p2;
+    let edge1Index = null;
+    let edge2Index = null;
+    let id = face.id; // Original id
+    let brokenCreases = [];
 
-    // Find the two edges endpoints on
-    let edge1, edge2;
-    face.edges.forEach((edge) => {
-      if (edge.hasPoint(p1)){
-        edge1 = edge;
+    // Find the index of the two edges that the crease end points are on
+    for (let i = 0; i < face.edges.length; i ++){
+      if (face.edges[i].hasPoint(p1)){
+        edge1Index = i;
       }
-      if (edge.hasPoint(p2)){
-        edge2 = edge;
+      if (face.edges[i].hasPoint(p2)){
+        edge2Index = i;
       }
-    });
-    // console.log(edge1);
-    // console.log(edge2);
+    }
 
-    if (!edge1 || !edge2){
+    if (edge1Index === null || edge2Index === null){
       console.log('Crease Failed');
-      // Directly copy the face if crease does not apply to currect face
-      // newFaces.push(face);
       return false;
     }
 
-    // Helper function to make new faces
-    let makeFace = (edge1, edge2, p1, p2) => {
-      // Make face 1
-      let face1 = new Face(face.id); // face 1 use original id
-      let i = 0;
-
-      while(face.edges[i] !== edge1){
-        // Add edge until edge1 is found
-        face1.addEdge(face.edges[i]);
-        i ++;
-      }
-
-      // Add p1 to x1y1 edge
-      face1.addEdge(new Edge(new Point(face.edges[i].p1.x,face.edges[i].p1.y),p1));  // Zero length edge won't be added
-      i ++;
-      // Add x1y1 to x2y2 edge
-      face1.addEdge(new Edge(p1,p2, false));
-
-      while(face.edges[i] !== edge2){
-        // Do nothing untile edge2 is found
-        i ++;
-      }
-
-      face1.addEdge(new Edge(p2,new Point(face.edges[i].p2.x,face.edges[i].p2.y)));
-      i ++;
-      while(i<face.edges.length){
-        face1.addEdge(face.edges[i]);
-        i ++;
-      }
-
-      // Make face 2
-      let face2 = new Face(this.faces.length+1); // face 2 increment id
-      i = 0;
-
-      while(face.edges[i] !== edge1){
-        // Do nothing untile edge1 is found
-        i ++;
-      }
-
-      // Add x1y1 to p2 edge
-      face2.addEdge(new Edge(p1,new Point(face.edges[i].p2.x,face.edges[i].p2.y)));
-      i ++;
-
-      while(face.edges[i] !== edge2){
-        // Add edge untile edge2 is found
-        face2.addEdge(face.edges[i]);
-        i ++;
-      }
-
-      // Add p1 to x2y2 edge
-      face2.addEdge(new Edge(new Point(face.edges[i].p1.x,face.edges[i].p1.y),p2));
-      i ++;
-      // Add x2y2 to x1y1 edge
-      face2.addEdge(new Edge(p2,p1,false));
-
-      while(i<face.edges.length){
-        face2.addEdge(face.edges[i]);
-        i ++;
-      }
-      // console.log('Face1');
-      // console.log(face1.edges);
-      // console.log('Face2');
-      // console.log(face2.edges);
-
-      this.faces.splice(this.faces.indexOf(face), 1); // Remove original face
-      this.faces.push(face1);
-      this.faces.push(face2);
+    if (edge1Index > edge2Index){
+      // Order not correct, flip
+      p1 = edge.p2;
+      p2 = edge.p1;
+      let edgeTmpIndex = edge1Index; // Temp variable to save the index
+      edge1Index = edge2Index;
+      edge2Index = edgeTmpIndex;
     }
 
-    // Make faces
-    if (face.edges.indexOf(edge1) < face.edges.indexOf(edge2)){
-      // Will encounter edge 1 first
-      makeFace(edge1, edge2, p1, p2);
-    } else {
-      // Will encounter edge 2 first
-      // Swap edge 1 and edge 2, Swap x1y1 and x2y2
-      makeFace(edge2, edge1, p2, p1);
+    // Helper function
+    let addFixedEdge = (faceTmp, edgeTmp) => {
+      if (edgeTmp.isBoundary){
+        // If just a boundary fix parent and add
+        edgeTmp.parentFace1 = faceTmp;
+        faceTmp.addEdge(edgeTmp);
+      }
+      if (edgeTmp.isCrease){
+        let foundCrease = false;
+        // Check to see if there are broken creases that can be fixed
+        for (let j = 0; j < creases.length; j ++){
+          // NEED TESTING
+          if (creases[j].isEqual(edgeTmp, true)){
+            foundCrease = true;
+            creases[j].parentFace2 = faceTmp;
+            edgeTmp.parentFace1 = faceTmp;
+            edgeTmp.parentFace2 = creases[j].parentFace1;
+            faceTmp.addEdge(edgeTmp);
+          }
+        }
+
+        // If no, fix parents and add. Also add a broken crease
+        if (!foundCrease){
+          edgeTmp.parentFace1 = faceTmp;
+          faceTmp.addEdge(edgeTmp);
+          brokenCreases.push(edgeTmp);
+        }
+      }
     }
 
-    // this.faces = newFaces;
-    // console.log(this.faces);
-    return true;
+    // Make face 1
+    let face1 = new Face(id); // face 1 use original id
+    let i = 0;
+    while(i < edge1Index){
+      addFixedEdge(face1, face.edges[i]);
+      i ++;
+    }
+    // Add p1 to x1y1 edge
+    addFixedEdge(face1, new Edge(face.edges[i].p1,p1,face.edges[i].parentFace1,face.edges[i].parentFace2));
+    i ++;
+    // Add x1y1 to x2y2 edge
+    let newCrease1 = new Edge(p1,p2,face1); // Should fix the parent later in this function
+    face1.addEdge(newCrease1);
+    i = edge2Index;
+    addFixedEdge(face1, new Edge(p2,face.edges[i].p2,face.edges[i].parentFace1,face.edges[i].parentFace2));
+    i ++;
+    while(i<face.edges.length){
+      addFixedEdge(face1, face.edges[i]);
+      i ++;
+    }
+    // Make face 2
+    let face2 = new Face(this.faces.length+1); // face 2 increment id
+    i = edge1Index;
+    // Add x1y1 to p2 edge
+    addFixedEdge(face2, new Edge(p1,face.edges[i].p2,face.edges[i].parentFace1,face.edges[i].parentFace2));
+    i ++;
+    while(i !== edge2Index){
+      // Add edge until edge2 is found
+      addFixedEdge(face2, face.edges[i]);
+      i ++;
+    }
+    // Add p1 to x2y2 edge
+    addFixedEdge(face2, new Edge(face.edges[i].p1,p2,face.edges[i].parentFace1,face.edges[i].parentFace2));
+    i ++;
+    // Add x2y2 to x1y1 edge
+    newCrease1.parentFace2 = face2; // Fix previous one here
+    let newCrease2 = new Edge(p2,p1,face2,face1);
+    face2.addEdge(newCrease2);
+
+    // console.log(face1);
+    // console.log(face2);
+    // console.log(brokenCreases);
+
+    this.faces.splice(this.faces.indexOf(face), 1); // Remove original face
+    this.faces.push(face1);
+    this.faces.push(face2);
+
+    return brokenCreases;
   }
 
   // Fold single face along a crease
   // Line has to be one of the edge
-  // dir: valley/mountain stirng, affect layer +/-1
-  fold(face, edge, dir){
+  // dir: valley/mountain stirng, affect layer
+  // will try to put the new face on the outer most layer
+  singleFold(face, edge, dir){
     if (dir !== 'valley' && dir !== 'mountain'){
       console.log('Invalid fold direction');
       return false;
@@ -198,23 +214,42 @@ export class Origami {
       return false;
     }
 
-    // console.log('Valid crease');
-
-    // Simply reflect points for remaining edges
     // Order should be correct even after reflect
-    for (let i = creaseIndex; i < face.edges.length; i ++){
+    for (let i = 0; i < face.edges.length; i ++){
       face.edges[creaseIndex].reflectEdge(face.edges[i]);
     }
 
-    for (let i = 0; i < creaseIndex; i ++){
-      face.edges[creaseIndex].reflectEdge(face.edges[i]);
+    let dLayer = 1;
+    if (dir === 'mountain') dLayer = -1;
+    face.layer += dLayer;
+
+    let currentMaxLayer = this.maxLayer;
+    let currentMinLayer = this.minLayer;
+
+    while (face.layer <= currentMaxLayer+1 && face.layer >= currentMinLayer-1){
+      let isOverlapped = false;
+
+      for (let i = 0; i < this.faces.length; i ++){
+        if (i === this.faces.indexOf(face)) continue; // Dont check itself
+        if (this.faces[i].layer !== face.layer) continue;
+
+        if (this.faces[i].overlapFace(face)){
+           isOverlapped = true;
+           break;
+        }
+      }
+
+      if (isOverlapped){
+        console.log('Overlapped after fold');
+        face.layer += dLayer;
+      } else {
+        break;
+      }
     }
 
-    if (dir === 'valley') {
-      face.layer += 1;
-    } else {
-      face.layer -= 1;
-    }
+    this.layers.push(face.layer);
     // console.log(this.faces);
+
+
   }
 }

@@ -19,5 +19,24 @@ test('Test Edges Intersection', () => {
   expect(p34.x).toBe(0.5);
   expect(p34.y).toBe(0.5);
   expect(p43.x).toBe(p34.x);
-  expect(p43.y).toBe(p34.y);  
+  expect(p43.y).toBe(p34.y);
+});
+
+test('Test Edges Reflection', () => {
+  let e1 = new Edge(new Point(0.5,0),new Point(0.5,0.5));
+  let e2 = new Edge(new Point(1,0),new Point(0,1));
+
+  e2.reflectEdge(e1);
+  e2.reflectEdge(e2);
+
+
+  expect(e1.p1.x).toBe(1);
+  expect(e1.p1.y).toBe(0.5);
+  expect(e1.p2.x).toBe(0.5);
+  expect(e1.p2.y).toBe(0.5);
+
+  expect(e2.p1.x).toBe(1); // Reflect it self, nothing changed
+  expect(e2.p1.y).toBe(0);
+  expect(e2.p2.x).toBe(0);
+  expect(e2.p2.y).toBe(1);
 });

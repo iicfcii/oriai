@@ -3,19 +3,31 @@ import { Point } from './point';
 // Edge
 
 export class Edge {
-  constructor(p1, p2, isBound){
+  constructor(p1, p2, face1, face2){
     // p1
     this.p1 = p1;
     // p2
     this.p2 = p2;
 
-    if (isBound === undefined){
-      this.isBound = true;
-    } else {
-      this.isBound = isBound;
-    }
+    this.parentFace1 = null;
+    this.parentFace2 = null; // Can be null if not a crease
+
+    if (face1) this.parentFace1 = face1;
+    if (face2) this.parentFace2 = face2;
 
     this.selected = false;
+  }
+
+  get isBoundary() {
+    if (this.parentFace1 !== null && this.parentFace2 === null) return true;
+
+    return false;
+  }
+
+  get isCrease() {
+    if (this.parentFace1 !== null && this.parentFace2 !== null) return true;
+
+    return false;
   }
 
   get key(){
@@ -32,12 +44,13 @@ export class Edge {
   }
 
   isValid(){
-      if (this.isPointP1(this.p2.x, this.p2.y)){
-        // Zero length edge
-        return false;
-      } else {
-        return true;
-      }
+      // Zero length edge
+      if (this.isPointP1(this.p2)) return false;
+
+      // Neither boundary nor creaes
+      if (!this.isBoundary && !this.isCrease) return false;
+
+      return true;
   }
 
   isEqual(edge, isOrderIgnored){
@@ -119,6 +132,7 @@ export class Edge {
     return new Point(xr, yr);
   }
 
+  // Reflect a edge with respect to this edge
   // Directly modify the edge
   reflectEdge(edge){
     let p1 = this.reflectPoint(edge.p1);

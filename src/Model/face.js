@@ -10,10 +10,7 @@ export class Face {
     this.edges = [];
     this.layer = 0; // Layer of the face, change after fold
     this.id = null;
-    if (id){
-      this.id = id;
-    }
-
+    if (id !== undefined) this.id = id;
     this.selected = false;
     this.isShown = true;
   }
@@ -44,7 +41,7 @@ export class Face {
     this.edges.forEach((edge) => {
       let edgeS = edge.scale(ratio, x, y);
       points.push(edgeS[0]);
-      points.push(edgeS[1]);   
+      points.push(edgeS[1]);
     });
 
     return points;
@@ -53,7 +50,7 @@ export class Face {
   // Use this to add edge to make sure edges are added in order
   addEdge(edge) {
     if (!edge.isValid()){
-      // console.log("Invalid");
+      console.log('Invalid edge');
       return false;
     }
 
@@ -65,10 +62,12 @@ export class Face {
     }
     // Has edge, do not add
     if (this.hasEdge(edge)){
+      console.log("Already has edge");
       return false;
     }
     // Order not correct, do not add
-    if (this.edges[length-1].p2.x !== edge.p1.x || this.edges[length-1].p2.y !== edge.p1.y) {
+    if (!this.edges[length-1].p2.isEqual(edge.p1)) {
+      console.log("Order not correct");
       return false;
     }
     // Otherwise, add
@@ -97,32 +96,30 @@ export class Face {
 
   // True if two faces overlapped each other
   // Same layer overlap: some common area, contain
-  // Different layer overlap: penetrate the crease
   overlapFace(face){
-    // If not on the same layer
-    // If any edge intersect the other crease.
-    if (this.layer !== face.layer){
-      for (let i = 0; i < this.edges.length; i ++){
-        for (let j = 0; j < face.edges.length; j ++){
-          if (!face.edges[j].isBound){
-            if (this.edges[i].intersectEdge(face.edges[j])){
-              return true;
-            }
-          }
-        }
-      }
-      for (let i = 0; i < this.edges.length; i ++){
-        for (let j = 0; j < face.edges.length; j ++){
-          if (!this.edges[i].isBound){
-            if (face.edges[j].intersectEdge(this.edges[i])){
-              return true;
-            }
-          }
-        }
-      }
-
-      return false;
-    }
+    if (this.layer !== face.layer) return false;
+    // if (this.layer !== face.layer){
+    //   for (let i = 0; i < this.edges.length; i ++){
+    //     for (let j = 0; j < face.edges.length; j ++){
+    //       if (!face.edges[j].isBoundary){
+    //         if (this.edges[i].intersectEdge(face.edges[j])){
+    //           return true;
+    //         }
+    //       }
+    //     }
+    //   }
+    //   for (let i = 0; i < this.edges.length; i ++){
+    //     for (let j = 0; j < face.edges.length; j ++){
+    //       if (!this.edges[i].isBoundary){
+    //         if (face.edges[j].intersectEdge(this.edges[i])){
+    //           return true;
+    //         }
+    //       }
+    //     }
+    //   }
+    //
+    //   return false;
+    // }
 
     // If there is an intersection between two edges of the faces, overlap
     for (let i = 0; i < this.edges.length; i ++){

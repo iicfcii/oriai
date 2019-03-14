@@ -17,7 +17,7 @@ export class EdgeView extends Component {
 
       let str = 'p1(' + this.props.edge.p1.x + ', ' + this.props.edge.p1.y + ')' +
                ' p2(' + this.props.edge.p2.x + ', ' + this.props.edge.p2.y + ')';
-      console.log(str);
+      // console.log(str);
       this.setState(newState);
     }
 
@@ -42,7 +42,7 @@ export class EdgeView extends Component {
     let p = this.props.edge.scale(this.props.paperLayout.ratio,this.props.paperLayout.x,this.props.paperLayout.y);
     let c = 'black';
 
-    if (!this.props.edge.isBound){
+    if (!this.props.edge.isBoundary){
       c = 'red';
     }
 

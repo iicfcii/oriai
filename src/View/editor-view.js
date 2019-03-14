@@ -14,22 +14,22 @@ export class EditorView extends Component {
 
     // Some temporary operations
     let crease1 = new Edge(new Point(0.5,0),new Point(0,0.5));
-    this.origami.crease(this.origami.faces[0],crease1);
-    this.origami.fold(this.origami.faces[0],crease1,'valley');
-    let crease2 = new Edge(new Point(1,0),new Point(0,1));
-    this.origami.crease(this.origami.faces[1],crease2);
-    this.origami.fold(this.origami.faces[2],crease2,'valley');
+    this.origami.singleCrease(this.origami.faces[0],crease1,[]);
+    this.origami.singleFold(this.origami.faces[0],crease1,'mountain');
+    let crease2 = new Edge(new Point(1,0.25),new Point(0.25,1));
+    this.origami.singleCrease(this.origami.faces[1],crease2,[]);
+    this.origami.singleFold(this.origami.faces[2],crease2,'valley');
     this.origami.sortFaces();
-    console.log(this.origami.faces);
-    this.origami.faces[1].layer ++;
-    this.origami.sortFaces();
-
-    console.log('Face overlap: ',
-                this.origami.faces[1].overlapFace(this.origami.faces[2]),
-                this.origami.faces[2].overlapFace(this.origami.faces[1]),);
-
-    let testPt = new Point(0.5,0);
-    console.log('In face: ', testPt.isInFace(this.origami.faces[2]));
+    // console.log(this.origami.faces);
+    // this.origami.faces[1].layer ++;
+    // this.origami.sortFaces();
+    //
+    // console.log('Face overlap: ',
+    //             this.origami.faces[1].overlapFace(this.origami.faces[2]),
+    //             this.origami.faces[2].overlapFace(this.origami.faces[1]),);
+    //
+    // let testPt = new Point(0.5,0);
+    // console.log('In face: ', testPt.isInFace(this.origami.faces[2]));
 
     this.w = 600;
     this.h = 600;
