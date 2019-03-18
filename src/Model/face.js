@@ -50,7 +50,7 @@ export class Face {
   // Use this to add edge to make sure edges are added in order
   addEdge(edge) {
     if (!edge.isValid()){
-      console.log('Invalid edge');
+      // console.log('Invalid edge');
       return false;
     }
 
@@ -94,32 +94,36 @@ export class Face {
     return -1;
   }
 
+  // Return undefined if not a crease
+  isPenetratingCrease(crease){
+    if (!crease.isCrease) return;
+
+    // Determine the range
+    let lowLayer, highLayer;
+    if (crease.parentFace1.layer > crease.parentFace2.layer){
+      lowLayer = crease.parentFace2.layer;
+      highLayer = crease.parentFace1.layer;
+    } else {
+      lowLayer = crease.parentFace1.layer;
+      highLayer = crease.parentFace2.layer;
+    }
+
+    // if not within range, no penetration possible
+    if (this.layer < lowLayer || this.layer > highLayer) return false;
+
+    for (let i = 0; i < this.edges.length; i ++){
+      if (this.edges[i].intersectEdge(crease) !== null){
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   // True if two faces overlapped each other
   // Same layer overlap: some common area, contain
   overlapFace(face){
     if (this.layer !== face.layer) return false;
-    // if (this.layer !== face.layer){
-    //   for (let i = 0; i < this.edges.length; i ++){
-    //     for (let j = 0; j < face.edges.length; j ++){
-    //       if (!face.edges[j].isBoundary){
-    //         if (this.edges[i].intersectEdge(face.edges[j])){
-    //           return true;
-    //         }
-    //       }
-    //     }
-    //   }
-    //   for (let i = 0; i < this.edges.length; i ++){
-    //     for (let j = 0; j < face.edges.length; j ++){
-    //       if (!this.edges[i].isBoundary){
-    //         if (face.edges[j].intersectEdge(this.edges[i])){
-    //           return true;
-    //         }
-    //       }
-    //     }
-    //   }
-    //
-    //   return false;
-    // }
 
     // If there is an intersection between two edges of the faces, overlap
     for (let i = 0; i < this.edges.length; i ++){
@@ -166,6 +170,68 @@ export class Face {
 
     // No overlap
     return false;
+  }
+
+  // Face intersets an edge
+  // Return an edge if exists or null
+  intersectEdge(edge, infiniteLength){
+    // Simple checking first
+    let edge1Index = null;
+    let edge2Index = null;
+
+    // Fing edge.p1 then edge.p2
+    for (let i = 0; i < this.edges.length; i ++){
+      // At the same time, check if one edge has both points
+      let hasP1 = this.edges[i].hasPoint(edge.p1);
+      let hasP2 = this.edges[i].hasPoint(edge.p2);
+      if (hasP1 && hasP2) return null;
+
+      if (hasP1) edge1Index = i;
+    }
+
+    for (let i = 0; i < this.edges.length; i ++){
+      if (this.edges[i].hasPoint(edge.p2)) edge2Index = i;
+    }
+
+    if (edge1Index !== null && edge2Index !== null){
+      // console.log(edge1Index, edge2Index);
+      // Make sure the order is correct
+      // if (edge1Index < edge2Index) return new Edge(edge.p1, edge.p2);
+      // return new Edge(edge.p2, edge.p1);
+      return edge;
+    }
+
+    if (!infiniteLength && (edge1Index === null || edge2Index === null)) return null;
+
+    // Has to do more complicated checking
+    // Find two intersection points first
+    let p1 = null;
+    let p2 = null;
+    edge1Index = null;
+    edge2Index = null;
+    for (let i = 0; i < this.edges.length; i ++){
+      let pTmp = this.edges[i].intersectEdge(edge, true);
+      if (pTmp === null) continue;
+      if (pTmp.isOutsideFace(this)) continue;
+
+      p1 = pTmp;
+      edge1Index = i;
+    }
+
+    for (let i = 0; i < this.edges.length; i ++){
+      if (i === edge1Index) continue;
+
+      let pTmp = this.edges[i].intersectEdge(edge, true);
+      if (pTmp === null ||
+          pTmp.isOutsideFace(this) ||
+          pTmp.isEqual(p1)) continue;
+      p2 = pTmp;
+      edge2Index = i;
+    }
+
+    if (edge1Index !== null && edge2Index !== null) return new Edge(p1, p2);
+
+    return null;
   }
 
 }

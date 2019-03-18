@@ -52,7 +52,7 @@ export class Point {
 
 
   // return true only when inside
-  isInFace = (face) => {
+  isInFace(face){
     let wn = 0; // the  winding number counter
     for (let i = 0; i < face.edges.length; i ++){
       let edge = face.edges[i];
@@ -73,6 +73,17 @@ export class Point {
     };
 
     return wn === 0 ? false : true;
+  }
+
+  isOutsideFace(face){
+    if (this.isInFace(face)) return false;
+
+    // If on edge, not outside
+    for (let i = 0; i < face.edges.length; i ++){
+      if (face.edges[i].hasPoint(this)) return false;
+    }
+
+    return true;
   }
 
 }

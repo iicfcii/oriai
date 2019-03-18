@@ -12,12 +12,16 @@ export class FaceView extends Component {
 
     this.handleMouseover = () => {
       let str = 'ID: ' + this.props.face.id + ' Layer: ' + this.props.face.layer;
-      console.log(str);
+      // console.log(str);
       this.setState({mouseover: true,});
     }
 
     this.handleMouseout = () => {
       this.setState({mouseover: false,});
+    }
+
+    this.handleClick = () => {
+      console.log(this.props.face)
     }
   }
 
@@ -42,7 +46,8 @@ export class FaceView extends Component {
           fill = {this.state.mouseover? 'grey' : 'white'}
           opacity = {this.state.mouseover? 0.9 : 1}
           onMouseover = {this.handleMouseover}
-          onMouseout = {this.handleMouseout}>
+          onMouseout = {this.handleMouseout}
+          onClick = {this.handleClick}>
         </Line>
         {lines}
       </Group>

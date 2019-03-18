@@ -22,6 +22,14 @@ test('Test Edges Intersection', () => {
   expect(p43.y).toBe(p34.y);
 });
 
+test('Test Edges Intersection Out of Range', () => {
+  let e1 = new Edge(new Point(0.5,0),new Point(0.4,0.5));
+  let e2 = new Edge(new Point(1,0.25),new Point(0.25,1));
+
+  expect(e1.intersectEdge(e2)).toBe(null);
+});
+
+
 test('Test Edges Reflection', () => {
   let e1 = new Edge(new Point(0.5,0),new Point(0.5,0.5));
   let e2 = new Edge(new Point(1,0),new Point(0,1));

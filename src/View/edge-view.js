@@ -15,6 +15,7 @@ export class EdgeView extends Component {
         mouseover: true,
       }
 
+      // console.log(this.props.edge);
       let str = 'p1(' + this.props.edge.p1.x + ', ' + this.props.edge.p1.y + ')' +
                ' p2(' + this.props.edge.p2.x + ', ' + this.props.edge.p2.y + ')';
       // console.log(str);
@@ -27,6 +28,10 @@ export class EdgeView extends Component {
       }
 
       this.setState(newState);
+    }
+
+    this.handleClick = () => {
+      console.log(this.props.edge)
     }
 
     this.getStrokeWidth = () => {
@@ -54,7 +59,8 @@ export class EdgeView extends Component {
         lineCap = 'round'
         lineJoint = 'round'
         onMouseover = {this.handleMouseover}
-        onMouseout = {this.handleMouseout}>
+        onMouseout = {this.handleMouseout}
+        onClick = {this.handleClick}>
       </Line>
     );
   }

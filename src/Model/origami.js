@@ -48,7 +48,13 @@ export class Origami {
     return Math.min(...this.layers);
   }
 
-
+  getFaceByID(id){
+    for (let i = 0; i < this.faces.length; i ++){
+      if (this.faces[i].id === id){
+        return this.faces[i];
+      }
+    }
+  }
 
   showLayers(layers){
     this.changeAllLayerVisibility(false)
@@ -82,9 +88,15 @@ export class Origami {
 
   // Return a list of broken creases for next crease to figure out the new parents
   // face: face of a origami to be creased, will be removed after new ones are generated
-  // edge: proposed creasing line
+  // edge: proposed creasing line, infinite length
   // creases: list of broken creases to be fixed
   singleCrease(face, edge, creases){
+    edge = face.intersectEdge(edge, true);
+    if (edge === null) {
+      console.log('Crease Failed');
+      return;
+    }
+
     // Assumed order
     let p1 = edge.p1;
     let p2 = edge.p2;
@@ -105,7 +117,7 @@ export class Origami {
 
     if (edge1Index === null || edge2Index === null){
       console.log('Crease Failed');
-      return false;
+      return;
     }
 
     if (edge1Index > edge2Index){
@@ -119,6 +131,9 @@ export class Origami {
 
     // Helper function
     let addFixedEdge = (faceTmp, edgeTmp) => {
+      // If invalid, don't add.
+      if (!edgeTmp.isValid()) return;
+
       if (edgeTmp.isBoundary){
         // If just a boundary fix parent and add
         edgeTmp.parentFace1 = faceTmp;
@@ -140,15 +155,21 @@ export class Origami {
 
         // If no, fix parents and add. Also add a broken crease
         if (!foundCrease){
+          console.log('Crease', edgeTmp);
+          // Fix the same crease on other face if exists
+          let f = edgeTmp.parentFace2;
+          if (f.edgeIndex(edgeTmp) !== -1) f.edges[f.edgeIndex(edgeTmp)].parentFace2 = faceTmp;
+          // parentFace1 will always be the one that need fix
+          // A face's crease will always has itself as the first parent
           edgeTmp.parentFace1 = faceTmp;
-          faceTmp.addEdge(edgeTmp);
-          brokenCreases.push(edgeTmp);
+          if (faceTmp.addEdge(edgeTmp)) brokenCreases.push(edgeTmp);
         }
       }
     }
 
     // Make face 1
     let face1 = new Face(id); // face 1 use original id
+    face1.layer = face.layer;
     let i = 0;
     while(i < edge1Index){
       addFixedEdge(face1, face.edges[i]);
@@ -169,6 +190,7 @@ export class Origami {
     }
     // Make face 2
     let face2 = new Face(this.faces.length+1); // face 2 increment id
+    face2.layer = face.layer;
     i = edge1Index;
     // Add x1y1 to p2 edge
     addFixedEdge(face2, new Edge(p1,face.edges[i].p2,face.edges[i].parentFace1,face.edges[i].parentFace2));
@@ -190,8 +212,8 @@ export class Origami {
     // console.log(face2);
     // console.log(brokenCreases);
 
-    this.faces.splice(this.faces.indexOf(face), 1); // Remove original face
-    this.faces.push(face1);
+    this.faces.splice(this.faces.indexOf(face), 1, face1); // Replace original face
+    // this.faces.push(face1);
     this.faces.push(face2);
 
     return brokenCreases;
@@ -214,6 +236,7 @@ export class Origami {
       return false;
     }
 
+    let currentLayer = face.layer;
     // Order should be correct even after reflect
     for (let i = 0; i < face.edges.length; i ++){
       face.edges[creaseIndex].reflectEdge(face.edges[i]);
@@ -222,13 +245,16 @@ export class Origami {
     let dLayer = 1;
     if (dir === 'mountain') dLayer = -1;
     face.layer += dLayer;
+    // console.log(face.layer);
 
     let currentMaxLayer = this.maxLayer;
     let currentMinLayer = this.minLayer;
 
     while (face.layer <= currentMaxLayer+1 && face.layer >= currentMinLayer-1){
       let isOverlapped = false;
+      let isPenetrating = false;
 
+      // Check whether folded face is overlapping other face
       for (let i = 0; i < this.faces.length; i ++){
         if (i === this.faces.indexOf(face)) continue; // Dont check itself
         if (this.faces[i].layer !== face.layer) continue;
@@ -239,17 +265,59 @@ export class Origami {
         }
       }
 
-      if (isOverlapped){
-        console.log('Overlapped after fold');
+      // Check whether other face is penetrating the crease of the folded face
+      for (let i = 0; i < face.edges.length; i ++){
+        for (let j = 0; j < this.faces.length; j ++){
+          // console.log(face.edges[i]);
+          if (!face.edges[i].isCrease) continue; // Not a crease, skip
+
+          if (this.faces[j].isPenetratingCrease(face.edges[i])){
+            isPenetrating = true;
+            break;
+          }
+        }
+      }
+
+      if (isOverlapped || isPenetrating){
+        console.log('Overlap', isOverlapped, 'Penetrating', isPenetrating);
         face.layer += dLayer;
+        if (face.layer > currentMaxLayer+1 || face.layer < currentMinLayer-1){
+          // Not a valid fold, undo every thing
+          // Can also get a face copy and test first
+          for (let i = 0; i < face.edges.length; i ++){
+            face.edges[creaseIndex].reflectEdge(face.edges[i]);
+          }
+          face.layer = currentLayer;
+          console.log('Invalid fold');
+          return false;
+        }
       } else {
         break;
       }
     }
 
-    this.layers.push(face.layer);
-    // console.log(this.faces);
+    this.addLayer(face.layer);
+  }
 
+  // Make multiple creases through different layers of faces
+  // Edge: single fold line,
+  multiCrease(edge){
+    let brokenCreases = [];
+    let currentLength = this.faces.length;
 
+    // Since creasing will replace the original face and append a new face.
+    // Only the original faces should be creased
+    for (let i = 0; i < currentLength; i ++){
+      console.log(this.faces[i]);
+      let face = this.faces[i];
+      let e = face.intersectEdge(edge, true);
+      console.log(e);
+      if (!e) continue;
+
+      brokenCreases = this.singleCrease(face, e, brokenCreases);
+      // console.log(brokenCreases);
+    }
+
+    console.log(this.faces)
   }
 }

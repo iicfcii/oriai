@@ -145,8 +145,8 @@ export class Edge {
 
   // Return intersection point or null
   // Parallel(Overlap) means no intersection
-  // Intersect at end points means no ntersection
-  intersectEdge(edge){
+  // Intersect at end points means no intersection
+  intersectEdge(edge, infiniteLength){
     // k12 slop of this
     // kab slope of that
     let k12 = (this.p2.y-this.p1.y)/(this.p2.x-this.p1.x);
@@ -169,7 +169,10 @@ export class Edge {
     }
 
     let point = new Point(x,y);
-    if (!point.isWithinRect(edge.p1, edge.p2)) return null;
+
+    if (infiniteLength) return point;
+
+    if (!point.isWithinRect(this.p1, this.p2)) return null;
 
     // Not include both end points
     if (edge.isPointP1(point) ||

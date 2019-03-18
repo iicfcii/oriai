@@ -13,23 +13,27 @@ export class EditorView extends Component {
     this.origami = new Origami();
 
     // Some temporary operations
-    let crease1 = new Edge(new Point(0.5,0),new Point(0,0.5));
-    this.origami.singleCrease(this.origami.faces[0],crease1,[]);
-    this.origami.singleFold(this.origami.faces[0],crease1,'mountain');
-    let crease2 = new Edge(new Point(1,0.25),new Point(0.25,1));
-    this.origami.singleCrease(this.origami.faces[1],crease2,[]);
-    this.origami.singleFold(this.origami.faces[2],crease2,'valley');
-    this.origami.sortFaces();
-    // console.log(this.origami.faces);
-    // this.origami.faces[1].layer ++;
+    // let crease1 = new Edge(new Point(0,0.75),new Point(0.75,0));
+    // this.origami.singleCrease(this.origami.getFaceByID(1),crease1,[]);
+    // this.origami.singleFold(this.origami.getFaceByID(1),crease1,'valley');
     // this.origami.sortFaces();
-    //
-    // console.log('Face overlap: ',
-    //             this.origami.faces[1].overlapFace(this.origami.faces[2]),
-    //             this.origami.faces[2].overlapFace(this.origami.faces[1]),);
-    //
-    // let testPt = new Point(0.5,0);
-    // console.log('In face: ', testPt.isInFace(this.origami.faces[2]));
+    // let crease2 = new Edge(new Point(0.75,0.25),new Point(0.25,0.75));
+    // this.origami.singleCrease(this.origami.getFaceByID(1),crease2,[]);
+    // this.origami.singleFold(this.origami.getFaceByID(1),crease2,'valley');
+    // this.origami.sortFaces();
+    // let crease3 = new Edge(new Point(0.25,0.25),new Point(1,1));
+    // this.origami.multiCrease(crease3);
+    // this.origami.sortFaces();
+    let crease1 = new Edge(new Point(0,1),new Point(1,0));
+    this.origami.singleCrease(this.origami.getFaceByID(1),crease1,[]);
+    let crease2 = new Edge(new Point(0.5,1),new Point(1,0));
+    this.origami.singleCrease(this.origami.getFaceByID(2),crease2,[]);
+    this.origami.singleFold(this.origami.getFaceByID(2),crease2,'valley');
+    this.origami.sortFaces();
+    console.log(this.origami.faces);
+    let crease3 = new Edge(new Point(0,0.5),new Point(1,0.5));
+    this.origami.multiCrease(crease3);
+    this.origami.sortFaces();
 
     this.w = 600;
     this.h = 600;
