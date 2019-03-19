@@ -142,20 +142,22 @@ export class Origami {
       if (edgeTmp.isCrease){
         let foundCrease = false;
         // Check to see if there are broken creases that can be fixed
-        for (let j = 0; j < creases.length; j ++){
+        for (let j = creases.length-1; j >= 0; j --){
           // NEED TESTING
           if (creases[j].isEqual(edgeTmp, true)){
+            // console.log(creases[j]);
             foundCrease = true;
             creases[j].parentFace2 = faceTmp;
             edgeTmp.parentFace1 = faceTmp;
             edgeTmp.parentFace2 = creases[j].parentFace1;
             faceTmp.addEdge(edgeTmp);
+            creases.splice(j,1); // Remove this crease
           }
         }
 
         // If no, fix parents and add. Also add a broken crease
         if (!foundCrease){
-          console.log('Crease', edgeTmp);
+          // console.log('Crease', edgeTmp);
           // Fix the same crease on other face if exists
           let f = edgeTmp.parentFace2;
           if (f.edgeIndex(edgeTmp) !== -1) f.edges[f.edgeIndex(edgeTmp)].parentFace2 = faceTmp;
@@ -216,7 +218,7 @@ export class Origami {
     // this.faces.push(face1);
     this.faces.push(face2);
 
-    return brokenCreases;
+    return brokenCreases.concat(creases);
   }
 
   // Fold single face along a crease
@@ -308,14 +310,13 @@ export class Origami {
     // Since creasing will replace the original face and append a new face.
     // Only the original faces should be creased
     for (let i = 0; i < currentLength; i ++){
-      console.log(this.faces[i]);
+      // console.log(this.faces[i].id);
       let face = this.faces[i];
       let e = face.intersectEdge(edge, true);
-      console.log(e);
       if (!e) continue;
 
       brokenCreases = this.singleCrease(face, e, brokenCreases);
-      // console.log(brokenCreases);
+      console.log(brokenCreases);
     }
 
     console.log(this.faces)

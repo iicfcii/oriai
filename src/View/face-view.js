@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Line, Group } from 'react-konva';
+import { Line, Group, Text} from 'react-konva';
 import { EdgeView } from './edge-view';
 
 // Visuailize Face
@@ -47,8 +47,7 @@ export class FaceView extends Component {
           opacity = {this.state.mouseover? 0.9 : 1}
           onMouseover = {this.handleMouseover}
           onMouseout = {this.handleMouseout}
-          onClick = {this.handleClick}>
-        </Line>
+          onClick = {this.handleClick}/>
         {lines}
       </Group>
     );
