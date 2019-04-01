@@ -31,7 +31,13 @@ export class EdgeView extends Component {
     }
 
     this.handleClick = () => {
-      console.log(this.props.edge)
+      if (!this.props.edge.isCrease) return;
+      console.log('Parents',
+                  this.props.edge.parentFace1.id,
+                  this.props.edge.parentFace2.id,
+                  'Twin Parents',
+                  this.props.edge.twin.parentFace1.id,
+                  this.props.edge.twin.parentFace2.id);
     }
 
     this.getStrokeWidth = () => {

@@ -24,15 +24,29 @@ export class EditorView extends Component {
     // let crease3 = new Edge(new Point(0.25,0.25),new Point(1,1));
     // this.origami.multiCrease(crease3);
     // this.origami.sortFaces();
+
+    // let crease1 = new Edge(new Point(0,1),new Point(1,0));
+    // this.origami.singleCrease(this.origami.getFaceByID(1),crease1,[]);
+    // let crease2 = new Edge(new Point(0.5,1),new Point(1,0));
+    // this.origami.singleCrease(this.origami.getFaceByID(2),crease2,[]);
+    // this.origami.singleFold(this.origami.getFaceByID(2),crease2,'valley');
+    // this.origami.sortFaces();
+    // let crease3 = new Edge(new Point(0,0.5),new Point(1,0.5));
+    // this.origami.multiCrease(crease3);
+    // this.origami.sortFaces();
+
     let crease1 = new Edge(new Point(0,1),new Point(1,0));
-    this.origami.singleCrease(this.origami.getFaceByID(1),crease1,[]);
-    let crease2 = new Edge(new Point(0.5,1),new Point(1,0));
-    this.origami.singleCrease(this.origami.getFaceByID(2),crease2,[]);
-    this.origami.singleFold(this.origami.getFaceByID(2),crease2,'valley');
+    let bc1 = this.origami.singleCrease(this.origami.getFaceByID(1),crease1,[]);
+    let crease2 = new Edge(new Point(0,0),new Point(1,1));
+    let bc2 = this.origami.singleCrease(this.origami.getFaceByID(2),crease2,[]);
+    // let crease3 = new Edge(new Point(0,0.5),new Point(1,0));
+    // let bc3 = this.origami.singleCrease(this.origami.getFaceByID(1),crease3,[]);
+    // console.log(bc3);
+    // let crease4 = new Edge(new Point(0,0),new Point(1,1));
+    // this.origami.multiCrease(crease4);
+    // // this.origami.singleFold(this.origami.getFaceByID(2),this.origami.getFaceByID(2).edges[1],'valley');
     this.origami.sortFaces();
-    let crease3 = new Edge(new Point(0,0.5),new Point(1,0.5));
-    this.origami.multiCrease(crease3);
-    this.origami.sortFaces();
+
 
     this.w = 600;
     this.h = 600;

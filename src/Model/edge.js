@@ -30,6 +30,16 @@ export class Edge {
     return false;
   }
 
+  get twin() {
+    if (!this.isCrease) return null;
+
+    for (let i = 0; i < this.parentFace2.edges.length; i++){
+      if (this.parentFace2.edges[i].isEqual(this, true)) return this.parentFace2.edges[i];
+    }
+
+    return null;
+  }
+
   get key(){
     let p = [this.p1.x,this.p1.y,this.p2.x,this.p2.y];
     let key = p.map(String);
