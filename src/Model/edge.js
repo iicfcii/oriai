@@ -37,6 +37,7 @@ export class Edge {
       if (this.parentFace2.edges[i].isEqual(this, true)) return this.parentFace2.edges[i];
     }
 
+    console.log('No twin found')
     return null;
   }
 
@@ -63,13 +64,13 @@ export class Edge {
       return true;
   }
 
-  isEqual(edge, isOrderIgnored){
+  isEqual(edge, ignoreOrder){
     if (this.p1.isEqual(edge.p1) &&
         this.p2.isEqual(edge.p2)){
       return true;
     }
 
-    if (isOrderIgnored &&
+    if (ignoreOrder &&
         this.p1.isEqual(edge.p2) &&
         this.p2.isEqual(edge.p1)){
       return true;
@@ -119,37 +120,11 @@ export class Edge {
     }
   }
 
-  // Reflect a point across this edge
-  reflectPoint(p){
-    let e = [this.p2.x-this.p1.x, this.p2.y-this.p1.y]; // edge vector
-    let pt = [p.x-this.p1.x, p.y-this.p1.y]; // point vector
-
-    // p dot e / e dot e
-    let mag = (pt[0]*e[0]+pt[1]*e[1])/(e[0]*e[0]+e[1]*e[1]);
-    let proj = [e[0]*mag,e[1]*mag]; // projection vector
-    // console.log(proj);
-
-    // Projected point
-    let xo = this.p1.x+proj[0];
-    let yo = this.p1.y+proj[1];
-    // console.log(xo,yo);
-
-    // Go to other side of edge
-    let xr = p.x-2*(p.x-xo);
-    let yr = p.y-2*(p.y-yo);
-    // console.log(xr,yr);
-
-    return new Point(xr, yr);
-  }
-
-  // Reflect a edge with respect to this edge
-  // Directly modify the edge
-  reflectEdge(edge){
-    let p1 = this.reflectPoint(edge.p1);
-    let p2 = this.reflectPoint(edge.p2);
-
-    edge.p1 = p1;
-    edge.p2 = p2;
+  // Mirror this with respect to the provided edge
+  mirror(edge){
+    // console.log(this);
+    this.p1.mirror(edge);
+    this.p2.mirror(edge);
   }
 
 

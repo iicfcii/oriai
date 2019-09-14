@@ -75,10 +75,10 @@ export class Face {
     return true;
   }
 
-  hasEdge(edge1) {
+  hasEdge(edge1, ignoreOrder) {
     let has = false;
     this.edges.forEach((edge2) => {
-      if (edge1.isEqual(edge2, true)){
+      if (edge1.isEqual(edge2, ignoreOrder)){
         has = true;
       }
     });
@@ -86,12 +86,22 @@ export class Face {
     return has;
   }
 
-  edgeIndex(edge) {
+  edgeIndex(edge, infiniteLength) {
     for (let i = 0; i < this.edges.length; i ++){
-      if (this.edges[i].isEqual(edge, true)) return i; // Ignore ordered for now
+      if (infiniteLength){
+        if (this.edges[i].hasPoint(edge.p1) && this.edges[i].hasPoint(edge.p2)) return i;
+      } else {
+        if (this.edges[i].isEqual(edge)) return i; // Ignore ordered for now
+      }
     }
 
     return -1;
+  }
+
+  mirror(edge) {
+    this.edges.forEach((e) => {
+      e.mirror(edge);
+    });
   }
 
   // Return undefined if not a crease

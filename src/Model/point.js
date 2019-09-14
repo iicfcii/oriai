@@ -8,6 +8,10 @@ export class Point {
     return 1e-6;
   }
 
+  get copy(){
+    return new Point(this.x, this.y);
+  }
+
   isEqual(p){
     if (Math.abs(p.x-this.x) < Point.TOLERANCE && Math.abs(p.y-this.y) < Point.TOLERANCE){
       return true;
@@ -19,6 +23,31 @@ export class Point {
   // Return a flat list [x, y] with the ratio and offset(x,y)
   scale(ratio, x, y) {
     return [this.x*ratio+x, this.y*ratio+y];
+  }
+
+  // Directly modify the point
+  mirror(edge) {
+    let e = [edge.p2.x-edge.p1.x, edge.p2.y-edge.p1.y]; // edge vector
+    let pt = [this.x-edge.p1.x, this.y-edge.p1.y]; // point vector
+
+    // p dot e / e dot e
+    let mag = (pt[0]*e[0]+pt[1]*e[1])/(e[0]*e[0]+e[1]*e[1]);
+    let proj = [e[0]*mag,e[1]*mag]; // projection vector
+    // console.log(proj);
+
+    // Projected point
+    let xo = edge.p1.x+proj[0];
+    let yo = edge.p1.y+proj[1];
+    // console.log(xo,yo);
+
+    // Go to other side of edge
+    let xr = this.x-2*(this.x-xo);
+    let yr = this.y-2*(this.y-yo);
+    // console.log(xr,yr);
+
+    this.x = xr;
+    this.y = yr;
+    // return new Point(xr, yr);
   }
 
   // Within the rectangle defined by p1 and p2

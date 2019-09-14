@@ -4,9 +4,12 @@ An 2D origami simulator for now.
 ## Basic structure
 - An origami contains faces which contains edges.
 - An edge has up to two parent faces, that is, boundary edge has one, crease edge has two(Should be correct).
-- Two faces can share an crease edge.
+- Two faces can share an crease edge(two twin objects).
 - A crease breaks a face into two faces, the edges will also be broken.
-- A fold only change the edges of the faces.  
+- A crease does not need to go through the entire paper.
+- A fold can affect multiple faces such as inside reverse fold, fold several layers together, sink fold.
+- A fold changes the edges of the faces.
+- A fold changes faces layers. Layer number is always >= 0.
 - Each face has a layer number to indicate z axis position.
 
 ## TODO List

@@ -30,12 +30,12 @@ test('Test Edges Intersection Out of Range', () => {
 });
 
 
-test('Test Edges Reflection', () => {
+test('Test Mirror Edges', () => {
   let e1 = new Edge(new Point(0.5,0),new Point(0.5,0.5));
   let e2 = new Edge(new Point(1,0),new Point(0,1));
 
-  e2.reflectEdge(e1);
-  e2.reflectEdge(e2);
+  e1.mirror(e2);
+  e2.mirror(e2);
 
 
   expect(e1.p1.x).toBe(1);

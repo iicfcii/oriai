@@ -36,15 +36,12 @@ export class EditorView extends Component {
     // this.origami.sortFaces();
 
     let crease1 = new Edge(new Point(0,1),new Point(1,0));
-    let bc1 = this.origami.singleCrease(this.origami.getFaceByID(1),crease1,[]);
+    this.origami.singleCrease(this.origami.getFaceByID(1),crease1);
     let crease2 = new Edge(new Point(0,0),new Point(1,1));
-    let bc2 = this.origami.singleCrease(this.origami.getFaceByID(2),crease2,[]);
-    // let crease3 = new Edge(new Point(0,0.5),new Point(1,0));
-    // let bc3 = this.origami.singleCrease(this.origami.getFaceByID(1),crease3,[]);
-    // console.log(bc3);
-    // let crease4 = new Edge(new Point(0,0),new Point(1,1));
-    // this.origami.multiCrease(crease4);
-    // // this.origami.singleFold(this.origami.getFaceByID(2),this.origami.getFaceByID(2).edges[1],'valley');
+    this.origami.singleCrease(this.origami.getFaceByID(2),crease2);
+    let crease3 = new Edge(new Point(0,0),new Point(0.5,0.5));
+    this.origami.singleCrease(this.origami.getFaceByID(1),crease3);
+    this.origami.singleFold(this.origami.getFaceByID(1), crease1, -1);
     this.origami.sortFaces();
 
 

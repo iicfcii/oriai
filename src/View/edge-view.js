@@ -36,8 +36,8 @@ export class EdgeView extends Component {
                   this.props.edge.parentFace1.id,
                   this.props.edge.parentFace2.id,
                   'Twin Parents',
-                  this.props.edge.twin.parentFace1.id,
-                  this.props.edge.twin.parentFace2.id);
+                  this.props.edge.twin?this.props.edge.twin.parentFace1.id:'NA',
+                  this.props.edge.twin?this.props.edge.twin.parentFace2.id:'NA');
     }
 
     this.getStrokeWidth = () => {
