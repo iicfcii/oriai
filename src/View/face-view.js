@@ -41,7 +41,7 @@ export class FaceView extends Component {
     return (
       <Group>
         <Line
-          points = {this.props.face.scale(this.props.paperLayout.ratio,this.props.paperLayout.x,this.props.paperLayout.y)}
+          points = {this.props.face.scale(this.props.paperLayout)}
           closed = {true}
           fill = {this.state.mouseover? 'grey' : 'white'}
           opacity = {this.state.mouseover? 0.9 : 1}

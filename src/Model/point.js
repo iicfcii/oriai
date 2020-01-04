@@ -21,8 +21,19 @@ export class Point {
   }
 
   // Return a flat list [x, y] with the ratio and offset(x,y)
-  scale(ratio, x, y) {
-    return [this.x*ratio+x, this.y*ratio+y];
+  // angle in degrees, angle wrt positive x
+  scale(layout) {
+    let ratio = layout.ratio;
+    let x = layout.x;
+    let y = layout.y;
+    let angle = layout.angle;
+    // x' = x*Ctheta-y*Stheta
+    // y' = x*Stheta+y*Ctheta
+    let theta = angle/180*Math.PI; // to radian
+    return [
+      (this.x*Math.cos(theta)-this.y*Math.sin(theta))*ratio+x,
+      (this.x*Math.sin(theta)+this.y*Math.cos(theta))*ratio+y,
+    ];
   }
 
   // Directly modify the point
@@ -65,7 +76,7 @@ export class Point {
       isWithinRange &= (this.y >= p2.y && this.y <= p1.y);
     }
 
-    return isWithinRange;
+    return isWithinRange === 1;
   }
 
   // NOTE THE COORDINATE SYSTEM!!!!!!!

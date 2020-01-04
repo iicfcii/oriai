@@ -34,7 +34,9 @@ export class Edge {
     if (!this.isCrease) return null;
 
     for (let i = 0; i < this.parentFace2.edges.length; i++){
-      if (this.parentFace2.edges[i].isEqual(this, true)) return this.parentFace2.edges[i];
+      if (this.parentFace2.edges[i].isEqual(this, true)){
+        return this.parentFace2.edges[i];
+      }
     }
 
     console.log('No twin found')
@@ -88,7 +90,7 @@ export class Edge {
   }
 
   // Will include both end points
-  hasPoint(p){
+  hasPoint(p, infiniteLength){
     // if (this.isPointP2(p)){
     //     // Do not has x2, y2 to make sure
     //     // no two edges have the same point in a sginle polygon
@@ -98,10 +100,28 @@ export class Edge {
     // Vertical, special case
     if (this.p2.x-this.p1.x === 0){
       let delta = Math.abs(p.x-this.p1.x);
-      if (delta < Point.TOLERANCE && p.isWithinRect(this.p1,this.p2)){
+      if (delta < Point.TOLERANCE){
+        if (infiniteLength){
+          return true;
+        } else{
+          return p.isWithinRect(this.p1,this.p2)
+        }
         // y does not matter
-        // console.log(this);
-        return true;
+      } else {
+        return false;
+      }
+    }
+
+    // Horizontal, special case
+    if (this.p2.y-this.p1.y === 0){
+      let delta = Math.abs(p.y-this.p1.y);
+      if (delta < Point.TOLERANCE){
+        if (infiniteLength){
+          return true;
+        } else{
+          return p.isWithinRect(this.p1,this.p2)
+        }
+        // x does not matter
       } else {
         return false;
       }
@@ -111,9 +131,12 @@ export class Edge {
     let yTmp = k*(p.x-this.p1.x)+this.p1.y;
 
     let delta = Math.abs(p.y-yTmp);
-    if (delta < Point.TOLERANCE && p.isWithinRect(this.p1,this.p2)){
-      // console.log(this);
-      return true;
+    if (delta < Point.TOLERANCE){
+      if (infiniteLength){
+        return true;
+      } else{
+        return p.isWithinRect(this.p1,this.p2)
+      }
     }  else {
       // console.log(delta);
       return false;
@@ -157,7 +180,8 @@ export class Edge {
 
     if (infiniteLength) return point;
 
-    if (!point.isWithinRect(this.p1, this.p2)) return null;
+    // If not on both edges, not intersecting
+    if (!point.isWithinRect(this.p1, this.p2) | !point.isWithinRect(edge.p1, edge.p2)) return null;
 
     // Not include both end points
     if (edge.isPointP1(point) ||

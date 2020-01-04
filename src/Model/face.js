@@ -36,10 +36,10 @@ export class Face {
   }
 
   // Return a flat list [x1, y1, x2, y2, x3, y3...] with the ratio and offset(x,y)
-  scale(ratio, x, y) {
+  scale(layout) {
     let points = [];
     this.edges.forEach((edge) => {
-      let edgeS = edge.scale(ratio, x, y);
+      let edgeS = edge.scale(layout);
       points.push(edgeS[0]);
       points.push(edgeS[1]);
     });
@@ -86,16 +86,25 @@ export class Face {
     return has;
   }
 
-  edgeIndex(edge, infiniteLength) {
+  // Get the index of an edge
+  // Can have more than one index if infinite length
+  // Always return an array
+  edgeIndexList(edge, infiniteLength) {
+    let list = [];
     for (let i = 0; i < this.edges.length; i ++){
       if (infiniteLength){
-        if (this.edges[i].hasPoint(edge.p1) && this.edges[i].hasPoint(edge.p2)) return i;
+        if (this.edges[i].hasPoint(edge.p1,true) &&
+            this.edges[i].hasPoint(edge.p2,true)){
+          list.push(i);
+        };
       } else {
-        if (this.edges[i].isEqual(edge)) return i; // Ignore ordered for now
+        if (this.edges[i].isEqual(edge, true)){
+          list.push(i);
+        };
       }
     }
 
-    return -1;
+    return list;
   }
 
   mirror(edge) {
@@ -104,9 +113,9 @@ export class Face {
     });
   }
 
-  // Return undefined if not a crease
+  // Return false if not a crease
   isPenetratingCrease(crease){
-    if (!crease.isCrease) return;
+    if (!crease.isCrease) return false;
 
     // Determine the range
     let lowLayer, highLayer;
@@ -132,8 +141,8 @@ export class Face {
 
   // True if two faces overlapped each other
   // Same layer overlap: some common area, contain
-  overlapFace(face){
-    if (this.layer !== face.layer) return false;
+  overlapFace(face, ignoreLayer){
+    if (this.layer !== face.layer && !ignoreLayer) return false;
 
     // If there is an intersection between two edges of the faces, overlap
     for (let i = 0; i < this.edges.length; i ++){
@@ -189,7 +198,7 @@ export class Face {
     let edge1Index = null;
     let edge2Index = null;
 
-    // Fing edge.p1 then edge.p2
+    // Find edge.p1 then edge.p2
     for (let i = 0; i < this.edges.length; i ++){
       // At the same time, check if one edge has both points
       let hasP1 = this.edges[i].hasPoint(edge.p1);
