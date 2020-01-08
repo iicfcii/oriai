@@ -12,18 +12,43 @@ An 2D origami simulator for now.
 - A fold changes faces layers. Layer number is always >= 0.
 - Each face has a layer number to indicate z axis position.
 
+## Classes
+### Design
+- Attributes
+  - origamis (origamis after each step)
+  - steps (crease and fold)
+- Methods
+  - addStep(step) (create a new origami and perform all steps and save the origami)
+  - getOrigami(stepIndex) (return origami after certain steps)
+
+### Origami
+- Attributes
+  - faces
+  - layers
+- Methods
+  - getFaceByID
+  - getFacesByLayer
+
+### Crease
+- Attributes
+  - faceIDs
+  - crease
+- Methods
+  - do(origami)
+
+### Fold
+- Attributes
+  - faceIDs
+  - foldEdge
+  - directions
+- Methods
+  - do(origami)
+
 ## TODO List
-- Fold multiple faces.
-  - Complex crease and fold
-- Check whether fold is valid.
-  - Each edge as a fold may need to know its sibling(the one created because of the fold).
-  - Check layer after fold to avoid impossible folds.
-  - Check if fold breaks any edge connection(separate faces)
+- Crease and fold multiple faces.
+- Check whether fold break twin of crease.
 - Visualizer for origami structure.
-  - Check each layer
-  - Perspective view?
-  - UI: buttons, lists, text...
-  - Interactions: folds
+- Show each step of an origami.
 
 ## Hope List
 - Automatically generate origami creations and name them based on shape.

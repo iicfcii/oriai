@@ -1,6 +1,4 @@
-// Face
 import { Edge } from './edge';
-import { Point } from './point';
 
 export class Face {
   constructor(id) {

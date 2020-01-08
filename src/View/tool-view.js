@@ -16,7 +16,7 @@ export class ToolView extends Component {
     // console.log(event.target)
     let valStr = event.target.value;
 
-    this.props.origami.showLayers([parseInt(valStr,10)]);
+    this.props.origami.showLayersOnly([parseInt(valStr,10)]);
 
     this.setState({
       layer: valStr,
@@ -28,7 +28,7 @@ export class ToolView extends Component {
     if (this.state.shouldShowAllLayers === 'OFF'){
       this.props.origami.changeAllLayerVisibility(true);
     } else {
-      this.props.origami.showLayers([parseInt(this.state.layer,10)]);
+      this.props.origami.showLayersOnly([parseInt(this.state.layer,10)]);
     }
 
     this.setState({

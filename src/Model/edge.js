@@ -49,10 +49,9 @@ export class Edge {
     return key.join('');
   }
 
-  // Return a flat list [x1, y1, x2, y2] with the ratio and offset(x,y)
-  scale(ratio, x, y) {
-    let p1 = this.p1.scale(ratio, x, y);
-    let p2 = this.p2.scale(ratio, x, y);
+  scale(layout) {
+    let p1 = this.p1.scale(layout);
+    let p2 = this.p2.scale(layout);
     return p1.concat(p2);
   }
 
