@@ -45,10 +45,10 @@ An 2D origami simulator for now.
   - do(origami)
 
 ## TODO List
-- Crease and fold multiple faces.
-- Check whether fold break twin of crease.
-- Visualizer for origami structure.
-- Show each step of an origami.
+- Better visualizer for origami structure.
 
 ## Hope List
 - Automatically generate origami creations and name them based on shape.
+- Give a sketch and return folding steps.
+  - Search and optimization like genetic algorithm
+  - Train a network, sketch -> features -> steps --origami model--> design

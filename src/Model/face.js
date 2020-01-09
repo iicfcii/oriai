@@ -4,7 +4,7 @@ export class Face {
   constructor(id) {
     // Edges have to be in order
     // 1st edge's p2 has to equal to 2nd edge's p1
-    // Assume that there is no concave polygon in CP
+    // NOTE: Assume all faces are convex
     this.edges = [];
     this.layer = 0; // Layer of the face, change after fold
     this.id = null;
@@ -73,21 +73,15 @@ export class Face {
     return true;
   }
 
-  hasEdge(edge1, ignoreOrder) {
-    let has = false;
-    this.edges.forEach((edge2) => {
-      if (edge1.isEqual(edge2, ignoreOrder)){
-        has = true;
-      }
-    });
-
-    return has;
+  hasEdge(edge, ignoreOrder) {
+    let list = this.edgeIndexList(edge,false,ignoreOrder);
+    return list.length > 0;
   }
 
   // Get the index of an edge
   // Can have more than one index if infinite length
   // Always return an array
-  edgeIndexList(edge, infiniteLength) {
+  edgeIndexList(edge, infiniteLength, ignoreOrder) {
     let list = [];
     for (let i = 0; i < this.edges.length; i ++){
       if (infiniteLength){
@@ -96,7 +90,7 @@ export class Face {
           list.push(i);
         };
       } else {
-        if (this.edges[i].isEqual(edge, true)){
+        if (this.edges[i].isEqual(edge, ignoreOrder)){
           list.push(i);
         };
       }
@@ -115,21 +109,16 @@ export class Face {
   isPenetratingCrease(crease){
     if (!crease.isCrease) return false;
 
-    // Determine the range
-    let lowLayer, highLayer;
-    if (crease.parentFace1.layer > crease.parentFace2.layer){
-      lowLayer = crease.parentFace2.layer;
-      highLayer = crease.parentFace1.layer;
-    } else {
-      lowLayer = crease.parentFace1.layer;
-      highLayer = crease.parentFace2.layer;
-    }
-
     // if not within range, no penetration possible
-    if (this.layer < lowLayer || this.layer > highLayer) return false;
+    if (this.layer < crease.bottomLayer || this.layer > crease.topLayer) return false;
 
+    if (!crease.p1.isOutsideFace(this) && !crease.p2.isOutsideFace(this) && !this.hasEdge(crease, true)){
+      // Crease inside face
+      return true;
+    }
     for (let i = 0; i < this.edges.length; i ++){
-      if (this.edges[i].intersectEdge(crease) !== null){
+      if (this.edges[i].intersectEdge(crease, false) !== null){
+        // Face intersects with a crease
         return true;
       }
     }
@@ -145,7 +134,9 @@ export class Face {
     // If there is an intersection between two edges of the faces, overlap
     for (let i = 0; i < this.edges.length; i ++){
       for (let j = 0; j < face.edges.length; j ++){
-        if (this.edges[i].intersectEdge(face.edges[j]) !== null) return true;
+        if (this.edges[i].intersectEdge(face.edges[j]) !== null){
+          return true;
+        }
       }
     }
 

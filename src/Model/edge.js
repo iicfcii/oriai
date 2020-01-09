@@ -39,8 +39,24 @@ export class Edge {
       }
     }
 
-    console.log('No twin found')
+    // console.log('No twin found')
     return null;
+  }
+
+  get bottomLayer() {
+    if (this.parentFace1.layer < this.parentFace2.layer) {
+      return this.parentFace1.layer;
+    } else {
+      return this.parentFace2.layer;
+    }
+  }
+
+  get topLayer() {
+    if (this.parentFace1.layer > this.parentFace2.layer) {
+      return this.parentFace1.layer;
+    } else {
+      return this.parentFace2.layer;
+    }
   }
 
   get key(){
@@ -161,7 +177,7 @@ export class Edge {
     // console.log(k12,kab);
 
     if (k12 === kab) return null; // Parallel, no intersection
-
+    
     // Must have an intersection
     let x, y;
     if (!isFinite(k12)){

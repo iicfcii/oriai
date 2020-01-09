@@ -1,16 +1,58 @@
 export class Fold {
-  constructor(faceIDs, crease, directions){
+  constructor(faceIDs, creases, directions){
     this.faceIDs = faceIDs;
-    this.crease = crease;
+    this.creases = creases;
     this.directions = directions;
   }
 
   do(origami){
-    let isSuccessful = this.faceIDs.every((faceID, index) => {
-      return this.singleFold(origami, faceID, this.crease, this.directions[index]);
+    let isFoldFailed = this.faceIDs.some((faceID, index) => {
+      return this.singleFold(origami, faceID, this.creases[index], this.directions[index]) === false;
     });
-    //  Check crease connection
-    return isSuccessful;
+    if (isFoldFailed) return false;
+
+    // Crease twin cannot be found
+    let missingTwin = this.faceIDs.some((faceID) => {
+      return origami.getFaceByID(faceID).edges.some((edge) => {
+        if (!edge.isCrease) return false;
+        return edge.twin === null;
+      });
+    });
+    // console.log('missingTwin', missingTwin);
+    if (missingTwin){
+      console.log('Missing twin');
+      return false;
+    };
+
+    // Check penetration
+    let isPenetrating = false;
+    this.faceIDs.forEach((faceID,index) => {
+      let face = origami.getFaceByID(faceID);
+      let crease = this.creases[index];
+      // Whether this face penetrates other creases
+      isPenetrating = isPenetrating || origami.faces.some((f) => {
+        return f.edges.some((e) => {
+          // folded face penerating any edges?
+          if (face.isPenetratingCrease(e)){
+            return true;
+          }
+        }) && f.id !== face.id;
+      });
+      // Whether other faces penetrate creases of this face
+      isPenetrating = isPenetrating || origami.faces.some((f) => {
+        return face.edges.some((e) => {
+          if (f.isPenetratingCrease(e)){
+            return true;
+          }
+        }) && f.id !== face.id;
+      })
+    });
+    if (isPenetrating){
+      console.log('Penetrating');
+      return false;
+    }
+
+    return true;
   }
 
   // Fold face based on folding edge and direction.
@@ -53,35 +95,53 @@ export class Fold {
     let isFloating = false
 
     // Check floating
-    // Layer directly below/above is empty but not all layers below/above are empty
+    // Layer directly below/above has no overlapped faces
     if (direction > 0){
-      let layerBelowEmpty = false;
-      let allLayersBelowEmpty = true;
-      origami.layers.forEach((layer) => {
-        if (layer === face.layer - 1){
-          let faces = origami.getFacesByLayer(layer);
-          if (faces.length === 0) layerBelowEmpty = true;
-        }
-        if (layer < face.layer - 1){
-          let faces = origami.getFacesByLayer(layer);
-          if (faces.length !== 0) allLayersBelowEmpty = false;
-        }
-      });
-      if (layerBelowEmpty && !allLayersBelowEmpty) isFloating = true;
+      let hasFacesBelow = false;
+      let hasFacesBelowBelow = false;
+      if (face.layer > 0){
+        let faceCount = 0;
+        origami.faces.forEach((f) => {
+          if (f.layer === face.layer - 1){
+            if (f.overlapFace(face, true)){
+              hasFacesBelow = true;
+            }
+          }
+
+          if (f.layer < face.layer - 1){
+            faceCount = faceCount + 1;
+          }
+        });
+        // No faces below, cannot be floating
+        if (faceCount === 0) hasFacesBelowBelow = true;
+      } else {
+        // Bottom layer, no faces below
+        hasFacesBelow = true;
+      }
+      if (!hasFacesBelow && !hasFacesBelowBelow) isFloating = true;
     } else {
-      let layerAboveEmpty = false;
-      let allLayersAboveEmpty = true;
-      origami.layers.forEach((layer) => {
-        if (layer === face.layer + 1){
-          let faces = origami.getFacesByLayer(layer);
-          if (faces.length === 0) layerAboveEmpty = true;
-        }
-        if (layer > face.layer + 1){
-          let faces = origami.getFacesByLayer(layer);
-          if (faces.length !== 0) allLayersAboveEmpty = false;
-        }
-      });
-      if (layerAboveEmpty && !allLayersAboveEmpty) isFloating = true;
+      let hasFacesAbove = false;
+      let hasFacesAboveAbove = false;
+      if (face.layer < origami.maxLayer){
+        let faceCount = 0;
+        origami.faces.forEach((f) => {
+          if (f.layer === face.layer + 1){
+            if (f.overlapFace(face, true)){
+              hasFacesAbove = true;
+            }
+          }
+
+          if (f.layer > face.layer + 1){
+            faceCount = faceCount + 1;
+          }
+        });
+        // No faces above, cannot be floating
+        if (faceCount === 0) hasFacesAboveAbove = true;
+      } else {
+        // Top layer, no faces above
+        hasFacesAbove = true;
+      }
+      if (!hasFacesAbove && !hasFacesAboveAbove) isFloating = true;
     }
 
     if (isFloating){
@@ -103,7 +163,7 @@ export class Fold {
       // Check whether folded face is overlapping other face
       let facesSameLayer = origami.getFacesByLayer(face.layer);
       isOverlapped = facesSameLayer.some((faceSameLayer) =>{
-        return faceSameLayer.overlapFace(face) && faceSameLayer.id !== face.id;
+        return faceSameLayer.id !== face.id && faceSameLayer.overlapFace(face);
       });
 
       if (isOverlapped){
@@ -127,27 +187,6 @@ export class Fold {
     } else{
       // Should not reach here
       console.log('Invalid fold direction');
-    }
-
-    // Check penetration
-    isPenetrating = origami.faces.some((f) => {
-      return f.edges.some((e) => {
-        // folded face penerating any edges?
-        if (face.isPenetratingCrease(e)){
-          console.log('Penerating');
-          return true;
-        }
-      }) && f.id !== face.id;
-    });
-
-    if (isPenetrating){
-      // Undo mirror
-      face.mirror(crease);
-      // Undo layer change
-      origami.faces.forEach((f) =>{f.layer = oldFacesLayer[f.id]});
-      // Undo layers
-      origami.layers = oldLayers
-      return false;
     }
 
     origami.sortFaces();

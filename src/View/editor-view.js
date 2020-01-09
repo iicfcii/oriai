@@ -18,76 +18,69 @@ export class EditorView extends Component {
 
     let crease1 = new Edge(new Point(1,0),new Point(0,1));
     this.design.addStep(new Crease([1],crease1));
-    this.design.addStep(new Fold([1],crease1,[1]));
+    this.design.addStep(new Fold([1],[crease1],[1]));
 
     let crease2 = new Edge(new Point(0.6,0.4),new Point(1,0.3));
     this.design.addStep(new Crease([1,2],crease2));
-    this.design.addStep(new Fold([3,2],crease2,[1,3]));
+    // this.design.addStep(new Fold([3],[crease2],[1]));
+    this.design.addStep(new Fold([3,2],[crease2,crease2],[1,3]));
 
     let crease3 = new Edge(new Point(0.4,0.6),new Point(0.3,1));
     this.design.addStep(new Crease([1,4],crease3));
-    this.design.addStep(new Fold([5,6],crease3,[1,3]));
+    this.design.addStep(new Fold([5,6],[crease3,crease3],[-1,1]));
 
     let crease4 = new Edge(new Point(1,0.7),new Point(0.7,1));
     this.design.addStep(new Crease([1,4],crease4));
-    this.design.addStep(new Fold([1,8],crease4,[1,-1]));
+    this.design.addStep(new Fold([1,8],[crease4,crease4],[1,-1]));
 
     let crease5 = new Edge(new Point(1,0.5),new Point(0.5,1));
     this.design.addStep(new Crease([1],crease5));
-    this.design.addStep(new Fold([1],crease5,[1]));
+    this.design.addStep(new Fold([1],[crease5],[1]));
 
-    // this.design = new Design();
-    // let crease1 = new Edge(new Point(0.5,0),new Point(0.5,1));
-    // let crease2 = new Edge(new Point(0.75,0),new Point(0.75,1));
+    // let crease1 = new Edge(new Point(0,0.5),new Point(0.5,0));
     //
     // this.design.addStep(new Crease([1],crease1));
-    // this.design.addStep(new Crease([2],crease2));
-    // this.design.addStep(new Fold([1],crease1,[1]));
-    // this.design.addStep(new Fold([3],crease2,[-1]));
+    // this.design.addStep(new Fold([1],[crease1],[1]));
+    // this.design.addStep(new Fold([1],[crease1],[-1]));
 
     this.w = 600;
     this.h = 600;
-    this.paperLayout = {
-      ratio: 400,
-      x: this.w/2,
-      y: (this.h-400*Math.sqrt(2))/2,
-      angle: 45,
-    };
     // this.paperLayout = {
     //   ratio: 400,
-    //   x: 100,
-    //   y: 100,
-    //   angle: 0,
+    //   x: this.w/2,
+    //   y: (this.h-400*Math.sqrt(2))/2,
+    //   angle: 45,
     // };
+    this.paperLayout = {
+      ratio: 400,
+      x: 100,
+      y: 100,
+      angle: 0,
+    };
 
     this.state = {
       layer: 0,
-      shouldShowAllLayers: 'ON',
-      step: 0,
+      shouldShowAllLayers: true,
+      step: this.design.origamis.length-1,
     }
+
+    this.updateLayersVisibility(this.state.shouldShowAllLayers,this.state.layer);
   }
 
-  onLayerChange = (event) => {
-    // console.log(event.target)
-    let valStr = event.target.value;
-
-    this.design.getOrigami(this.state.step).showLayersOnly([parseInt(valStr,10)]);
-
-    this.setState({
-      layer: valStr,
-      shouldShowAllLayers: 'OFF',
-    });
+  updateLayersVisibility = (shouldShowAllLayers, layer) => {
+    if (shouldShowAllLayers){
+      this.design.getOrigami(this.state.step).showLayersOnly(this.design.getOrigami(this.state.step).layers);
+    } else {
+      this.design.getOrigami(this.state.step).showLayersOnly([layer]);
+    }
   }
 
   onToggleAllLayer = () => {
-    if (this.state.shouldShowAllLayers === 'OFF'){
-      this.design.getOrigami(this.state.step).showLayersOnly(this.design.getOrigami(this.state.step).layers);
-    } else {
-      this.design.getOrigami(this.state.step).showLayersOnly([this.state.layer]);
-    }
+    let nextVal = !this.state.shouldShowAllLayers;
+    this.updateLayersVisibility(nextVal,this.state.layer);
 
     this.setState({
-      shouldShowAllLayers: this.state.shouldShowAllLayers === 'ON' ? 'OFF' : 'ON',
+      shouldShowAllLayers: nextVal,
     })
   }
 
@@ -104,6 +97,28 @@ export class EditorView extends Component {
       );
     }
     return options;
+  }
+
+  onPrevLayer = () => {
+    if (this.state.layer > this.design.getOrigami(this.state.step).minLayer){
+      let nextVal = this.state.layer - 1;
+      this.updateLayersVisibility(false,nextVal);
+      this.setState({
+        shouldShowAllLayers: false,
+        layer: nextVal,
+      });
+    }
+  }
+
+  onNextLayer = () => {
+    if (this.state.layer < this.design.getOrigami(this.state.step).maxLayer){
+      let nextVal = this.state.layer + 1;
+      this.updateLayersVisibility(false,nextVal);
+      this.setState({
+        shouldShowAllLayers: false,
+        layer: nextVal,
+      });
+    }
   }
 
   onPrevStep = () => {
@@ -150,14 +165,14 @@ export class EditorView extends Component {
           <div>{'Total Faces: ' + this.design.getOrigami(this.state.step).faces.length}</div>
           <div>{'Total Layers: ' + this.design.getOrigami(this.state.step).layers}</div>
           <div>
-            {'Show all layers is '}
-            <button onClick={this.onToggleAllLayer}>{this.state.shouldShowAllLayers}</button>
+            {this.state.shouldShowAllLayers?'Showing all layers':'Showing single layer'}
+            <button onClick={this.onToggleAllLayer}>{'Toggle'}</button>
           </div>
           <div>
-            {'Select Layers: '}
-            <select value={this.state.layer.toFixed(0)} onChange={this.onLayerChange}>
-              {this.renderOptions()}
-            </select>
+            {'Layers: '}
+            <button onClick={(this.onPrevLayer)}>Prev</button>
+            { this.state.layer.toFixed(0) + '/' + this.design.getOrigami(this.state.step).maxLayer}
+            <button onClick={this.onNextLayer}>Next</button>
           </div>
           <div>
             {'Steps: '}

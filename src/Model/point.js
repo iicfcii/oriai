@@ -65,15 +65,15 @@ export class Point {
   isWithinRect(p1, p2){
     let isWithinRange = true;
     if (p1.x < p2.x) {
-      isWithinRange &= (this.x >= p1.x && this.x <= p2.x);
+      isWithinRange &= (this.x >= p1.x-Point.TOLERANCE && this.x <= p2.x+Point.TOLERANCE);
     } else {
-      isWithinRange &= (this.x >= p2.x && this.x <= p1.x);
+      isWithinRange &= (this.x >= p2.x-Point.TOLERANCE && this.x <= p1.x+Point.TOLERANCE);
     }
 
     if (p1.y < p2.y) {
-      isWithinRange &= (this.y >= p1.y && this.y <= p2.y);
+      isWithinRange &= (this.y >= p1.y-Point.TOLERANCE && this.y <= p2.y+Point.TOLERANCE);
     } else {
-      isWithinRange &= (this.y >= p2.y && this.y <= p1.y);
+      isWithinRange &= (this.y >= p2.y-Point.TOLERANCE && this.y <= p1.y+Point.TOLERANCE);
     }
 
     return isWithinRange === 1;
@@ -93,7 +93,7 @@ export class Point {
 
   // return true only when inside
   isInFace(face){
-    let wn = 0; // the  winding number counter
+    let wn = 0; // the winding number counter
     for (let i = 0; i < face.edges.length; i ++){
       let edge = face.edges[i];
       if (edge.hasPoint(this)) return false; // on edge, return false

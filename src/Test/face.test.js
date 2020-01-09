@@ -67,7 +67,7 @@ test('Should intersect correctly when infinite length', () => {
   expect(e2.isEqual(new Edge(new Point(0,0),new Point(1,1)), true)).toBe(true);
 });
 
-test('Should return index if given edge is the same as one of the edges of face when not infinite length', () => {
+test('Should return index list if given edge is the same as one of the edges of face when not infinite length', () => {
   let face = new Face(1); // Starting id is 1
   face.addEdge(new Edge(new Point(0,0),new Point(1,0), face));
   face.addEdge(new Edge(new Point(1,0),new Point(1,1), face));
@@ -79,7 +79,7 @@ test('Should return index if given edge is the same as one of the edges of face 
   expect(list[0]).toBe(3);
 });
 
-test('Should return -1 if given edge is not the same as one of the edges of face when not infinite length', () => {
+test('Should return empty list if given edge is not the same as one of the edges of face when not infinite length', () => {
   let face = new Face(1); // Starting id is 1
   face.addEdge(new Edge(new Point(0,0),new Point(1,0), face));
   face.addEdge(new Edge(new Point(1,0),new Point(1,1), face));
@@ -92,7 +92,7 @@ test('Should return -1 if given edge is not the same as one of the edges of face
 });
 
 
-test('Should return index if given edge is shorter or longer than but collinear with the edge of face when infinite length', () => {
+test('Should return index list if given edge is shorter or longer than but collinear with the edge of face when infinite length', () => {
   let face = new Face(1); // Starting id is 1
   face.addEdge(new Edge(new Point(0,0),new Point(1,0), face));
   face.addEdge(new Edge(new Point(1,0),new Point(1,1), face));
@@ -108,7 +108,7 @@ test('Should return index if given edge is shorter or longer than but collinear 
   expect(list[0]).toBe(3);
 });
 
-test('Should return -1 if given edge is shorter or longer than but collinear with the edge of face when not infinite length', () => {
+test('Should return empty list if given edge is shorter or longer than but collinear with the edge of face when not infinite length', () => {
   let face = new Face(1); // Starting id is 1
   face.addEdge(new Edge(new Point(0,0),new Point(1,0), face));
   face.addEdge(new Edge(new Point(1,0),new Point(1,1), face));

@@ -104,6 +104,14 @@ test('Should intersect correctly', () => {
   expect(p12.y).toBe(0.5);
 });
 
+test('Should intersect correctly with tolerance', () => {
+  let e1 = new Edge(new Point(0.3,1),new Point(1,1));
+  let e2 = new Edge(new Point(0.4,0.6),new Point(0.5647058823529412,1.1411764705882352));
+  let p12 = e1.intersectEdge(e2);
+
+  expect(p12 !== null).toBe(true);
+});
+
 
 test('Should mirror correctly', () => {
   let e1 = new Edge(new Point(0.5,0),new Point(0.5,0.5));
