@@ -1,4 +1,5 @@
 import { Edge } from './edge';
+import { Point } from './point';
 
 export class Face {
   constructor(id) {
@@ -22,7 +23,7 @@ export class Face {
   }
 
   // Get the polygon points in an flat array
-  get polygonFlat() {
+  get polygonFlat(){
     let points = [];
     // Add points to the array
     this.edges.forEach((edge) => {
@@ -31,6 +32,19 @@ export class Face {
     });
 
     return points;
+  }
+
+  get centroid(){
+    let xSum = 0;
+    let ySum = 0;
+    let n = this.edges.length;
+
+    this.edges.forEach((edge) => {
+      xSum = xSum + edge.p1.x;
+      ySum = ySum + edge.p2.y;
+    });
+
+    return new Point(xSum/n, ySum/n);
   }
 
   // Return a flat list [x1, y1, x2, y2, x3, y3...] with the ratio and offset(x,y)
@@ -79,14 +93,15 @@ export class Face {
   }
 
   // Get the index of an edge
-  // Can have more than one index if infinite length
+  // Can have more than one index
   // Always return an array
-  edgeIndexList(edge, infiniteLength, ignoreOrder) {
+  // ignoreOrder only works when infiniteLength is false
+  edgeIndexList(edge, infiniteLength, ignoreOrder, includeOutside) {
     let list = [];
     for (let i = 0; i < this.edges.length; i ++){
       if (infiniteLength){
-        if (this.edges[i].hasPoint(edge.p1,true) &&
-            this.edges[i].hasPoint(edge.p2,true)){
+        if (this.edges[i].hasPoint(edge.p1,includeOutside) &&
+            this.edges[i].hasPoint(edge.p2,includeOutside)){
           list.push(i);
         };
       } else {
@@ -110,16 +125,31 @@ export class Face {
     if (!crease.isCrease) return false;
 
     // if not within range, no penetration possible
-    if (this.layer < crease.bottomLayer || this.layer > crease.topLayer) return false;
+    if (this.layer <= crease.bottomLayer || this.layer >= crease.topLayer) return false;
 
     if (!crease.p1.isOutsideFace(this) && !crease.p2.isOutsideFace(this) && !this.hasEdge(crease, true)){
-      // Crease inside face
+      // Crease not outside face
       return true;
     }
+
     for (let i = 0; i < this.edges.length; i ++){
       if (this.edges[i].intersectEdge(crease, false) !== null){
         // Face intersects with a crease
         return true;
+      }
+    }
+
+    let list = this.edgeIndexList(crease, true, null, false);
+    if (list.length > 0){
+      if (crease.parentFace1.overlapFace(this, true) || crease.parentFace2.overlapFace(this, true)){
+        // console.log(this.id, crease.p1, crease.p2, crease.parentFace1.id,crease.parentFace2.id)
+        return list.some((index) => {
+          if (!this.edges[index].isCrease) return false
+          if (this.edges[index].parentFace2.layer > crease.topLayer ||
+              this.edges[index].parentFace2.layer < crease.bottomLayer){
+            return true;
+          }
+        })
       }
     }
 

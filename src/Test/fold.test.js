@@ -31,7 +31,7 @@ test('Fold should not happen when face does not have fold edge', () => {
   expect(design.addStep(new Fold([1],[crease2],[1]))).toBe(false);
 })
 
-test('Fold should not happen when face folded penetrate crease', () => {
+test('Fold should not happen when face folded penetrates crease', () => {
   let design = new Design();
   let crease1 = new Edge(new Point(0,0.5),new Point(0.5,0));
   let crease2 = new Edge(new Point(0.1,1),new Point(1,0.1));
@@ -40,6 +40,17 @@ test('Fold should not happen when face folded penetrate crease', () => {
   expect(design.addStep(new Crease([2],crease2))).toBe(true);
   expect(design.addStep(new Fold([1],[crease1],[-1]))).toBe(true);
   expect(design.addStep(new Fold([3],[crease2],[-1]))).toBe(false);
+})
+
+test('Fold should not happen when face folded penetrates crease on its edge', () => {
+  let design = new Design();
+  let crease1 = new Edge(new Point(1,0),new Point(0,1));
+  let crease2 = new Edge(new Point(1,0.7),new Point(0.7,1));
+
+  expect(design.addStep(new Crease([1],crease1))).toBe(true);
+  expect(design.addStep(new Fold([1],[crease1],[1]))).toBe(true);
+  expect(design.addStep(new Crease([1,2],crease2))).toBe(true);
+  expect(design.addStep(new Fold([1,4],[crease2,crease2],[1,2]))).toBe(false);
 })
 
 test('Fold should not happen when crease of folded face is penetrated by other face', () => {

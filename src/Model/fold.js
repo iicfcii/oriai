@@ -31,20 +31,20 @@ export class Fold {
       let crease = this.creases[index];
       // Whether this face penetrates other creases
       isPenetrating = isPenetrating || origami.faces.some((f) => {
-        return f.edges.some((e) => {
+        return f.id !== face.id && f.edges.some((e) => {
           // folded face penerating any edges?
           if (face.isPenetratingCrease(e)){
             return true;
           }
-        }) && f.id !== face.id;
+        });
       });
       // Whether other faces penetrate creases of this face
       isPenetrating = isPenetrating || origami.faces.some((f) => {
-        return face.edges.some((e) => {
+        return f.id !== face.id && face.edges.some((e) => {
           if (f.isPenetratingCrease(e)){
             return true;
           }
-        }) && f.id !== face.id;
+        });
       })
     });
     if (isPenetrating){
@@ -67,7 +67,7 @@ export class Fold {
       return false;
     }
 
-    let indexList = face.edgeIndexList(crease,true);
+    let indexList = face.edgeIndexList(crease,true,null,true);
     if (indexList.length === 0){
       console.log('Invalid fold edge');
       return false;

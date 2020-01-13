@@ -105,18 +105,12 @@ export class Edge {
   }
 
   // Will include both end points
-  hasPoint(p, infiniteLength){
-    // if (this.isPointP2(p)){
-    //     // Do not has x2, y2 to make sure
-    //     // no two edges have the same point in a sginle polygon
-    //   return false;
-    // }
-
+  hasPoint(p, includeOutside){
     // Vertical, special case
     if (this.p2.x-this.p1.x === 0){
       let delta = Math.abs(p.x-this.p1.x);
       if (delta < Point.TOLERANCE){
-        if (infiniteLength){
+        if (includeOutside){
           return true;
         } else{
           return p.isWithinRect(this.p1,this.p2)
@@ -131,7 +125,7 @@ export class Edge {
     if (this.p2.y-this.p1.y === 0){
       let delta = Math.abs(p.y-this.p1.y);
       if (delta < Point.TOLERANCE){
-        if (infiniteLength){
+        if (includeOutside){
           return true;
         } else{
           return p.isWithinRect(this.p1,this.p2)
@@ -147,13 +141,12 @@ export class Edge {
 
     let delta = Math.abs(p.y-yTmp);
     if (delta < Point.TOLERANCE){
-      if (infiniteLength){
+      if (includeOutside){
         return true;
       } else{
         return p.isWithinRect(this.p1,this.p2)
       }
     }  else {
-      // console.log(delta);
       return false;
     }
   }
@@ -177,7 +170,7 @@ export class Edge {
     // console.log(k12,kab);
 
     if (k12 === kab) return null; // Parallel, no intersection
-    
+
     // Must have an intersection
     let x, y;
     if (!isFinite(k12)){

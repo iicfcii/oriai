@@ -46,6 +46,7 @@ An 2D origami simulator for now.
 
 ## TODO List
 - Better visualizer for origami structure.
+- Serialize origami object
 
 ## Hope List
 - Automatically generate origami creations and name them based on shape.

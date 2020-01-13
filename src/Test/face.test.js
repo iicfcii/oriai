@@ -2,6 +2,18 @@ import { Edge } from '../Model/edge';
 import { Point } from '../Model/point';
 import { Face } from '../Model/face';
 
+test('Should calculate face centroid correctly', () => {
+  let face = new Face(1); // Starting id is 1
+  face.addEdge(new Edge(new Point(0,0),new Point(1,0), face));
+  face.addEdge(new Edge(new Point(1,0),new Point(1,1), face));
+  face.addEdge(new Edge(new Point(1,1),new Point(0,1), face));
+  face.addEdge(new Edge(new Point(0,1),new Point(0,0), face));
+
+  let p = face.centroid;
+  expect(p.x).toBe(0.5);
+  expect(p.y).toBe(0.5);
+});
+
 test('Should not intersect when edge is collinear with one of the edges of face', () => {
   let face = new Face(1); // Starting id is 1
   face.addEdge(new Edge(new Point(0,0),new Point(1,0), face));
@@ -91,8 +103,7 @@ test('Should return empty list if given edge is not the same as one of the edges
   expect(list.length).toBe(0);
 });
 
-
-test('Should return index list if given edge is shorter or longer than but collinear with the edge of face when infinite length', () => {
+test('Should return index list if collinear and endpoints of given edge are inside the edge of face when infinite length', () => {
   let face = new Face(1); // Starting id is 1
   face.addEdge(new Edge(new Point(0,0),new Point(1,0), face));
   face.addEdge(new Edge(new Point(1,0),new Point(1,1), face));
@@ -102,10 +113,23 @@ test('Should return index list if given edge is shorter or longer than but colli
   let e1 = new Edge(new Point(0,0.1),new Point(0,0.6));
   let list = face.edgeIndexList(e1, true);
   expect(list[0]).toBe(3);
+});
 
-  let e2 = new Edge(new Point(0,-1),new Point(0,2));
-  list = face.edgeIndexList(e2, true);
-  expect(list[0]).toBe(3);
+test('Should return index list if collinear and endpoints of given edge are outside the edge of face when infinite length and include outside', () => {
+  let face = new Face(1); // Starting id is 1
+  face.addEdge(new Edge(new Point(0,0),new Point(1,0), face));
+  face.addEdge(new Edge(new Point(1,0),new Point(1,1), face));
+  face.addEdge(new Edge(new Point(1,1),new Point(0,1), face));
+  face.addEdge(new Edge(new Point(0,1),new Point(0,0), face));
+
+  // Longer
+  let e1 = new Edge(new Point(0,-1),new Point(0,2));
+  let list = face.edgeIndexList(e1, true, null, true);
+  expect(list[0]).toBe(3)
+
+  let e2 = new Edge(new Point(0,-1),new Point(0,-0.5));
+  list = face.edgeIndexList(e2, true, null, true);
+  expect(list[0]).toBe(3);;
 });
 
 test('Should return empty list if given edge is shorter or longer than but collinear with the edge of face when not infinite length', () => {

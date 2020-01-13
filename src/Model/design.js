@@ -1,7 +1,8 @@
 import { Origami } from './origami';
 
 export class Design {
-  constructor(){
+  constructor(name){
+    this.name = name;
     this.origamis = [new Origami()]; // always have a plain paper
     this.steps = []; // Array of crease and fold
   }

@@ -14,34 +14,42 @@ export class EditorView extends Component {
   constructor(props) {
     super(props);
 
-    this.design = new Design();
-
+    this.design = new Design('Dog Face');
     let crease1 = new Edge(new Point(1,0),new Point(0,1));
     this.design.addStep(new Crease([1],crease1));
     this.design.addStep(new Fold([1],[crease1],[1]));
-
     let crease2 = new Edge(new Point(0.6,0.4),new Point(1,0.3));
     this.design.addStep(new Crease([1,2],crease2));
-    // this.design.addStep(new Fold([3],[crease2],[1]));
     this.design.addStep(new Fold([3,2],[crease2,crease2],[1,3]));
-
     let crease3 = new Edge(new Point(0.4,0.6),new Point(0.3,1));
     this.design.addStep(new Crease([1,4],crease3));
-    this.design.addStep(new Fold([5,6],[crease3,crease3],[-1,1]));
-
+    this.design.addStep(new Fold([5,6],[crease3,crease3],[1,3]));
     let crease4 = new Edge(new Point(1,0.7),new Point(0.7,1));
     this.design.addStep(new Crease([1,4],crease4));
     this.design.addStep(new Fold([1,8],[crease4,crease4],[1,-1]));
-
     let crease5 = new Edge(new Point(1,0.5),new Point(0.5,1));
     this.design.addStep(new Crease([1],crease5));
     this.design.addStep(new Fold([1],[crease5],[1]));
 
-    // let crease1 = new Edge(new Point(0,0.5),new Point(0.5,0));
-    //
+    // this.design = new Design('Crane');
+    // let crease1 = new Edge(new Point(1,0),new Point(0,1));
+    // let crease2 = new Edge(new Point(0,0),new Point(1,1));
     // this.design.addStep(new Crease([1],crease1));
+    // this.design.addStep(new Crease([1,2],crease2));
     // this.design.addStep(new Fold([1],[crease1],[1]));
-    // this.design.addStep(new Fold([1],[crease1],[-1]));
+    // let crease2 = new Edge(new Point(0.85,0.15),new Point(1,0.5));
+    // this.design.addStep(new Crease([1,2],crease2));
+    // this.design.addStep(new Fold([3,2],[crease2,crease2],[1,-1]));
+    // let crease3 = new Edge(new Point(0.15,0.85),new Point(0.5,1));
+    // this.design.addStep(new Crease([1,4],crease3));
+    // this.design.addStep(new Fold([5,6],[crease3,crease3],[1,3]));
+    // let crease4 = new Edge(new Point(1,0.7),new Point(0.7,1));
+    // this.design.addStep(new Crease([1,4],crease4));
+    // this.design.addStep(new Fold([1,8],[crease4,crease4],[1,-1]));
+    // let crease5 = new Edge(new Point(1,0.5),new Point(0.5,1));
+    // this.design.addStep(new Crease([1],crease5));
+    // this.design.addStep(new Fold([1],[crease5],[1]));
+
 
     this.w = 600;
     this.h = 600;
@@ -134,13 +142,13 @@ export class EditorView extends Component {
   }
 
   render() {
-    const containerStyle = {
+    const container = {
       height: this.h,
       display: 'flex',
       justifyContent: 'flex-start',
       alignItems: 'flex-start',
     };
-    const containerToolStyle = {
+    const containerTool = {
       height: this.h,
       flex: 1,
       display: 'flex',
@@ -149,9 +157,13 @@ export class EditorView extends Component {
       justifyContent: 'flex-start',
       alignItems: 'flex-start',
     };
+    const containerItem = {
+      margin: '10px 0px',
+    };
+
 
     return (
-      <div style = {containerStyle}>
+      <div style = {container}>
         <div>
           <OrigamiView
             w = {this.w}
@@ -160,21 +172,21 @@ export class EditorView extends Component {
             origami = {this.design.getOrigami(this.state.step)}
           />
         </div>
-        <div style = {containerToolStyle}>
-          <div>Tools</div>
-          <div>{'Total Faces: ' + this.design.getOrigami(this.state.step).faces.length}</div>
-          <div>{'Total Layers: ' + this.design.getOrigami(this.state.step).layers}</div>
-          <div>
-            {this.state.shouldShowAllLayers?'Showing all layers':'Showing single layer'}
+        <div style = {containerTool}>
+          <div style = {containerItem}>Tools</div>
+          <div style = {containerItem}>{'Total Faces: ' + this.design.getOrigami(this.state.step).faces.length}</div>
+          <div style = {containerItem}>{'Total Layers: ' + this.design.getOrigami(this.state.step).layers}</div>
+          <div style = {containerItem}>
+            {this.state.shouldShowAllLayers?'Showing all layers ':'Showing single layer '}
             <button onClick={this.onToggleAllLayer}>{'Toggle'}</button>
           </div>
-          <div>
+          <div style = {containerItem}>
             {'Layers: '}
             <button onClick={(this.onPrevLayer)}>Prev</button>
             { this.state.layer.toFixed(0) + '/' + this.design.getOrigami(this.state.step).maxLayer}
             <button onClick={this.onNextLayer}>Next</button>
           </div>
-          <div>
+          <div style = {containerItem}>
             {'Steps: '}
             <button onClick={(this.onPrevStep)}>Prev</button>
             { this.state.step.toFixed(0) + '/' + (this.design.origamis.length-1).toFixed(0)}

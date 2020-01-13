@@ -49,6 +49,13 @@ export class FaceView extends Component {
           onMouseout = {this.handleMouseout}
           onClick = {this.handleClick}/>
         {lines}
+        <Text
+          x = {this.props.face.centroid.scale(this.props.paperLayout)[0]}
+          y = {this.props.face.centroid.scale(this.props.paperLayout)[1]}
+          text = {this.props.face.id}
+          align = {'center'}
+          alignVertical = {'middle'}
+        />
       </Group>
     );
   }
