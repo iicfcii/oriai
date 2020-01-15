@@ -39,13 +39,16 @@ export class EdgeView extends Component {
                   'Twin Parents',
                   twin?twin.parentFace1.id:'NA',
                   twin?twin.parentFace2.id:'NA');
+      console.log('Points',
+                  this.props.edge.p1,
+                  this.props.edge.p2);
     }
 
     this.getStrokeWidth = () => {
       if (this.state.mouseover){
-        return 8;
+        return 5;
       } else {
-        return 6;
+        return 3;
       }
     }
   }

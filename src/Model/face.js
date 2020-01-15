@@ -129,12 +129,14 @@ export class Face {
 
     if (!crease.p1.isOutsideFace(this) && !crease.p2.isOutsideFace(this) && !this.hasEdge(crease, true)){
       // Crease not outside face
+      console.log('Crease not outside face');
       return true;
     }
 
     for (let i = 0; i < this.edges.length; i ++){
       if (this.edges[i].intersectEdge(crease, false) !== null){
         // Face intersects with a crease
+        console.log('Face intersects with a crease');
         return true;
       }
     }
@@ -142,11 +144,11 @@ export class Face {
     let list = this.edgeIndexList(crease, true, null, false);
     if (list.length > 0){
       if (crease.parentFace1.overlapFace(this, true) || crease.parentFace2.overlapFace(this, true)){
-        // console.log(this.id, crease.p1, crease.p2, crease.parentFace1.id,crease.parentFace2.id)
         return list.some((index) => {
           if (!this.edges[index].isCrease) return false
           if (this.edges[index].parentFace2.layer > crease.topLayer ||
               this.edges[index].parentFace2.layer < crease.bottomLayer){
+            console.log('Crease crosses crease of face');
             return true;
           }
         })

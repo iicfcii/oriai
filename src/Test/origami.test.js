@@ -11,8 +11,8 @@ test('Should hide all layers', () => {
 
   expect(design.addStep(new Crease([1],crease1))).toBe(true);
   expect(design.addStep(new Crease([2],crease2))).toBe(true);
-  expect(design.addStep(new Fold([1],[crease1],[1]))).toBe(true);
-  expect(design.addStep(new Fold([3],[crease2],[-1]))).toBe(true);
+  expect(design.addStep(new Fold([1],crease1,[1]))).toBe(true);
+  expect(design.addStep(new Fold([3],crease2,[-1]))).toBe(true);
 
   let origami = design.getOrigami(4);
   origami.showLayersOnly([]);
@@ -28,8 +28,8 @@ test('Should show layer 1', () => {
 
   expect(design.addStep(new Crease([1],crease1))).toBe(true);
   expect(design.addStep(new Crease([2],crease2))).toBe(true);
-  expect(design.addStep(new Fold([1],[crease1],[1]))).toBe(true);
-  expect(design.addStep(new Fold([3],[crease2],[-1]))).toBe(true);
+  expect(design.addStep(new Fold([1],crease1,[1]))).toBe(true);
+  expect(design.addStep(new Fold([3],crease2,[-1]))).toBe(true);
 
   let origami = design.getOrigami(4);
   origami.showLayersOnly([1]);

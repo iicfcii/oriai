@@ -76,6 +76,13 @@ test('Should not intersect when collinear', () => {
   expect(e1.intersectEdge(e1)).toBe(null);
 });
 
+test('Should not intersect when collinear but has floating point error', () => {
+  let e1 = new Edge(new Point(0.7928932188134525,0.5),new Point(0.6464466094067263,0.6464466094067263));
+  let e2 = new Edge(new Point(0.7928932188134525,0.5),new Point(0.6464466094067263,0.646446609406726));
+
+  expect(e1.intersectEdge(e2)).toBe(null);
+});
+
 test('Should not intersect when parallel', () => {
   let e1 = new Edge(new Point(1,0),new Point(0,1));
   let e1p = new Edge(new Point(2,0),new Point(1,1));
@@ -112,6 +119,13 @@ test('Should intersect correctly with tolerance', () => {
   expect(p12 !== null).toBe(true);
 });
 
+test('Should intersect correctly with vertical edge with tolerance', () => {
+  let e1 = new Edge(new Point(0.5,0.5),new Point(0.7928932188134525,0.5));
+  let e2 = new Edge(new Point(0.646446609406726,0.14644660940672627),new Point(0.6464466094067263,0.6464466094067263));
+  let p12 = e1.intersectEdge(e2);
+
+  expect(p12 !== null).toBe(true);
+});
 
 test('Should mirror correctly', () => {
   let e1 = new Edge(new Point(0.5,0),new Point(0.5,0.5));

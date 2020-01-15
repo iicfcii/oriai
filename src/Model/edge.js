@@ -18,6 +18,10 @@ export class Edge {
     this.selected = false;
   }
 
+  static get TOLERANCE(){
+    return 1e-6;
+  }
+
   get isBoundary() {
     if (this.parentFace1 !== null && this.parentFace2 === null) return true;
 
@@ -107,7 +111,7 @@ export class Edge {
   // Will include both end points
   hasPoint(p, includeOutside){
     // Vertical, special case
-    if (this.p2.x-this.p1.x === 0){
+    if (Math.abs(this.p2.x-this.p1.x) < Edge.TOLERANCE){
       let delta = Math.abs(p.x-this.p1.x);
       if (delta < Point.TOLERANCE){
         if (includeOutside){
@@ -122,7 +126,7 @@ export class Edge {
     }
 
     // Horizontal, special case
-    if (this.p2.y-this.p1.y === 0){
+    if (Math.abs(this.p2.y-this.p1.y) < Edge.TOLERANCE){
       let delta = Math.abs(p.y-this.p1.y);
       if (delta < Point.TOLERANCE){
         if (includeOutside){
@@ -163,20 +167,31 @@ export class Edge {
   // Parallel(Overlap) means no intersection
   // Intersect at end points means no intersection
   intersectEdge(edge, infiniteLength){
-    // k12 slop of this
+    // k12 slope of this
     // kab slope of that
-    let k12 = (this.p2.y-this.p1.y)/(this.p2.x-this.p1.x);
-    let kab = (edge.p2.y-edge.p1.y)/(edge.p2.x-edge.p1.x);
-    // console.log(k12,kab);
+    let k12,kab;
+    if (Math.abs(this.p2.x-this.p1.x) > Edge.TOLERANCE){
+      k12 = (this.p2.y-this.p1.y)/(this.p2.x-this.p1.x);
+    }
+    if (Math.abs(edge.p2.x-edge.p1.x) > Edge.TOLERANCE){
+      kab = (edge.p2.y-edge.p1.y)/(edge.p2.x-edge.p1.x);
+    }
 
-    if (k12 === kab) return null; // Parallel, no intersection
+    if (k12 !== undefined && kab !== undefined){
+      if (Math.abs(k12-kab) <= Edge.TOLERANCE) return null; // Parallel, no intersection
+    }
+    if (k12 === undefined && kab === undefined){
+      // Both vertical no intersection.
+      return null;
+    }
+
 
     // Must have an intersection
     let x, y;
-    if (!isFinite(k12)){
+    if (k12 === undefined){
       x = this.p1.x;
       y = (x-edge.p1.x)*kab+edge.p1.y;
-    } else if (!isFinite(kab)){
+    } else if (kab === undefined){
       x = edge.p1.x;
       y = (x-this.p1.x)*k12+this.p1.y;
     } else {

@@ -6,6 +6,10 @@ import { EdgeView } from './edge-view';
 export class FaceView extends Component {
   constructor(props) {
     super(props);
+
+    this.ID_WIDTH = 20;
+    this.ID_HEIGHT = 10;
+
     this.state = {
       mouseover: false,
     }
@@ -43,18 +47,21 @@ export class FaceView extends Component {
         <Line
           points = {this.props.face.scale(this.props.paperLayout)}
           closed = {true}
-          fill = {this.state.mouseover? 'grey' : 'white'}
-          opacity = {this.state.mouseover? 0.9 : 1}
+          fill = {'white'}
+          opacity = {this.state.mouseover? 0.6 : 1}
           onMouseover = {this.handleMouseover}
           onMouseout = {this.handleMouseout}
           onClick = {this.handleClick}/>
         {lines}
         <Text
-          x = {this.props.face.centroid.scale(this.props.paperLayout)[0]}
-          y = {this.props.face.centroid.scale(this.props.paperLayout)[1]}
+          opacity = {this.state.mouseover? 0 : 1}
+          x = {this.props.face.centroid.scale(this.props.paperLayout)[0]-this.ID_WIDTH/2}
+          y = {this.props.face.centroid.scale(this.props.paperLayout)[1]-this.ID_HEIGHT/2}
+          width = {this.ID_WIDTH}
+          height = {this.ID_HEIGHT}
           text = {this.props.face.id}
           align = {'center'}
-          alignVertical = {'middle'}
+          verticalAlign = {'middle'}
         />
       </Group>
     );

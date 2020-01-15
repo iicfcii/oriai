@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { FaceView } from './face-view'
-import { Layer, Stage, Rect } from 'react-konva';
+import { Layer, Stage, Rect, Text } from 'react-konva';
 
 // Visuailize Face
 export class OrigamiView extends Component {

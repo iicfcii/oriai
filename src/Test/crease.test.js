@@ -11,7 +11,7 @@ test('Twin creases should have same parent faces', () => {
   let crease2 = new Edge(new Point(0.5,0.5),new Point(1,1));
 
   expect(design.addStep(new Crease([1],crease1))).toBe(true);
-  expect(design.addStep(new Fold([1],[crease1],[1]))).toBe(true);
+  expect(design.addStep(new Fold([1],crease1,[1]))).toBe(true);
   expect(design.addStep(new Crease([1],crease2))).toBe(true);
 
   let origami = design.getOrigami(3);

@@ -7,6 +7,8 @@ An 2D origami simulator for now.
 - Two faces can share an crease edge(two twin objects).
 - A crease breaks a face into two faces, the edges will also be broken.
 - A crease does not need to go through the entire paper.
+- A crease can affect multiple faces.
+- A fold can only be folded along a single crease.
 - A fold can affect multiple faces such as inside reverse fold, fold several layers together, sink fold.
 - A fold changes the edges of the faces.
 - A fold changes faces layers. Layer number is always >= 0.
@@ -47,6 +49,10 @@ An 2D origami simulator for now.
 ## TODO List
 - Better visualizer for origami structure.
 - Serialize origami object
+- Serialize steps
+- Auto generate random origami designs
+- Any complex fold with multiple faces and creases can be converted into
+mulitple simple folds with single creases?
 
 ## Hope List
 - Automatically generate origami creations and name them based on shape.

@@ -18,12 +18,12 @@ export class Crease {
   singleCrease(origami, faceID, crease){
     let face = origami.getFaceByID(faceID);
     if (!face){
-      console.log('No such face to creaes');
+      console.log('No such face to crease');
       return false;
     }
     let edge = face.intersectEdge(crease, true);
     if (edge === null) {
-      console.log('No such creaes');
+      console.log('No such crease');
       return false;
     }
 
