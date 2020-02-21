@@ -30,11 +30,34 @@ export class Point {
     // x' = x*Ctheta-y*Stheta
     // y' = x*Stheta+y*Ctheta
     let theta = angle/180*Math.PI; // to radian
+
+    let xTransformed = (this.x*Math.cos(theta)-this.y*Math.sin(theta))*ratio;
+    let yTransformed = (this.x*Math.sin(theta)+this.y*Math.cos(theta))*ratio;
+
+    // Translate the center of paper to origin
+    xTransformed = xTransformed-ratio/2*Math.sqrt(2)*Math.cos((45+angle)/180*Math.PI);
+    yTransformed = yTransformed-ratio/2*Math.sqrt(2)*Math.sin((45+angle)/180*Math.PI);
+
+    // Apply offset at last
+    if (!layout.isometric) return [xTransformed+x,yTransformed+y];
+
+    // Get before projection coordinate system
+    // Paper x and y becomes x and -z;
+    // Apply transformation matrix
+    // https://www.cs.bham.ac.uk/~slb/courses/Graphics/g65.html
     return [
-      (this.x*Math.cos(theta)-this.y*Math.sin(theta))*ratio+x,
-      (this.x*Math.sin(theta)+this.y*Math.cos(theta))*ratio+y,
+      0.7071*xTransformed+0*0+0.7071*(-yTransformed)+x,
+      0.4082*xTransformed+0.8166*0-0.4082*(-yTransformed)+y,
     ];
   }
+
+  // Return a flat list [x, y] after isometric projection
+  // isometric(layout) {
+  //   let x = 0.7071*this.x+0*this.y+0*0;
+  //   let y = 0.4082*this.x+0.8166*this.y-0.4082*0;
+  //
+  //   return [x,y];
+  // }
 
   // Directly modify the point
   mirror(edge) {

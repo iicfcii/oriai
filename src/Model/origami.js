@@ -73,15 +73,15 @@ export class Origami {
     return faces;
   }
 
-  showLayersOnly(layers){
-    this.faces.forEach((face) => {
-      if (layers.indexOf(face.layer) !== -1) {
-        face.isShown = true;
-      } else {
-        face.isShown = false;
-      }
-    });
-  }
+  // showLayersOnly(layers){
+  //   this.faces.forEach((face) => {
+  //     if (layers.indexOf(face.layer) !== -1) {
+  //       face.isShown = true;
+  //     } else {
+  //       face.isShown = false;
+  //     }
+  //   });
+  // }
 
   sortFaces(){
     this.faces.sort((face1, face2) => {

@@ -7,6 +7,8 @@ import { Point } from '../Model/point';
 import { Crease } from '../Model/crease';
 import { Fold } from '../Model/fold';
 import { Design } from '../Model/design';
+import { DesignGenerator } from '../Model/design-generator';
+
 
 import { OrigamiView } from './origami-view';
 
@@ -14,22 +16,27 @@ export class EditorView extends Component {
   constructor(props) {
     super(props);
 
-    this.design = new Design('Dog Face');
-    let crease1 = new Edge(new Point(1,0),new Point(0,1));
-    this.design.addStep(new Crease([1],crease1));
-    this.design.addStep(new Fold([1],crease1,[1]));
-    let crease2 = new Edge(new Point(0.6,0.4),new Point(1,0.3));
-    this.design.addStep(new Crease([1,2],crease2));
-    this.design.addStep(new Fold([3,2],crease2,[1,3]));
-    let crease3 = new Edge(new Point(0.4,0.6),new Point(0.3,1));
-    this.design.addStep(new Crease([1,4],crease3));
-    this.design.addStep(new Fold([5,6],crease3,[1,3]));
-    let crease4 = new Edge(new Point(1,0.7),new Point(0.7,1));
-    this.design.addStep(new Crease([1,4],crease4));
-    this.design.addStep(new Fold([1,8],crease4,[1,-1]));
-    let crease5 = new Edge(new Point(1,0.5),new Point(0.5,1));
-    this.design.addStep(new Crease([1],crease5));
-    this.design.addStep(new Fold([1],crease5,[1]));
+    // this.design = new Design('Test');
+    // let crease1 = new Edge(new Point(0,0.5),new Point(1,0.5));
+    // this.design.addStep(new Crease([1],crease1));
+    // this.design.addStep(new Fold([1],crease1,[1]));
+
+    // this.design = new Design('Dog Face');
+    // let crease1 = new Edge(new Point(1,0),new Point(0,1));
+    // this.design.addStep(new Crease([1],crease1));
+    // this.design.addStep(new Fold([1],crease1,[1]));
+    // let crease2 = new Edge(new Point(0.6,0.4),new Point(1,0.3));
+    // this.design.addStep(new Crease([1,2],crease2));
+    // this.design.addStep(new Fold([3,2],crease2,[1,3]));
+    // let crease3 = new Edge(new Point(0.4,0.6),new Point(0.3,1));
+    // this.design.addStep(new Crease([1,4],crease3));
+    // this.design.addStep(new Fold([5,6],crease3,[1,3]));
+    // let crease4 = new Edge(new Point(1,0.7),new Point(0.7,1));
+    // this.design.addStep(new Crease([1,4],crease4));
+    // this.design.addStep(new Fold([1,8],crease4,[1,-1]));
+    // let crease5 = new Edge(new Point(1,0.5),new Point(0.5,1));
+    // this.design.addStep(new Crease([1],crease5));
+    // this.design.addStep(new Fold([1],crease5,[1]));
 
     // this.design = new Design('Crane');
     // let crease1 = new Edge(new Point(1,0),new Point(0,1));
@@ -68,60 +75,38 @@ export class EditorView extends Component {
     // this.design.addStep(new Crease([10,5,2,27],crease10));
     // this.design.addStep(new Fold([30,10,2,32],crease10,[-1,-3,1,3]));
 
-    // this.design = new Design('Rabbit Ear Fold');
-    // let crease1 = new Edge(new Point(1,0),new Point(0,1));
-    // this.design.addStep(new Crease([1],crease1));
-    // this.design.addStep(new Fold([1],crease1,[1]));
-    // let crease2 = new Edge(new Point(0,0),new Point(1,1));
-    // this.design.addStep(new Crease([1,2],crease2));
-    // let a = 0.5-Math.tan(Math.PI/8)*1/Math.sin(Math.PI/4)/2*Math.cos(Math.PI/4);
-    // let b = 0.5+Math.tan(Math.PI/8)*1/Math.sin(Math.PI/4)/2*Math.sin(Math.PI/4);
-    // let crease3 = new Edge(new Point(a,b),new Point(1,1));
-    // this.design.addStep(new Crease([3,4],crease3));
-    // this.design.addStep(new Fold([5,4],crease3,[1,-1]));
-    // this.design.addStep(new Crease([4],crease1));
-    // this.design.addStep(new Fold([4,6,2],crease1,[-1,-3,-3]));
+    this.design = new Design('Rabbit Ear Fold');
+    let crease1 = new Edge(new Point(1,0),new Point(0,1));
+    this.design.addStep(new Crease([1],crease1));
+    this.design.addStep(new Fold([1],crease1,[1]));
+    let crease2 = new Edge(new Point(0,0),new Point(1,1));
+    this.design.addStep(new Crease([1,2],crease2));
+    let a = 0.5-Math.tan(Math.PI/8)*1/Math.sin(Math.PI/4)/2*Math.cos(Math.PI/4);
+    let b = 0.5+Math.tan(Math.PI/8)*1/Math.sin(Math.PI/4)/2*Math.sin(Math.PI/4);
+    let crease3 = new Edge(new Point(a,b),new Point(1,1));
+    this.design.addStep(new Crease([3,4],crease3));
+    this.design.addStep(new Fold([5,4],crease3,[1,-1]));
+    this.design.addStep(new Crease([4],crease1));
+    this.design.addStep(new Fold([4,6,2],crease1,[-1,-3,-3]));
 
     this.w = 600;
     this.h = 600;
-    // this.paperLayout = {
-    //   ratio: 400,
-    //   x: this.w/2,
-    //   y: (this.h-400*Math.sqrt(2))/2,
-    //   angle: 45,
-    // };
-    this.paperLayout = {
-      ratio: 400,
-      x: 100,
-      y: 100,
-      angle: 0,
-    };
 
-    let lastOrigami = this.design.origamis[this.design.origamis.length-1];
     this.state = {
-      layer: lastOrigami.layers[lastOrigami.layers.length-1],
       shouldShowAllLayers: true,
       step: this.design.origamis.length-1,
-    }
+      space: 0,
+      layerOffset: 0, // Unit: layer
+      info: '',
+    };
 
-    this.updateLayersVisibility(this.state.shouldShowAllLayers,this.state.layer,this.state.step);
-  }
-
-  updateLayersVisibility = (shouldShowAllLayers, layer, step) => {
-    if (shouldShowAllLayers){
-      this.design.getOrigami(step).showLayersOnly(this.design.getOrigami(step).layers);
-    } else {
-      this.design.getOrigami(step).showLayersOnly([layer]);
-    }
-  }
-
-  onToggleAllLayer = () => {
-    let nextVal = !this.state.shouldShowAllLayers;
-    this.updateLayersVisibility(nextVal,this.state.layer,this.state.step);
-
-    this.setState({
-      shouldShowAllLayers: nextVal,
-    })
+    this.layout = {
+      ratio: 400,
+      x: this.w/2,
+      y: this.h/2,
+      angle: 0,
+      isometric: true,
+    };
   }
 
   renderOptions = () => {
@@ -139,35 +124,12 @@ export class EditorView extends Component {
     return options;
   }
 
-  onPrevLayer = () => {
-    if (this.state.layer > this.design.getOrigami(this.state.step).minLayer){
-      let nextVal = this.state.layer - 1;
-      this.updateLayersVisibility(false,nextVal,this.state.step);
-      this.setState({
-        shouldShowAllLayers: false,
-        layer: nextVal,
-      });
-    }
-  }
-
-  onNextLayer = () => {
-    if (this.state.layer < this.design.getOrigami(this.state.step).maxLayer){
-      let nextVal = this.state.layer + 1;
-      this.updateLayersVisibility(false,nextVal,this.state.step);
-      this.setState({
-        shouldShowAllLayers: false,
-        layer: nextVal,
-      });
-    }
-  }
-
   onPrevStep = () => {
     if (this.state.step > 0){
       let origami = this.design.origamis[this.state.step - 1];
-      this.updateLayersVisibility(this.state.shouldShowAllLayers,origami.layers[origami.layers.length-1],this.state.step-1);
       this.setState({
-        layer: origami.layers[origami.layers.length-1],
-        step: this.state.step - 1
+        step: this.state.step - 1,
+        layerOffset: 0,
       });
     }
   }
@@ -175,34 +137,32 @@ export class EditorView extends Component {
   onNextStep = () => {
     if (this.state.step < this.design.origamis.length - 1){
       let origami = this.design.origamis[this.state.step + 1];
-      this.updateLayersVisibility(this.state.shouldShowAllLayers,origami.layers[origami.layers.length-1],this.state.step + 1);
       this.setState({
-        layer: origami.layers[origami.layers.length-1],
-        step: this.state.step + 1
+        step: this.state.step + 1,
+        layerOffset: 0,
       });
     }
   }
 
-  render() {
-    const container = {
-      height: this.h,
-      display: 'flex',
-      justifyContent: 'flex-start',
-      alignItems: 'flex-start',
-    };
-    const containerTool = {
-      height: this.h,
-      flex: 1,
-      display: 'flex',
-      flexDirection: 'column',
-      backgroundColor: 'white ',
-      justifyContent: 'flex-start',
-      alignItems: 'flex-start',
-    };
-    const containerItem = {
-      margin: '10px 0px',
-    };
+  onSpaceChange = (event) => {
+    let space = parseInt(event.target.value);
+    // Scale vertical offset with space
+    this.setState({
+      space:space,
+    });
+  }
 
+  onLayerOffsetChange = (event) => {
+    this.setState({layerOffset:parseInt(event.target.value)});
+  }
+
+  setInfo = (info) => {
+    this.setState({info: info});
+  }
+
+  render() {
+    // Update layout
+    this.layout.y = this.h/2+this.state.layerOffset*this.state.space;
 
     return (
       <div style = {container}>
@@ -210,32 +170,60 @@ export class EditorView extends Component {
           <OrigamiView
             w = {this.w}
             h = {this.h}
-            paperLayout = {this.paperLayout}
+            layout = {this.layout}
+            space = {this.state.space}
             origami = {this.design.getOrigami(this.state.step)}
+            setInfo = {this.setInfo}
           />
         </div>
         <div style = {containerTool}>
           <div style = {containerItem}>Tools</div>
+          <div style = {containerItem}>{'Info: ' + this.state.info}</div>
           <div style = {containerItem}>{'Total Faces: ' + this.design.getOrigami(this.state.step).faces.length}</div>
           <div style = {containerItem}>{'Total Layers: ' + this.design.getOrigami(this.state.step).layers}</div>
           <div style = {containerItem}>
-            {this.state.shouldShowAllLayers?'Showing all layers ':'Showing single layer '}
-            <button onClick={this.onToggleAllLayer}>{'Toggle'}</button>
-          </div>
-          <div style = {containerItem}>
-            {'Layers: '}
-            <button onClick={(this.onPrevLayer)}>Prev</button>
-            { this.state.layer.toFixed(0) + '/' + this.design.getOrigami(this.state.step).maxLayer}
-            <button onClick={this.onNextLayer}>Next</button>
-          </div>
-          <div style = {containerItem}>
             {'Steps: '}
-            <button onClick={(this.onPrevStep)}>Prev</button>
-            { this.state.step.toFixed(0) + '/' + (this.design.origamis.length-1).toFixed(0)}
+            <button onClick={this.onPrevStep}>Prev</button>
+            {this.state.step.toFixed(0) + '/' + (this.design.origamis.length-1).toFixed(0)}
             <button onClick={this.onNextStep}>Next</button>
+          </div>
+          <div style = {containerItem}>
+            {'Layer space: '}
+            <input type="range" min="0" max="50" value={this.state.space} step="10" onChange={this.onSpaceChange}/>
+            {' ' + this.state.space}
+          </div>
+          <div style = {containerItem}>
+            {'Layer offset: '}
+            <input
+              type="range"
+              min={-Math.floor((this.design.getOrigami(this.state.step).maxLayer+1)/2)}
+              max={Math.floor((this.design.getOrigami(this.state.step).maxLayer+1)/2)}
+              value={this.state.layerOffset}
+              step={1}
+              onChange={this.onLayerOffsetChange}/>
+              {' ' + this.state.layerOffset}
           </div>
         </div>
       </div>
     );
   }
 }
+
+const container = {
+  height: 600,
+  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+};
+const containerTool = {
+  height: 600,
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'column',
+  backgroundColor: 'white ',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+};
+const containerItem = {
+  margin: '10px 0px',
+};

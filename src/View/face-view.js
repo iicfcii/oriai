@@ -9,59 +9,63 @@ export class FaceView extends Component {
 
     this.ID_WIDTH = 20;
     this.ID_HEIGHT = 10;
+  }
 
-    this.state = {
-      mouseover: false,
-    }
+  handleMouseover = () => {
+    this.props.selection.setFaceOver(this.props.face);
+  }
 
-    this.handleMouseover = () => {
-      let str = 'ID: ' + this.props.face.id + ' Layer: ' + this.props.face.layer;
-      // console.log(str);
-      this.setState({mouseover: true,});
-    }
-
-    this.handleMouseout = () => {
-      this.setState({mouseover: false,});
-    }
-
-    this.handleClick = () => {
-      console.log(this.props.face)
-    }
+  handleMouseout = () => {
+    this.props.selection.setFaceOver(null);
   }
 
   render() {
-    if (!this.props.face.isShown) return null;
+    // Determine face opacity
+    let opacity = 1;
+    if (this.props.selection.faceOver){
+      if(this.props.face !== this.props.selection.faceOver) opacity = 0.1;
+    }
 
+    // Prepare edges
     let lines = [];
     this.props.face.edges.forEach((edge) => {
+      let edgeOver = this.props.selection.edgeOver;
+      let isOver = false;
+      if(edgeOver){
+        isOver = edge === edgeOver || edge === edgeOver.twin;
+      }
+
       lines.push(
         <EdgeView
           key = {edge.key}
           edge = {edge}
-          paperLayout = {this.props.paperLayout}/>
+          over = {isOver}
+          opacity = {opacity}
+          layout = {this.props.layout}
+          selection = {this.props.selection}/>
       );
     });
 
     return (
       <Group>
         <Line
-          points = {this.props.face.scale(this.props.paperLayout)}
+          points = {this.props.face.scale(this.props.layout)}
           closed = {true}
           fill = {'white'}
-          opacity = {this.state.mouseover? 0.6 : 1}
           onMouseover = {this.handleMouseover}
           onMouseout = {this.handleMouseout}
-          onClick = {this.handleClick}/>
+          onClick = {this.handleClick}
+          opacity = {opacity}/>
         {lines}
         <Text
-          opacity = {this.state.mouseover? 0 : 1}
-          x = {this.props.face.centroid.scale(this.props.paperLayout)[0]-this.ID_WIDTH/2}
-          y = {this.props.face.centroid.scale(this.props.paperLayout)[1]-this.ID_HEIGHT/2}
+          x = {this.props.face.centroid.scale(this.props.layout)[0]-this.ID_WIDTH/2}
+          y = {this.props.face.centroid.scale(this.props.layout)[1]-this.ID_HEIGHT/2}
           width = {this.ID_WIDTH}
           height = {this.ID_HEIGHT}
           text = {this.props.face.id}
           align = {'center'}
           verticalAlign = {'middle'}
+          opacity = {opacity}
         />
       </Group>
     );

@@ -5,67 +5,38 @@ import { Line } from 'react-konva';
 export class EdgeView extends Component {
   constructor(props) {
     super(props);
+  }
 
-    this.state = {
-      mouseover: false,
-    }
+  handleMouseover = () => {
+    this.props.selection.setEdgeOver(this.props.edge);
+  }
 
-    this.handleMouseover = () => {
-      let newState = {
-        mouseover: true,
-      }
+  handleMouseout = () => {
+    this.props.selection.setEdgeOver(null);
+  }
 
-      // console.log(this.props.edge);
-      let str = 'p1(' + this.props.edge.p1.x + ', ' + this.props.edge.p1.y + ')' +
-               ' p2(' + this.props.edge.p2.x + ', ' + this.props.edge.p2.y + ')';
-      // console.log(str);
-      this.setState(newState);
-    }
-
-    this.handleMouseout = () => {
-      let newState = {
-        mouseover: false,
-      }
-
-      this.setState(newState);
-    }
-
-    this.handleClick = () => {
-      if (!this.props.edge.isCrease) return;
-      let twin = this.props.edge.twin;
-      console.log('Parents',
-                  this.props.edge.parentFace1.id,
-                  this.props.edge.parentFace2.id,
-                  'Twin Parents',
-                  twin?twin.parentFace1.id:'NA',
-                  twin?twin.parentFace2.id:'NA');
-      console.log('Points',
-                  this.props.edge.p1,
-                  this.props.edge.p2);
-    }
-
-    this.getStrokeWidth = () => {
-      if (this.state.mouseover){
-        return 5;
-      } else {
-        return 3;
-      }
-    }
+  handleClick = () => {
+    // if (!this.props.edge.isCrease) return;
+    // let twin = this.props.edge.twin;
+    // console.log('Parents',
+    //             this.props.edge.parentFace1.id,
+    //             this.props.edge.parentFace2.id,
+    //             'Twin Parents',
+    //             twin?twin.parentFace1.id:'NA',
+    //             twin?twin.parentFace2.id:'NA');
+    // console.log('Points',
+    //             this.props.edge.p1,
+    //             this.props.edge.p2);
   }
 
   render() {
-    let p = this.props.edge.scale(this.props.paperLayout);
-    let c = 'black';
-
-    if (!this.props.edge.isBoundary){
-      c = 'red';
-    }
-
     return (
       <Line
-        points = {p}
-        stroke = {c}
-        strokeWidth = {this.getStrokeWidth()}
+        opacity = {this.props.opacity}
+        points = {this.props.edge.scale(this.props.layout)}
+        stroke = {this.props.edge.isBoundary?'black':'red'}
+        strokeWidth = {this.props.over?5:3}
+        hitStrokeWidth = {10}
         lineCap = 'round'
         lineJoint = 'round'
         onMouseover = {this.handleMouseover}

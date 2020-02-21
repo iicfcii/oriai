@@ -10,29 +10,28 @@ export class Face {
     this.layer = 0; // Layer of the face, change after fold
     this.id = null;
     if (id !== undefined) this.id = id;
-    this.selected = false;
-    this.isShown = true;
   }
 
   // Unique string key to identify the face
   // TODO: need to add depth to truly be unique
   get key(){
-    let key = this.polygonFlat.map(String);
-    key.push(this.layer.toString()); // Add depth
-    return key.join('');
+    // let key = this.polygonFlat.map(String);
+    // key.push(this.layer.toString()); // Add depth
+    // return key.join('');
+    return 'face' + this.id;
   }
 
   // Get the polygon points in an flat array
-  get polygonFlat(){
-    let points = [];
-    // Add points to the array
-    this.edges.forEach((edge) => {
-      points.push(edge.p1.x);
-      points.push(edge.p1.y);
-    });
-
-    return points;
-  }
+  // get polygonFlat(){
+  //   let points = [];
+  //   // Add points to the array
+  //   this.edges.forEach((edge) => {
+  //     points.push(edge.p1.x);
+  //     points.push(edge.p1.y);
+  //   });
+  //
+  //   return points;
+  // }
 
   get centroid(){
     let xSum = 0;

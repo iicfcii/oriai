@@ -96,6 +96,8 @@ export class Fold {
     // NOTE: When a face is folded twice with same directions,
     // the face will move to another layer.
 
+    // NOTE: two faces folded around the same crease can flip the paper
+
     // Check overlap
     if (desiredLayer >= 0 && desiredLayer <= origami.maxLayer){
       // Check whether folded face is overlapping other face

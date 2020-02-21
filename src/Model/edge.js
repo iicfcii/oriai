@@ -69,7 +69,7 @@ export class Edge {
     return key.join('');
   }
 
-  scale(layout) {
+  scale(layout, isIsometric) {
     let p1 = this.p1.scale(layout);
     let p2 = this.p2.scale(layout);
     return p1.concat(p2);

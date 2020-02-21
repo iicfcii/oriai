@@ -47,10 +47,11 @@ An 2D origami simulator for now.
   - do(origami)
 
 ## TODO List
-- Better visualizer for origami structure.
+- Hide layers
+- Step description
 - Serialize origami object
 - Serialize steps
-- Auto generate random origami designs
+- Auto generate random origami designs, NOT USEFUL
 - Any complex fold with multiple faces and creases can be converted into
 mulitple simple folds with single creases?
 
