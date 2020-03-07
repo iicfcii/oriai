@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { EditorView } from './View/editor-view';
+import { EditorView } from './View/EditorView';
 
 class App extends Component {
   constructor(props) {

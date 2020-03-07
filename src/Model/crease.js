@@ -7,6 +7,12 @@ export class Crease {
     this.crease = crease;
   }
 
+  getDescription(){
+    return 'Crease faces ' + this.faceIDs + ' along line (' +
+           this.crease.p1.x.toFixed(2) + ', '+ this.crease.p1.y.toFixed(2) + ') to (' +
+           this.crease.p2.x.toFixed(2) + ', '+ this.crease.p2.y.toFixed(2) + ')';
+  }
+
   do(origami){
     return this.faceIDs.every((faceID) => {
       return this.singleCrease(origami, faceID, this.crease)

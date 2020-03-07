@@ -5,6 +5,13 @@ export class Fold {
     this.directions = directions;
   }
 
+  getDescription(){
+    return 'Fold faces ' + this.faceIDs + ' along line (' +
+           this.crease.p1.x.toFixed(2) + ', '+ this.crease.p1.y.toFixed(2) + ') to (' +
+           this.crease.p2.x.toFixed(2) + ', '+ this.crease.p2.y.toFixed(2) + ')' +
+           ' up ' + this.directions + ' layers';
+  }
+
   do(origami){
     let isFoldFailed = this.faceIDs.some((faceID, index) => {
       return this.singleFold(origami, faceID, this.crease, this.directions[index]) === false;

@@ -47,8 +47,8 @@ An 2D origami simulator for now.
   - do(origami)
 
 ## TODO List
-- Hide layers
-- Step description
+- Add step (enter point and directions)
+- Remove step
 - Serialize origami object
 - Serialize steps
 - Auto generate random origami designs, NOT USEFUL

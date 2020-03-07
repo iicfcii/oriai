@@ -8,6 +8,10 @@ export class Point {
     return 1e-6;
   }
 
+  get key(){
+    return this.x.toFixed(2)+this.y.toFixed(2);
+  }
+
   get copy(){
     return new Point(this.x, this.y);
   }

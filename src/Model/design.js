@@ -23,8 +23,11 @@ export class Design {
     return isSuccessful;
   }
 
-  getOrigami(stepIndex){
-    if (stepIndex > this.origamis.length-1) return;
-    return this.origamis[stepIndex];
+  getOrigami(origamiIndex){
+    return this.origamis[origamiIndex];
+  }
+
+  getStep(stepIndex){
+    return this.steps[stepIndex];
   }
 }
