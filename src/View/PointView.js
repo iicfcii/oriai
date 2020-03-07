@@ -7,28 +7,33 @@ export class PointView extends Component {
 
   }
 
-  onMouseover = () => {
-    let info = 'Point (' + this.props.point.x.toFixed(2) +
-               ', ' + this.props.point.y.toFixed(2) +
-               ')';
+  onClick = () => {
+    let index = this.props.pointSelected.indexOf(this.props.point);
+    let newPointSelected = this.props.pointSelected.slice(); // Make a copy
+    if (index !== -1) {
+      // Already selected, deselect
+      newPointSelected.splice(index,1);
+    } else {
+      newPointSelected.push(this.props.point);
+    }
+
+    let info = '';
+    if (newPointSelected.length === 1){
+      info = 'Point (' + newPointSelected[0].x.toFixed(2) +
+             ', ' + newPointSelected[0].y.toFixed(2) +
+             ')';
+    } else if (newPointSelected.length > 1){
+      info = 'Multiple points selected';
+    } else {
+    }
     this.props.update({
       info: info,
-      pointOver: this.props.point
+      pointSelected: newPointSelected,
     });
-  }
-
-  onMouseout = () => {
-    this.props.update({
-      info: '',
-      pointOver: null
-    });
-  }
-
-  onClick = () => {
   }
 
   render() {
-    let isOver = this.props.pointOver === this.props.point;
+    let isSelected = this.props.pointSelected.indexOf(this.props.point) !== -1;
     let point = this.props.point.scale(this.props.layout);
 
     return (
@@ -36,11 +41,9 @@ export class PointView extends Component {
         opacity = {this.props.opacity}
         x = {point[0]}
         y = {point[1]}
-        radius = {isOver?5:3}
+        radius = {isSelected?5:3}
         fill = {'red'}
         hitStrokeWidth = {10}
-        onMouseover = {this.onMouseover}
-        onMouseout = {this.onMouseout}
         onClick = {this.onClick}/>
     );
   }

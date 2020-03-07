@@ -13,6 +13,15 @@ export class OrigamiView extends Component {
     this.LABEL_OFFSET = 5;
   }
 
+  onClick = () => {
+    this.props.update({
+      info: '',
+      pointSelected: [],
+      edgeSelected: [],
+      faceSelected: [],
+    });
+  }
+
   renderFaces =() => {
     let faces = [];
     this.props.origami.faces.forEach((face) => {
@@ -31,10 +40,9 @@ export class OrigamiView extends Component {
           face = {face}
           layout = {layout}
           space = {this.props.space}
-          pointOver = {this.props.pointOver}
-          edgeOver = {this.props.edgeOver}
-          faceOver = {this.props.faceOver}
           faceSelected = {this.props.faceSelected}
+          edgeSelected = {this.props.edgeSelected}
+          pointSelected = {this.props.pointSelected}
           update = {this.props.update}/>
       );
     });
@@ -62,42 +70,35 @@ export class OrigamiView extends Component {
           y = {0}
           width = {this.props.dimension.width}
           height = {this.props.dimension.height}
-          fill = '#f0f0f0'>
+          fill = '#f0f0f0'
+          onClick = {this.onClick}>
         </Rect>
         <Line
           points = {frame}
           closed = {true}
           stroke = {'black'}
           strokeWidth = {1}
-          opacity = {this.LABEL_OPACITY}/>
+          listening = {false}/>
         <Circle
           x = {frame[0]}
           y = {frame[1]}
           radius = {2}
-          fill = {'black'}
-          opacity = {this.LABEL_OPACITY}
-        />
+          fill = {'black'}/>
         <Circle
           x = {frame[2]}
           y = {frame[3]}
           radius = {2}
-          fill = {'black'}
-          opacity = {this.LABEL_OPACITY}
-        />
+          fill = {'black'}/>
         <Circle
           x = {frame[4]}
           y = {frame[5]}
           radius = {2}
-          fill = {'black'}
-          opacity = {this.LABEL_OPACITY}
-        />
+          fill = {'black'}/>
         <Circle
           x = {frame[6]}
           y = {frame[7]}
           radius = {2}
-          fill = {'black'}
-          opacity = {this.LABEL_OPACITY}
-        />
+          fill = {'black'}/>
         <Text
           x = {frame[0]-this.LABEL_WIDTH/2}
           y = {frame[1]-this.LABEL_HEIGHT-this.LABEL_OFFSET}
@@ -107,9 +108,7 @@ export class OrigamiView extends Component {
           text = {'(0, 0)'}
           align = {'center'}
           verticalAlign = {'middle'}
-          opacity = {this.LABEL_OPACITY}
-          listening = {false}
-        />
+          listening = {false}/>
         <Text
           x = {frame[2]+this.LABEL_OFFSET}
           y = {frame[3]-this.LABEL_HEIGHT/2}
@@ -119,9 +118,7 @@ export class OrigamiView extends Component {
           text = {'(1, 0)'}
           align = {'left'}
           verticalAlign = {'middle'}
-          opacity = {this.LABEL_OPACITY}
-          listening = {false}
-        />
+          listening = {false}/>
         <Text
           x = {frame[4]-this.LABEL_WIDTH/2}
           y = {frame[5]+this.LABEL_OFFSET}
@@ -131,9 +128,7 @@ export class OrigamiView extends Component {
           text = {'(1, 1)'}
           align = {'center'}
           verticalAlign = {'middle'}
-          opacity = {this.LABEL_OPACITY}
-          listening = {false}
-        />
+          listening = {false}/>
         <Text
           x = {frame[6]-this.LABEL_WIDTH-this.LABEL_OFFSET}
           y = {frame[7]-this.LABEL_HEIGHT/2}
@@ -143,9 +138,7 @@ export class OrigamiView extends Component {
           text = {'(0, 1)'}
           align = {'right'}
           verticalAlign = {'middle'}
-          opacity = {this.LABEL_OPACITY}
-          listening = {false}
-        />
+          listening = {false}/>
       </Layer>
     );
   }

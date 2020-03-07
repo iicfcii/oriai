@@ -96,9 +96,6 @@ export class EditorView extends Component {
       space: 0,
       layer: 0, // Unit: layer
       info: '',
-      pointOver: null,
-      edgeOver: null,
-      faceOver: null,
       pointSelected: [],
       edgeSelected: [],
       faceSelected: [],
@@ -133,9 +130,8 @@ export class EditorView extends Component {
           layout = {this.layout}
           space = {this.state.space}
           layer = {this.state.layer}
-          pointOver = {this.state.pointOver}
-          edgeOver = {this.state.edgeOver}
-          faceOver = {this.state.faceOver}
+          pointSelected = {this.state.pointSelected}
+          edgeSelected = {this.state.edgeSelected}
           faceSelected = {this.state.faceSelected}
           update = {this.update}
         />
@@ -149,6 +145,7 @@ export class EditorView extends Component {
         />
         <EditView
           design = {this.design}
+          pointSelected = {this.state.pointSelected}
           faceSelected = {this.state.faceSelected}
           update = {this.update}
         />

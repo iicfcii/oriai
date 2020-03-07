@@ -49,6 +49,7 @@ An 2D origami simulator for now.
 ## TODO List
 - Add step (enter point and directions)
 - Remove step
+- Visuailize step to add
 - Serialize origami object
 - Serialize steps
 - Auto generate random origami designs, NOT USEFUL

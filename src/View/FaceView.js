@@ -12,54 +12,41 @@ export class FaceView extends Component {
     this.ID_HEIGHT = 10;
   }
 
-  onMouseover = () => {
-    this.props.update({
-      info: 'Face ' + this.props.face.id + ' is on layer ' + this.props.face.layer,
-      faceOver: this.props.face
-    });
-  }
-
-  onMouseout = () => {
-    this.props.update({
-      info: '',
-      faceOver: null
-    });
-  }
-
   onClick = () => {
     let index = this.props.faceSelected.indexOf(this.props.face);
+    let newFaceSelected = this.props.faceSelected.slice();
     if (index !== -1) {
       // Already selected, deselect
-      let newFaceSelected = this.props.faceSelected.slice(); // Make a copy
       newFaceSelected.splice(index,1);
-      this.props.update({
-        faceSelected: newFaceSelected,
-      });
     } else {
-      let newFaceSelected = this.props.faceSelected.slice(); // Make a copy
       newFaceSelected.push(this.props.face);
-      this.props.update({
-        faceSelected: newFaceSelected,
-      });
     }
 
+    let info = '';
+    if (newFaceSelected.length === 1){
+      info = 'Face ' + newFaceSelected[0].id + ' is on layer ' + newFaceSelected[0].layer;
+    } else if (newFaceSelected.length > 1){
+      info = 'Multiple faces selected';
+    } else {
+    }
+    this.props.update({
+      info: info,
+      faceSelected: newFaceSelected,
+    });
   }
 
   renderEdges = (opacity) => {
     // Prepare edges
     let edges = [];
     this.props.face.edges.forEach((edge) => {
-      let edgeOver = this.props.edgeOver;
-      let isOver = false;
-      if(edgeOver){
-        isOver = edge === edgeOver || edge === edgeOver.twin;
-      }
-
+      // if(edgeOver){
+      //   isOver = edge === edgeOver || edge === edgeOver.twin;
+      // }
       edges.push(
         <EdgeView
           key = {edge.key}
           edge = {edge}
-          over = {isOver}
+          edgeSelected = {this.props.edgeSelected}
           opacity = {opacity}
           layout = {this.props.layout}
           update = {this.props.update}/>
@@ -76,7 +63,7 @@ export class FaceView extends Component {
         <PointView
           key = {edge.parentFace1.id+edge.p1.key}
           point = {edge.p1}
-          pointOver = {this.props.pointOver}
+          pointSelected = {this.props.pointSelected}
           opacity = {opacity}
           layout = {this.props.layout}
           update = {this.props.update}/>
@@ -98,8 +85,6 @@ export class FaceView extends Component {
         points = {this.props.face.scale(this.props.layout)}
         closed = {true}
         fill = {color}
-        onMouseover = {this.onMouseover}
-        onMouseout = {this.onMouseout}
         onClick = {this.onClick}
         opacity = {opacity}/>
     );

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Point } from '../Model/point'
+import { SelectEdgeView } from './SelectEdgeView'
 
 export class EditView extends Component {
   constructor(props) {
@@ -6,10 +8,15 @@ export class EditView extends Component {
 
     this.state = {
       type: 'Crease',
-      isAddingFace: false,
     }
 
+    // Not owned by this component
+    // Only reflecting changes
     this.faceIDs = [];
+
+    // Will be updated by child
+    this.p1 = null;
+    this.p2 = null;
   }
 
   onTypeChange = () => {
@@ -21,33 +28,30 @@ export class EditView extends Component {
     }
   }
 
-  onAddFace = () => {
+  onSelectFace = () => {
     this.props.update({faceSelected: []}); // Clear selection
     this.setState({
-      isAddingFace: !this.state.isAddingFace,
+      isSelectingFace: !this.state.isSelectingFace,
     })
   }
 
-  getFaceSelected = () => {
+  updateFaceSelected = () => {
     // Updates every time props change
-    if (this.state.isAddingFace){
+    if (this.state.isSelectingFace){
       let faceIDs = [];
       this.props.faceSelected.forEach((face) => {
         faceIDs.push(face.id);
       });
       this.faceIDs = faceIDs;
     }
-
-    return this.faceIDs;
   }
-
 
   renderDirections = () => {
     if(this.state.type === 'Fold'){
       let inputs = [];
       this.faceIDs.forEach((id, i) => {
         inputs.push(
-          <span>
+          <span key={id}>
             <input type="text" size="5"/>
             {i === this.faceIDs.length-1?'':', '}
           </span>
@@ -67,6 +71,8 @@ export class EditView extends Component {
   }
 
   render() {
+    this.updateFaceSelected();
+
     return(
       <div style = {container}>
         <div style = {containerRow}>
@@ -84,22 +90,15 @@ export class EditView extends Component {
           <button onClick={this.onTypeChange}>{this.state.type}</button>
         </div>
         <div style = {containerRow}>
-          {'Faces ' + this.getFaceSelected() + ' '}
-          <button onClick={this.onAddFace}>{this.state.isAddingFace?'Finish':'Add'}</button>
-          <button onClick={this.onDeleteFace}>Delete</button>
+          {'Faces ' + this.faceIDs + ' '}
+          <button onClick={this.onSelectFace}>{this.state.isSelectingFace?'Finish':'Select'}</button>
         </div>
         <div style = {containerRow}>
-          {'Along line ('}
-          <input type="text" size="5"/>
-          {', '}
-          <input type="text" size="5"/>
-          {') to ('}
-          <input type="text" size="5"/>
-          {', '}
-          <input type="text" size="5"/>
-          {') '}
-          <button onClick={null}>{'Select'}</button>
-          <button onClick={null}>Delete</button>
+          <SelectEdgeView
+            pointSelected = {this.props.pointSelected}
+            update = {this.props.update}
+            setP1 = {(p) => {this.p1 = p;}}
+            setP2 = {(p) => {this.p2 = p;}}/>
         </div>
         {this.renderDirections()}
         <div style = {containerRow}>
