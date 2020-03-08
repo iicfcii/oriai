@@ -1,22 +1,22 @@
 import React, { Component } from 'react';
-import { Point } from '../Model/point'
-import { SelectEdgeView } from './SelectEdgeView'
+import { Edge } from '../Model/edge'
+import { Crease } from '../Model/crease'
+import { SetFaceView } from './SetFaceView'
+import { SetEdgeView } from './SetEdgeView'
+import { SetDirectionView } from './SetDirectionView'
 
 export class EditView extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      type: 'Crease',
+      type: 'Fold',
+      faceIDs: [],
+      p1: null,
+      p2: null,
+      directions: [], // Relate to faceIDs
     }
 
-    // Not owned by this component
-    // Only reflecting changes
-    this.faceIDs = [];
-
-    // Will be updated by child
-    this.p1 = null;
-    this.p2 = null;
   }
 
   onTypeChange = () => {
@@ -28,51 +28,51 @@ export class EditView extends Component {
     }
   }
 
-  onSelectFace = () => {
-    this.props.update({faceSelected: []}); // Clear selection
-    this.setState({
-      isSelectingFace: !this.state.isSelectingFace,
-    })
-  }
+  onAddStep = () => {
+    if (this.state.type === 'Crease'){
+      // Check selections are all set
+      if (this.state.faceIDs.length > 0 &&
+          this.state.p1 !== null &&
+          this.state.p2 !== null){
+        // Add step
+        let step = new Crease(this.state.faceIDs, new Edge(this.state.p1, this.state.p2));
+        this.props.design.addStep(step);
 
-  updateFaceSelected = () => {
-    // Updates every time props change
-    if (this.state.isSelectingFace){
-      let faceIDs = [];
-      this.props.faceSelected.forEach((face) => {
-        faceIDs.push(face.id);
-      });
-      this.faceIDs = faceIDs;
+        // Update steps
+        this.props.update({
+          step: this.props.design.origamis.length-1,
+        });
+        // Reset selections
+        this.setState({
+          faceIDs: [],
+          p1: null,
+          p2: null,
+        });
+      } else {
+        console.log('Not fully defined');
+      }
     }
   }
 
   renderDirections = () => {
-    if(this.state.type === 'Fold'){
-      let inputs = [];
-      this.faceIDs.forEach((id, i) => {
-        inputs.push(
-          <span key={id}>
-            <input type="text" size="5"/>
-            {i === this.faceIDs.length-1?'':', '}
-          </span>
-        );
-      });
+    if(this.state.type === 'Crease') return null;
 
-      return (
-        <div style = {containerRow}>
-          {'Up '}
-          {inputs}
-          {' layers'}
-        </div>
-      );
-    }
+    return (
+      <div style = {containerRow}>
+        <SetDirectionView
+          faceIDs = {this.state.faceIDs}
+          directions = {this.state.directions}
+          update = {this.props.update}
+          updateEdit = {this.updateEdit}/>
+      </div>
+    );
+  }
 
-    return null;
+  updateEdit = (state) => {
+    this.setState(state);
   }
 
   render() {
-    this.updateFaceSelected();
-
     return(
       <div style = {container}>
         <div style = {containerRow}>
@@ -90,19 +90,23 @@ export class EditView extends Component {
           <button onClick={this.onTypeChange}>{this.state.type}</button>
         </div>
         <div style = {containerRow}>
-          {'Faces ' + this.faceIDs + ' '}
-          <button onClick={this.onSelectFace}>{this.state.isSelectingFace?'Finish':'Select'}</button>
+          <SetFaceView
+            faceIDs = {this.state.faceIDs}
+            faceSelected = {this.props.faceSelected}
+            update = {this.props.update}
+            updateEdit = {this.updateEdit}/>
         </div>
         <div style = {containerRow}>
-          <SelectEdgeView
+          <SetEdgeView
+            p1 = {this.state.p1}
+            p2 = {this.state.p2}
             pointSelected = {this.props.pointSelected}
             update = {this.props.update}
-            setP1 = {(p) => {this.p1 = p;}}
-            setP2 = {(p) => {this.p2 = p;}}/>
+            updateEdit = {this.updateEdit}/>
         </div>
         {this.renderDirections()}
         <div style = {containerRow}>
-          <button onClick={null}>Add Step</button>
+          <button onClick={this.onAddStep}>Add Step</button>
         </div>
         <div style = {containerRow}>
           <button onClick={null}>Delete Last Step</button>
