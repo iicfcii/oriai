@@ -6,8 +6,6 @@ export class SetEdgeView extends Component {
     super(props);
 
     this.state = {
-      canEditP1: true,
-      canEditP2: true,
     }
   }
 
@@ -16,20 +14,20 @@ export class SetEdgeView extends Component {
       <div>
         {'Along line '}
         <SetPointView
+          id = {'p1'}
           point = {this.props.p1}
+          editing = {this.props.editing}
           pointSelected = {this.props.pointSelected}
-          canEdit = {this.state.canEditP1}
-          setCanEditOther = {(canEdit) => {this.setState({canEditP2: canEdit})}}
           update = {this.props.update}
-          updatePoint = {(point) => {this.props.updateEdit({p1: point});}}/>
+          updateEdit = {this.props.updateEdit}/>
         {'to '}
         <SetPointView
+          id = {'p2'}
           point = {this.props.p2}
+          editing = {this.props.editing}
           pointSelected = {this.props.pointSelected}
-          canEdit = {this.state.canEditP2}
-          setCanEditOther = {(canEdit) => {this.setState({canEditP1: canEdit})}}
           update = {this.props.update}
-          updatePoint = {(point) => {this.props.updateEdit({p2: point});}}/>
+          updateEdit = {this.props.updateEdit}/>
       </div>
     );
   }
@@ -48,14 +46,12 @@ class SetPointView extends Component {
   }
 
   onSelect = () => {
-    if (this.state.isInputting || !this.props.canEdit) return;
+    if (this.state.isInputting) return;
     this.props.update({pointSelected: []}); // Clear selection
 
-    this.props.setCanEditOther(this.state.isSelecting); // Not next isSelecting
+    this.props.updateEdit({editing: this.state.isSelecting?null:this.props.id});
 
-    this.setState({
-      isSelecting: !this.state.isSelecting,
-    })
+    this.setState({isSelecting: !this.state.isSelecting})
   }
 
   onInput = () => {
@@ -64,23 +60,15 @@ class SetPointView extends Component {
     let px = '';
     let py = '';
 
-    if (this.state.isInputting){
-      // Finish input
-      let x = parseFloat(this.state.px);
-      let y = parseFloat(this.state.py);
-
-      if (!isNaN(x) && !isNaN(y)){
-        this.props.updatePoint(new Point(x, y));
-      } else {
-        this.props.updatePoint(null);
-      }
-    } else {
+    if (!this.state.isInputting){
       // Start input
       if (this.props.point){
         px = this.props.point.x.toFixed(5);
         py = this.props.point.y.toFixed(5);
       }
     }
+
+    this.props.updateEdit({editing: this.state.isInputting?null:this.props.id});
 
     this.setState({
       px: px,
@@ -89,14 +77,27 @@ class SetPointView extends Component {
     })
   }
 
-  onPxChange = (event) => {
-    // console.log(event.target.value)
-    this.setState({px: event.target.value});
-  }
 
-  onPyChange = (event) => {
-    // console.log(event.target.value)
-    this.setState({py: event.target.value});
+  onInputChange = (event, p) => {
+    let x;
+    let y;
+    if (p === 'px'){
+      x = parseFloat(event.target.value);
+      y = parseFloat(this.state.py);
+    } else if(p === 'py')  {
+      x = parseFloat(this.state.px);
+      y = parseFloat(event.target.value);
+    } else {
+      // wrong point
+    }
+
+    if (!isNaN(x) && !isNaN(y)){
+      this.props.updateEdit({[this.props.id]: new Point(x, y)});
+    } else {
+      this.props.updateEdit({[this.props.id]: null});
+    }
+
+    this.setState({[p]: event.target.value});
   }
 
   getPoint = () => {
@@ -112,17 +113,30 @@ class SetPointView extends Component {
   }
 
   componentDidUpdate(){
-    // Update state when props change
-    if (!this.state.isSelecting) return;
+    // Update state when props change and is selecting or inputting
+    if (!this.state.isSelecting && !this.state.isInputting) return;
 
-    if (this.props.pointSelected.length === 1){
-      if (this.props.point === null ||
-          !this.props.pointSelected[0].isEqual(this.props.point))
-      this.props.updatePoint(this.props.pointSelected[0]);
+    if (this.props.editing !== this.props.id){
+      this.props.update({pointSelected: []}); // Clear selection
+      if(this.state.isSelecting) this.setState({isSelecting: !this.state.isSelecting,});
+      if(this.state.isInputting) this.setState({isInputting: !this.state.isInputting,});
+      return;
     }
 
-    if (this.props.pointSelected.length > 1 || this.props.pointSelected.length === 0){
-      if (this.props.point) this.props.updatePoint(null);
+    // Update selected point when selecting
+    if (this.state.isSelecting){
+      if (this.props.pointSelected.length === 1){
+        if (this.props.point === null ||
+            !this.props.pointSelected[0].isEqual(this.props.point)){
+          this.props.updateEdit({[this.props.id]: this.props.pointSelected[0]});
+        }
+      }
+
+      if (this.props.pointSelected.length > 1 || this.props.pointSelected.length === 0){
+        if (this.props.point){
+          this.props.updateEdit({[this.props.id]: null});
+        }
+      }
     }
   }
 
@@ -134,14 +148,14 @@ class SetPointView extends Component {
           type="text"
           size="5"
           value={this.getPoint()[0]}
-          onChange={this.onPxChange}
+          onChange={(event) => {this.onInputChange(event, 'px')}}
           disabled = {this.state.isInputting?false:true}/>
         {', '}
         <input
           type="text"
           size="5"
           value={this.getPoint()[1]}
-          onChange={this.onPyChange}
+          onChange={(event) => {this.onInputChange(event, 'py')}}
           disabled = {this.state.isInputting?false:true}/>
         {') '}
         <button onClick={this.onSelect}>{this.state.isSelecting?'Finish':'Select'}</button>

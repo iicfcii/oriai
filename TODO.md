@@ -47,9 +47,9 @@ An 2D origami simulator for now.
   - do(origami)
 
 ## TODO List
-- Add step (enter point and directions)
-- Auto finish when other options are selected
+- Show failure message
 - Remove step
+- Better crease or selection
 - Visuailize step to add
 - Serialize origami object
 - Serialize steps

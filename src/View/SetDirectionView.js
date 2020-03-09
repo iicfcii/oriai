@@ -15,23 +15,7 @@ export class SetDirectionView extends Component {
     let newState = {
       isInputting: !this.state.isInputting,
     };
-    if (this.state.isInputting){
-      let directions = [];
-      let valid = true;
-      this.props.faceIDs.forEach((id) => {
-        let direction = parseInt(this.state[id]);
-        if (isNaN(direction)) {
-          valid = false;
-          directions.push(null);
-        } else {
-          directions.push(direction);
-        }
-      });
-
-      this.props.updateEdit({directions: directions});
-
-      if (!valid) console.log('Invalid input');
-    } else {
+    if (!this.state.isInputting){
       // Start input
       this.props.faceIDs.every((id, i) => {
         if (this.props.directions[i]){
@@ -39,17 +23,37 @@ export class SetDirectionView extends Component {
         } else {
           newState[id] = '';
         }
-
       })
     }
 
+    this.props.updateEdit({
+      editing: this.state.isInputting?null:'direction',
+    });
     this.setState(newState);
   }
 
   onInputChange = (id, event) => {
-    let newState = {};
-    newState[id] = event.target.value;
-    this.setState(newState);
+    // Update
+    let directions = [];
+    this.props.faceIDs.forEach((faceID, i) => {
+      let direction;
+      if (faceID !== id) {
+        direction = parseInt(this.state[faceID]);
+      } else {
+        // Use value because state not udpated yet
+        direction = parseInt(event.target.value);
+      }
+      if (isNaN(direction)) {
+        directions.push(null);
+      } else {
+        directions.push(direction);
+      }
+    });
+
+    this.props.updateEdit({directions: directions});
+    console.log(directions);
+
+    this.setState({[id]:event.target.value});
   }
 
   getDirection = (id, i) => {
@@ -62,6 +66,16 @@ export class SetDirectionView extends Component {
     }
 
     return '';
+  }
+
+  componentDidUpdate(){
+    if (!this.state.isInputting) return;
+
+    if (this.props.editing !== 'direction'){
+      // this.finishInput();
+      this.setState({isInputting: !this.state.isInputting});
+      return;
+    }
   }
 
   render(){

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Edge } from '../Model/edge'
-import { Crease } from '../Model/crease'
-import { SetFaceView } from './SetFaceView'
-import { SetEdgeView } from './SetEdgeView'
-import { SetDirectionView } from './SetDirectionView'
+import { Edge } from '../Model/edge';
+import { Crease } from '../Model/crease';
+import { Fold } from '../Model/fold';
+import { SetFaceView } from './SetFaceView';
+import { SetEdgeView } from './SetEdgeView';
+import { SetDirectionView } from './SetDirectionView';
 
 export class EditView extends Component {
   constructor(props) {
@@ -15,6 +16,7 @@ export class EditView extends Component {
       p1: null,
       p2: null,
       directions: [], // Relate to faceIDs
+      editing: null,
     }
 
   }
@@ -36,8 +38,12 @@ export class EditView extends Component {
           this.state.p2 !== null){
         // Add step
         let step = new Crease(this.state.faceIDs, new Edge(this.state.p1, this.state.p2));
-        this.props.design.addStep(step);
+        let isSuccessful = this.props.design.addStep(step);
 
+        if (!isSuccessful){
+          console.log('Fail to crease');
+          return;
+        }
         // Update steps
         this.props.update({
           step: this.props.design.origamis.length-1,
@@ -47,6 +53,43 @@ export class EditView extends Component {
           faceIDs: [],
           p1: null,
           p2: null,
+          directions: [],
+          editing: null,
+        });
+      } else {
+        console.log('Not fully defined');
+      }
+    }
+
+    if (this.state.type === 'Fold'){
+      // Check selections are all set
+      let isDirectionDefined = this.state.faceIDs.length === this.state.directions.length &&
+                               this.state.directions.every((direction) => {return direction !== null});
+      if (this.state.faceIDs.length > 0 &&
+          this.state.p1 !== null &&
+          this.state.p2 !== null &&
+          isDirectionDefined){
+        // Add step
+        let step = new Fold(this.state.faceIDs,
+                            new Edge(this.state.p1, this.state.p2),
+                            this.state.directions);
+        let isSuccessful = this.props.design.addStep(step);
+
+        if (!isSuccessful){
+          console.log('Fail to fold');
+          return;
+        }
+        // Update steps
+        this.props.update({
+          step: this.props.design.origamis.length-1,
+        });
+        // Reset selections
+        this.setState({
+          faceIDs: [],
+          p1: null,
+          p2: null,
+          directions: [],
+          editing: null,
         });
       } else {
         console.log('Not fully defined');
@@ -60,6 +103,7 @@ export class EditView extends Component {
     return (
       <div style = {containerRow}>
         <SetDirectionView
+          editing = {this.state.editing}
           faceIDs = {this.state.faceIDs}
           directions = {this.state.directions}
           update = {this.props.update}
@@ -91,6 +135,7 @@ export class EditView extends Component {
         </div>
         <div style = {containerRow}>
           <SetFaceView
+            editing = {this.state.editing}
             faceIDs = {this.state.faceIDs}
             faceSelected = {this.props.faceSelected}
             update = {this.props.update}
@@ -98,6 +143,7 @@ export class EditView extends Component {
         </div>
         <div style = {containerRow}>
           <SetEdgeView
+            editing = {this.state.editing}
             p1 = {this.state.p1}
             p2 = {this.state.p2}
             pointSelected = {this.props.pointSelected}

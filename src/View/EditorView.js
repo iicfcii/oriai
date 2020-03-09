@@ -19,8 +19,8 @@ export class EditorView extends Component {
     super(props);
 
     this.design = new Design('Test');
-    // let crease1 = new Edge(new Point(0,0.5),new Point(1,0.5));
-    // this.design.addStep(new Crease([1],crease1));
+    let crease1 = new Edge(new Point(0,0.5),new Point(1,0.5));
+    this.design.addStep(new Crease([1],crease1));
     // this.design.addStep(new Fold([1],crease1,[1]));
 
     // this.design = new Design('Dog Face');
