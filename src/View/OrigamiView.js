@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { FaceView } from './FaceView'
-import { Point } from '../Model/point'
 import { Layer, Stage, Rect, Text, Line, Circle } from 'react-konva';
+import { FaceView } from './FaceView'
+import { Point } from '../Model/Point'
 
 // Visuailize Face
 export class OrigamiView extends Component {
@@ -59,10 +59,10 @@ export class OrigamiView extends Component {
     let pB = new Point(1,0);
     let pC = new Point(1,1);
     let pD = new Point(0,1);
-    let frame = pA.scale(this.props.layout).concat(pB.scale(this.props.layout),
-                                                   pC.scale(this.props.layout),
-                                                   pD.scale(this.props.layout));
-
+    let frame = pA.scale(this.props.layout)
+                  .concat(pB.scale(this.props.layout),
+                          pC.scale(this.props.layout),
+                          pD.scale(this.props.layout));
     return(
       <Layer>
         <Rect

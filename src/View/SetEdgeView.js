@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Point } from '../Model/point'
+import { Point } from '../Model/Point'
 
 export class SetEdgeView extends Component {
   constructor(props) {

@@ -51,7 +51,6 @@ export class SetDirectionView extends Component {
     });
 
     this.props.updateEdit({directions: directions});
-    console.log(directions);
 
     this.setState({[id]:event.target.value});
   }

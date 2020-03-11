@@ -1,5 +1,5 @@
-import { Edge } from './edge';
-import { Point } from './point';
+import { Edge } from './Edge';
+import { Point } from './Point';
 
 export class Face {
   constructor(id) {
@@ -150,7 +150,7 @@ export class Face {
             console.log('Crease crosses crease of face');
             return true;
           }
-        })
+        });
       }
     }
 

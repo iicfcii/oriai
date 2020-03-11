@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Edge } from '../Model/edge';
-import { Crease } from '../Model/crease';
-import { Fold } from '../Model/fold';
+import { Edge } from '../Model/Edge';
+import { Crease } from '../Model/Crease';
+import { Fold } from '../Model/Fold';
 import { SetFaceView } from './SetFaceView';
 import { SetEdgeView } from './SetEdgeView';
 import { SetDirectionView } from './SetDirectionView';
@@ -17,6 +17,7 @@ export class EditView extends Component {
       p2: null,
       directions: [], // Relate to faceIDs
       editing: null,
+      result: '',
     }
 
   }
@@ -37,11 +38,12 @@ export class EditView extends Component {
           this.state.p1 !== null &&
           this.state.p2 !== null){
         // Add step
-        let step = new Crease(this.state.faceIDs, new Edge(this.state.p1, this.state.p2));
-        let isSuccessful = this.props.design.addStep(step);
+        let step = new Crease(this.state.faceIDs,
+                              new Edge(this.state.p1, this.state.p2));
+        let result = this.props.design.addStep(step);
 
-        if (!isSuccessful){
-          console.log('Fail to crease');
+        if (result !== step.RESULT_SUCCESSFUL){
+          this.setState({result: step.getResult(result)});
           return;
         }
         // Update steps
@@ -55,9 +57,13 @@ export class EditView extends Component {
           p2: null,
           directions: [],
           editing: null,
+          result: step.getResult(result),
         });
       } else {
-        console.log('Not fully defined');
+        this.setState({
+          editing: null,
+          result: 'Step not fully defined'
+        });
       }
     }
 
@@ -73,10 +79,10 @@ export class EditView extends Component {
         let step = new Fold(this.state.faceIDs,
                             new Edge(this.state.p1, this.state.p2),
                             this.state.directions);
-        let isSuccessful = this.props.design.addStep(step);
+        let result = this.props.design.addStep(step);
 
-        if (!isSuccessful){
-          console.log('Fail to fold');
+        if (result !== step.RESULT_SUCCESSFUL){
+          this.setState({result: step.getResult(result)});
           return;
         }
         // Update steps
@@ -90,11 +96,22 @@ export class EditView extends Component {
           p2: null,
           directions: [],
           editing: null,
+          result: step.getResult(result),
         });
       } else {
-        console.log('Not fully defined');
+        this.setState({
+          editing: null,
+          result: 'Step not fully defined'
+        });
       }
     }
+  }
+
+  onRemoveLastStep = () => {
+    this.props.design.removeLastStep();
+    this.props.update({
+      step: this.props.design.origamis.length-1,
+    });
   }
 
   renderDirections = () => {
@@ -116,19 +133,18 @@ export class EditView extends Component {
     this.setState(state);
   }
 
+  onSave = () => {
+  }
+
+  onLoad = () => {
+
+  }
+
   render() {
     return(
       <div style = {container}>
         <div style = {containerRow}>
-        <b>{'Edit'}</b>
-        </div>
-        <div style = {containerRow}>
-          <button onClick={null}>Save</button>
-          <button onClick={null}>Load</button>
-        </div>
-        <div style = {containerRow}>
-          {'Title: '}
-          <input type="text" size="10"/>
+          <b>{'Edit'}</b>
         </div>
         <div style = {containerRow}>
           <button onClick={this.onTypeChange}>{this.state.type}</button>
@@ -153,9 +169,10 @@ export class EditView extends Component {
         {this.renderDirections()}
         <div style = {containerRow}>
           <button onClick={this.onAddStep}>Add Step</button>
+          {' ' + this.state.result}
         </div>
         <div style = {containerRow}>
-          <button onClick={null}>Delete Last Step</button>
+          <button onClick={this.onRemoveLastStep}>Delete Last Step</button>
         </div>
       </div>
     );

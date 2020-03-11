@@ -1,26 +1,22 @@
 import React, { Component } from 'react';
-import { Stage, Layer, Rect, Text } from 'react-konva';
-import { Origami } from '../Model/origami';
-import { Edge } from '../Model/edge';
-import { Point } from '../Model/point';
-
-import { Crease } from '../Model/crease';
-import { Fold } from '../Model/fold';
-import { Design } from '../Model/design';
-import { DesignGenerator } from '../Model/design-generator';
-
-
 import { OrigamiView } from './OrigamiView';
 import { EditView } from './EditView';
 import { ViewView } from './ViewView';
+import { FileView } from './FileView';
+
+import { Design } from '../Model/Design';
+import { Point } from '../Model/Point';
+import { Crease } from '../Model/Crease';
+import { Fold } from '../Model/Fold';
+import { Edge } from '../Model/Edge';
 
 export class EditorView extends Component {
   constructor(props) {
     super(props);
 
-    this.design = new Design('Test');
-    let crease1 = new Edge(new Point(0,0.5),new Point(1,0.5));
-    this.design.addStep(new Crease([1],crease1));
+    this.design = new Design();
+    // let crease1 = new Edge(new Point(0,0.5),new Point(1,0.5));
+    // this.design.addStep(new Crease([1],crease1));
     // this.design.addStep(new Fold([1],crease1,[1]));
 
     // this.design = new Design('Dog Face');
@@ -135,6 +131,12 @@ export class EditorView extends Component {
           faceSelected = {this.state.faceSelected}
           update = {this.update}
         />
+        <EditView
+          design = {this.design}
+          pointSelected = {this.state.pointSelected}
+          faceSelected = {this.state.faceSelected}
+          update = {this.update}
+        />
         <ViewView
           design = {this.design}
           step = {this.state.step}
@@ -143,10 +145,8 @@ export class EditorView extends Component {
           info = {this.state.info}
           update = {this.update}
         />
-        <EditView
+        <FileView
           design = {this.design}
-          pointSelected = {this.state.pointSelected}
-          faceSelected = {this.state.faceSelected}
           update = {this.update}
         />
       </div>

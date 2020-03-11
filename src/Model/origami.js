@@ -1,6 +1,6 @@
-import { Face } from './face';
-import { Edge } from './edge';
-import { Point } from './point';
+import { Face } from './Face';
+import { Edge } from './Edge';
+import { Point } from './Point';
 
 export class Origami {
   // Has a single 1*1 face initially

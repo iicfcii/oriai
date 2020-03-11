@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Line, Group } from 'react-konva';
-import { PointView } from './PointView';
+import { Line } from 'react-konva';
 
 export class EdgeView extends Component {
   constructor(props) {

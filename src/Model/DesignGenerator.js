@@ -1,8 +1,8 @@
-import { Design } from './design';
-import { Edge } from './edge';
-import { Point } from './point';
-import { Crease } from './crease';
-import { Fold } from './fold';
+import { Design } from './Design';
+import { Edge } from './Edge';
+import { Point } from './Point';
+import { Crease } from './Crease';
+import { Fold } from './Fold';
 
 export class DesignGenerator {
   constructor(){
