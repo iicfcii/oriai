@@ -11,7 +11,7 @@ export class EditView extends Component {
     super(props);
 
     this.state = {
-      type: 'Fold',
+      type: 'Crease',
       faceIDs: [],
       p1: null,
       p2: null,
@@ -180,13 +180,13 @@ export class EditView extends Component {
 }
 
 const container = {
-  flex: 1,
+  width: 200,
+  flex: 'none',
   display: 'flex',
   flexDirection: 'column',
   backgroundColor: 'white ',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  overflow: 'auto'
 };
 const containerRow = {
   margin: '10px 0px',

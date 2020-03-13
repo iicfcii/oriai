@@ -158,6 +158,7 @@ class SetPointView extends Component {
           onChange={(event) => {this.onInputChange(event, 'py')}}
           disabled = {this.state.isInputting?false:true}/>
         {') '}
+        <br/>  
         <button onClick={this.onSelect}>{this.state.isSelecting?'Finish':'Select'}</button>
         <button onClick={this.onInput}>{this.state.isInputting?'Finish':'Input'}</button>
       </div>

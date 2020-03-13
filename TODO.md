@@ -47,10 +47,10 @@ An 2D origami simulator for now.
   - do(origami)
 
 ## TODO List
-- More meta info and JSON text box in a new view
-- Fix test failure message
+- Visuailize step to add: edge set, face selected
+- Edit existing steps
+- Fix test(jest) with failure message
 - Better crease selection: by edge, angle bisector, 1/2, 1/3, 1/4 point of edge
-- Visuailize step to add
 - Remove step confirm
 - Auto generate random origami designs, NOT USEFUL
 - Any complex fold with multiple faces and creases can be converted into

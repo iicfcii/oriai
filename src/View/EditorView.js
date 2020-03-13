@@ -88,6 +88,11 @@ export class EditorView extends Component {
     // this.design.addStep(new Fold([4,6,2],crease1,[-1,-3,-3]));
 
     this.state = {
+      width: 0, // Window dimension
+      height: 0,
+      shouldPortrait: false,
+      // Most mobile devices will be portrait mode
+      // even device is in landscape mode
       step: this.design.origamis.length-1,
       space: 0,
       layer: 0, // Unit: layer
@@ -97,66 +102,211 @@ export class EditorView extends Component {
       faceSelected: [],
     };
 
-    this.w = 800;
-    this.h = 600;
-
-    this.layout = {
-      ratio: 500,
-      x: this.w/2,
-      y: this.h/2,
-      angle: 0,
-      isometric: true,
-    };
-
+    this.ORIGAMI_VIEW_MIN_WIDTH = 400;
+    this.ORIGAMI_VIEW_MAX_HEIGHT = 600;
+    this.ORIGAMI_VIEW_RATIO = 3/4; // height/width
   }
 
   update = (state) => {
     this.setState(state);
   }
 
-  render() {
-    // Update layout
-    this.layout.y = this.h/2+this.state.layer*this.state.space;
+  // Get origami view dimension
+  getDimension = ( ) => {
+    if (this.state.shouldPortrait){
+      return {
+        width: this.state.width,
+        height: this.state.width*this.ORIGAMI_VIEW_RATIO,
+      };
+    }
 
-    return (
-      <div style = {container}>
-        <OrigamiView
-          origami = {this.design.getOrigami(this.state.step)}
-          dimension = {{width: this.w, height: this.h}}
-          layout = {this.layout}
-          space = {this.state.space}
-          layer = {this.state.layer}
-          pointSelected = {this.state.pointSelected}
-          edgeSelected = {this.state.edgeSelected}
-          faceSelected = {this.state.faceSelected}
-          update = {this.update}
-        />
-        <EditView
-          design = {this.design}
-          pointSelected = {this.state.pointSelected}
-          faceSelected = {this.state.faceSelected}
-          update = {this.update}
-        />
-        <ViewView
-          design = {this.design}
-          step = {this.state.step}
-          space = {this.state.space}
-          layer = {this.state.layer}
-          info = {this.state.info}
-          update = {this.update}
-        />
-        <FileView
-          design = {this.design}
-          update = {this.update}
-        />
-      </div>
-    );
+    // Landscape mode
+    let w = this.state.width-600;
+    // 600 is the width of tools
+    // Use padding for child components
+    let h = w*this.ORIGAMI_VIEW_RATIO;
+
+    if (h > this.ORIGAMI_VIEW_MAX_HEIGHT){
+      return {
+        width: this.ORIGAMI_VIEW_MAX_HEIGHT/this.ORIGAMI_VIEW_RATIO,
+        height: this.ORIGAMI_VIEW_MAX_HEIGHT,
+      };
+    }
+
+    return {
+      width: w,
+      height: h,
+    };
+  }
+
+  getLayout = () => {
+    let dim = this.getDimension();
+    return {
+      ratio: dim.width/2,
+      x: dim.width/2,
+      y: dim.height/2+this.state.layer*this.state.space,
+      angle: 0,
+      isometric: true,
+    }
+  }
+
+  updateWindowDimension = () => {
+    console.log('Size', window.innerWidth, window.innerHeight)
+    this.setState({
+      width: window.innerWidth,
+      height: window.innerHeight,
+      shouldPortrait: window.innerWidth-600 < this.ORIGAMI_VIEW_MIN_WIDTH,
+    });
+  }
+
+  componentDidMount() {
+    this.updateWindowDimension();
+    window.addEventListener('resize', this.updateWindowDimension);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimension);
+  }
+
+  renderLandscapeTools = () => {
+    if(!this.state.shouldPortrait){
+      return(
+        <div style = {containerTools}>
+          <FileView
+            design = {this.design}
+            update = {this.update}
+          />
+          <ViewView
+            design = {this.design}
+            step = {this.state.step}
+            space = {this.state.space}
+            layer = {this.state.layer}
+            info = {this.state.info}
+            update = {this.update}
+          />
+          <EditView
+            design = {this.design}
+            pointSelected = {this.state.pointSelected}
+            faceSelected = {this.state.faceSelected}
+            update = {this.update}
+          />
+        </div>
+      );
+    } else {
+      return null;
+    }
+  }
+
+  render() {
+    if (this.state.width === 0){
+      return null;
+    }
+
+    if (this.state.shouldPortrait){
+      return(
+        <div style = {containerPortrait}>
+          <OrigamiView
+            origami = {this.design.getOrigami(this.state.step)}
+            dimension = {this.getDimension()}
+            layout = {this.getLayout()}
+            space = {this.state.space}
+            layer = {this.state.layer}
+            pointSelected = {this.state.pointSelected}
+            edgeSelected = {this.state.edgeSelected}
+            faceSelected = {this.state.faceSelected}
+            update = {this.update}
+          />
+          <div style = {containerPortraitTools}>
+            <EditView
+              design = {this.design}
+              pointSelected = {this.state.pointSelected}
+              faceSelected = {this.state.faceSelected}
+              update = {this.update}
+            />
+            <ViewView
+              design = {this.design}
+              step = {this.state.step}
+              space = {this.state.space}
+              layer = {this.state.layer}
+              info = {this.state.info}
+              update = {this.update}
+            />
+            <FileView
+              design = {this.design}
+              update = {this.update}
+            />
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div style = {container}>
+          <div style = {containerTools}>
+            <FileView
+              design = {this.design}
+              update = {this.update}
+            />
+            <ViewView
+              design = {this.design}
+              step = {this.state.step}
+              space = {this.state.space}
+              layer = {this.state.layer}
+              info = {this.state.info}
+              update = {this.update}
+            />
+            <EditView
+              design = {this.design}
+              pointSelected = {this.state.pointSelected}
+              faceSelected = {this.state.faceSelected}
+              update = {this.update}
+            />
+          </div>
+          <OrigamiView
+            origami = {this.design.getOrigami(this.state.step)}
+            dimension = {this.getDimension()}
+            layout = {this.getLayout()}
+            space = {this.state.space}
+            layer = {this.state.layer}
+            pointSelected = {this.state.pointSelected}
+            edgeSelected = {this.state.edgeSelected}
+            faceSelected = {this.state.faceSelected}
+            update = {this.update}
+          />
+        </div>
+      );
+    }
+
   }
 }
 
 const container = {
   flex: 1,
   display: 'flex',
+  flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
+};
+const containerTools = {
+  width: 600,
+  flex: 'none',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+};
+const containerPortrait = {
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+};
+const containerPortraitTools = {
+  width: '100%',
+  flex: 'none',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',
+  overflow: 'auto'
 };

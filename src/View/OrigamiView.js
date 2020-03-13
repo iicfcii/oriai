@@ -71,7 +71,8 @@ export class OrigamiView extends Component {
           width = {this.props.dimension.width}
           height = {this.props.dimension.height}
           fill = '#f0f0f0'
-          onClick = {this.onClick}>
+          onClick = {this.onClick}
+          preventDefault={false}>
         </Rect>
         <Line
           points = {frame}
@@ -145,7 +146,9 @@ export class OrigamiView extends Component {
 
   render() {
     return (
-      <Stage width={this.props.dimension.width} height={this.props.dimension.height}>
+      <Stage
+        width={this.props.dimension.width}
+        height={this.props.dimension.height}>
         {this.renderFrame()}
         {this.renderFaces()}
       </Stage>

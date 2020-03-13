@@ -57,11 +57,19 @@ export class ViewView extends Component {
         </div>
         <div style = {containerRow}>
           {'Layer space: '}
-          <input type="range" min="0" max="50" value={this.props.space} step="10" onChange={this.onSpaceChange}/>
+          <br/>
+          <input
+            type="range"
+            min="0"
+            max="50"
+            value={this.props.space}
+            step="10"
+            onChange={this.onSpaceChange}/>
           {' ' + this.props.space}
         </div>
         <div style = {containerRow}>
           {'Layer offset: '}
+          <br/>
           <input
             type="range"
             min={0}
@@ -81,13 +89,13 @@ export class ViewView extends Component {
 }
 
 const container = {
-  flex: 1,
+  width: 200,
+  flex: 'none',
   display: 'flex',
   flexDirection: 'column',
   backgroundColor: 'white ',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  overflow: 'auto'
 };
 
 const containerRow = {

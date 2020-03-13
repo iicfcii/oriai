@@ -13,6 +13,20 @@ export class FileView extends Component {
     }
   }
 
+  update = () => {
+    let getText = (text) => {
+      return text?text:'';
+    }
+
+    this.setState({
+      name: getText(this.props.design.name),
+      creator: getText(this.props.design.creator),
+      email: getText(this.props.design.email),
+      designer: getText(this.props.design.designer),
+      json: this.props.design.save(),
+    });
+  }
+
   onSave = () => {
     this.setState({json: this.props.design.save()});
   }
@@ -24,20 +38,10 @@ export class FileView extends Component {
       this.props.design.load(reader.result);
       this.props.update({step: this.props.design.origamis.length-1});
 
-      let getText = (text) => {
-        return text?text:'';
-      }
-
-      this.setState({
-        name: getText(this.props.design.name),
-        creator: getText(this.props.design.creator),
-        email: getText(this.props.design.email),
-        designer: getText(this.props.design.designer),
-        json: this.props.design.save(),
-      });
+      this.update();
     };
 
-    reader.readAsText(event.target.files[0]);
+    if (event.target.files[0]) reader.readAsText(event.target.files[0]);
   }
 
   onName = (event) => {
@@ -64,6 +68,10 @@ export class FileView extends Component {
     this.setState({designer: designer});
   }
 
+  componentDidMount(){
+    this.update();
+  }
+
   render(){
     return(
       <div style = {container}>
@@ -82,6 +90,7 @@ export class FileView extends Component {
         <div style = {containerRow}>
           <input
             type="file"
+            style={{width: 180}}
             onChange={this.onFile}/>
         </div>
         <div style = {containerRow}>
@@ -120,8 +129,6 @@ export class FileView extends Component {
           {'JSON '}<br></br>
           <textarea
             style={textArea}
-            rows="20"
-            cols="40"
             value={this.state.json}
             readOnly={true}/>
         </div>
@@ -131,13 +138,13 @@ export class FileView extends Component {
 }
 
 const container = {
-  flex: 1,
+  width: 200,
+  flex: 'none',
   display: 'flex',
   flexDirection: 'column',
   backgroundColor: 'white ',
   justifyContent: 'flex-start',
   alignItems: 'flex-start',
-  overflow: 'auto'
 };
 
 const containerRow = {
@@ -146,4 +153,6 @@ const containerRow = {
 
 const textArea = {
   resize: 'none',
+  width: 180,
+  height: 150,
 }
