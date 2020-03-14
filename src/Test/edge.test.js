@@ -1,5 +1,5 @@
-import { Edge } from '../Model/edge';
-import { Point } from '../Model/point';
+import { Edge } from '../Model/Edge';
+import { Point } from '../Model/Point';
 
 
 test('Should have point when point on edge and not infinite length', () => {

@@ -2,15 +2,14 @@ import { Face } from './Face';
 import { Edge } from './Edge';
 
 export class Crease {
+  static RESULT_SUCCESSFUL = 0;
+  static RESULT_INVALID_FACEID = 1;
+  static RESULT_INVALID_CREASE = 2;
+  static RESULT_FAILED_CREASE = 3;
+
   constructor(faceIDs, crease){
     this.faceIDs = faceIDs;
     this.crease = crease;
-
-    this.RESULT_SUCCESSFUL = 0;
-    this.RESULT_INVALID_FACEID = 1;
-    this.RESULT_INVALID_CREASE = 2;
-    this.RESULT_FAILED_CREASE = 3;
-
   }
 
   getDescription(){
@@ -21,13 +20,13 @@ export class Crease {
 
   getResult(code){
     switch(code){
-      case this.RESULT_SUCCESSFUL:
+      case Crease.RESULT_SUCCESSFUL:
         return 'Successful';
-      case this.RESULT_INVALID_FACEID:
+      case Crease.RESULT_INVALID_FACEID:
         return 'Face selected does not exist';
-      case this.RESULT_INVALID_CREASE:
+      case Crease.RESULT_INVALID_CREASE:
         return 'Crease selected is not valid';
-      case this.RESULT_FAILED_CREASE:
+      case Crease.RESULT_FAILED_CREASE:
         return 'Crease selected is not valid*';
         // Probably won't happen
       default:
@@ -44,15 +43,15 @@ export class Crease {
   }
 
   do(origami){
-    let result = this.RESULT_SUCCESSFUL;
+    let result = Crease.RESULT_SUCCESSFUL;
     let isCreaseFailed = this.faceIDs.some((faceID) => {
       result = this.singleCrease(origami, faceID, this.crease);
-      return result !== this.RESULT_SUCCESSFUL
+      return result !== Crease.RESULT_SUCCESSFUL
     });
 
     if (isCreaseFailed) return result;
 
-    return this.RESULT_SUCCESSFUL;
+    return Crease.RESULT_SUCCESSFUL;
   }
 
   // face: face of a origami to be creased, will be removed after new ones are generated
@@ -61,12 +60,12 @@ export class Crease {
     let face = origami.getFaceByID(faceID);
     if (!face){
       // console.log('No such face to crease');
-      return this.RESULT_INVALID_FACEID;
+      return Crease.RESULT_INVALID_FACEID;
     }
     let edge = face.intersectEdge(crease, true);
     if (edge === null) {
       // console.log('No such crease');
-      return this.RESULT_INVALID_CREASE;
+      return Crease.RESULT_INVALID_CREASE;
     }
 
     // Assumed order
@@ -89,7 +88,7 @@ export class Crease {
     if (edge1Index === null || edge2Index === null){
       // NOTE: Maybe won't reach here
       // console.log('Crease Failed');
-      return this.RESULT_FAILED_CREASE;
+      return Crease.RESULT_FAILED_CREASE;
     }
 
     if (edge1Index > edge2Index){
@@ -216,6 +215,6 @@ export class Crease {
     origami.faces.push(face2);
 
     origami.sortFaces();
-    return this.RESULT_SUCCESSFUL;
+    return Crease.RESULT_SUCCESSFUL;
   }
 }

@@ -1,6 +1,6 @@
-import { Edge } from '../Model/edge';
-import { Point } from '../Model/point';
-import { Face } from '../Model/face';
+import { Edge } from '../Model/Edge';
+import { Point } from '../Model/Point';
+import { Face } from '../Model/Face';
 
 test('Should calculate face centroid correctly', () => {
   let face = new Face(1); // Starting id is 1

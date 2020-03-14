@@ -126,7 +126,11 @@ export class Face {
     // if not within range, no penetration possible
     if (this.layer <= crease.bottomLayer || this.layer >= crease.topLayer) return false;
 
-    if (!crease.p1.isOutsideFace(this) && !crease.p2.isOutsideFace(this) && !this.hasEdge(crease, true)){
+    // Use edge index list to make sure crease that is collinear with one of the
+    // face edges won't be considered inside face.
+    if (!crease.p1.isOutsideFace(this) &&
+        !crease.p2.isOutsideFace(this) &&
+        this.edgeIndexList(crease, true, null, true).length === 0){
       // Crease not outside face
       console.log('Crease not outside face');
       return true;

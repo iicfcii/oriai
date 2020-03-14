@@ -26,7 +26,9 @@ export class Design {
 
     let result = step.do(origami);
 
-    if (result === step.RESULT_SUCCESSFUL) {
+    let successfulConst = Crease.RESULT_SUCCESSFUL;
+    if (step.directions) successfulConst = Fold.RESULT_SUCCESSFUL;
+    if (result === successfulConst) {
       this.origamis.push(origami);
       this.steps.push(step);
     }
@@ -67,8 +69,7 @@ export class Design {
   }
 
   // Will override current design
-  load(jsonStr){
-    let design = JSON.parse(jsonStr);
+  load(design){
     // Meta info
     this.name = design.name;
     this.creator = design.creator;
@@ -95,4 +96,34 @@ export class Design {
       }
     });
   }
+
+  // // Will override current design
+  // load(jsonStr){
+  //   let design = JSON.parse(jsonStr);
+  //   // Meta info
+  //   this.name = design.name;
+  //   this.creator = design.creator;
+  //   this.email = design.email;
+  //   this.designer = design.designer;
+  //
+  //   // Steps
+  //   // Reset origamis and steps
+  //   this.origamis = [new Origami()];
+  //   this.steps = [];
+  //   // Load new steps
+  //   design.steps.forEach((step) => {
+  //     if (!step.directions){
+  //       // Crease
+  //       this.addStep(new Crease(step.faces,
+  //                               new Edge(new Point(step.edge[0],step.edge[1]),
+  //                                        new Point(step.edge[2],step.edge[3]))));
+  //     } else {
+  //       // Fold
+  //       this.addStep(new Fold(step.faces,
+  //                             new Edge(new Point(step.edge[0],step.edge[1]),
+  //                                      new Point(step.edge[2],step.edge[3])),
+  //                             step.directions));
+  //     }
+  //   });
+  // }
 }

@@ -1,16 +1,15 @@
 export class Fold {
+  static RESULT_SUCCESSFUL = 0;
+  static RESULT_MISSING_TWIN = 1;
+  static RESULT_PENETRATING_CREASE = 2;
+  static RESULT_INVALID_FACEID = 3;
+  static RESULT_INVALID_FOLD_CREASE = 4;
+  static RESULT_INVALID_FOLD_DIRECTION = 5;
+
   constructor(faceIDs, crease, directions){
     this.faceIDs = faceIDs;
     this.crease = crease;
     this.directions = directions;
-
-    this.RESULT_SUCCESSFUL = 0;
-    this.RESULT_MISSING_TWIN = 1;
-    this.RESULT_PENETRATING_CREASE = 2;
-    this.RESULT_INVALID_FACEID = 3;
-    this.RESULT_INVALID_FOLD_CREASE = 4;
-    this.RESULT_INVALID_FOLD_DIRECTION = 5;
-
   }
 
   getDescription(){
@@ -22,18 +21,18 @@ export class Fold {
 
   getResult(code){
     switch(code){
-      case this.RESULT_SUCCESSFUL:
+      case Fold.RESULT_SUCCESSFUL:
         return 'Successful';
-      case this.RESULT_MISSING_TWIN:
+      case Fold.RESULT_MISSING_TWIN:
         return 'Crease is torn apart';
-      case this.RESULT_PENETRATING_CREASE:
+      case Fold.RESULT_PENETRATING_CREASE:
         return 'Crease is penetrated';
-      case this.RESULT_INVALID_FACEID:
+      case Fold.RESULT_INVALID_FACEID:
         return 'Face selected does not exist';
         // Probably won't happen because of how selection works.
-      case this.RESULT_INVALID_FOLD_CREASE:
+      case Fold.RESULT_INVALID_FOLD_CREASE:
         return 'Fold crease selected is not valid';
-      case this.RESULT_INVALID_FOLD_DIRECTION:
+      case Fold.RESULT_INVALID_FOLD_DIRECTION:
         return 'Fold direction is not valid';
       default:
         return 'Unknown result code';
@@ -50,10 +49,10 @@ export class Fold {
   }
 
   do(origami){
-    let result = this.RESULT_SUCCESSFUL;
+    let result = Fold.RESULT_SUCCESSFUL;
     let isFoldFailed = this.faceIDs.some((faceID, index) => {
       result = this.singleFold(origami, faceID, this.crease, this.directions[index]);
-      return result !== this.RESULT_SUCCESSFUL;
+      return result !== Fold.RESULT_SUCCESSFUL;
     });
     if (isFoldFailed) return result;
 
@@ -67,7 +66,7 @@ export class Fold {
     // console.log('missingTwin', missingTwin);
     if (missingTwin){
       // console.log('Missing twin');
-      return this.RESULT_MISSING_TWIN;
+      return Fold.RESULT_MISSING_TWIN;
     };
 
     // Check penetration
@@ -95,10 +94,10 @@ export class Fold {
     });
     if (isPenetrating){
       // console.log('Penetrating');
-      return this.RESULT_PENETRATING_CREASE;
+      return Fold.RESULT_PENETRATING_CREASE;
     }
 
-    return this.RESULT_SUCCESSFUL;
+    return Fold.RESULT_SUCCESSFUL;
   }
 
   // Fold face based on folding edge and direction.
@@ -110,19 +109,19 @@ export class Fold {
     let face = origami.getFaceByID(faceID);
     if (!face) {
       // console.log('Invalid face ID');
-      return this.RESULT_INVALID_FACEID;
+      return Fold.RESULT_INVALID_FACEID;
     }
 
     let indexList = face.edgeIndexList(crease,true,null,true);
     if (indexList.length === 0){
       // console.log('Invalid fold edge');
-      return this.RESULT_INVALID_FOLD_CREASE;
+      return Fold.RESULT_INVALID_FOLD_CREASE;
     }
 
     let desiredLayer = face.layer+direction;
     if (direction === 0 || desiredLayer < -1 || desiredLayer > origami.maxLayer+1) {
       // console.log('Invalid fold direction');
-      return this.RESULT_INVALID_FOLD_DIRECTION;
+      return Fold.RESULT_INVALID_FOLD_DIRECTION;
     }
 
     // Save old face layers
@@ -177,6 +176,6 @@ export class Fold {
 
     origami.sortFaces();
     origami.updateLayers();
-    return this.RESULT_SUCCESSFUL;
+    return Fold.RESULT_SUCCESSFUL;
   }
 }

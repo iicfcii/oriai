@@ -26,10 +26,12 @@ export class OrigamiView extends Component {
     let faces = [];
     this.props.origami.faces.forEach((face) => {
       // console.log(face.key);
+      let y = this.props.layout.y;
+      if (this.props.layout.isometric) y = y-face.layer*this.props.space
       let layout = {
         ratio: this.props.layout.ratio,
         x: this.props.layout.x,
-        y: this.props.layout.y-face.layer*this.props.space,
+        y: y,
         angle: this.props.layout.angle,
         isometric: this.props.layout.isometric,
       }
@@ -40,6 +42,7 @@ export class OrigamiView extends Component {
           face = {face}
           layout = {layout}
           space = {this.props.space}
+          hideUnselectedFaces = {this.props.hideUnselectedFaces}
           faceSelected = {this.props.faceSelected}
           edgeSelected = {this.props.edgeSelected}
           pointSelected = {this.props.pointSelected}

@@ -43,8 +43,9 @@ export class PointView extends Component {
         y = {point[1]}
         radius = {isSelected?5:3}
         fill = {'red'}
-        hitStrokeWidth = {10}
-        onClick = {this.onClick}/>
+        hitStrokeWidth = {5}
+        onClick = {this.onClick}
+        onTap = {this.onClick}/>
     );
   }
 }

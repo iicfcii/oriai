@@ -44,10 +44,11 @@ export class EdgeView extends Component {
         points = {this.props.edge.scale(this.props.layout)}
         stroke = {this.props.edge.isBoundary?'black':'red'}
         strokeWidth = {isSelected?5:3}
-        hitStrokeWidth = {10}
+        hitStrokeWidth = {5}
         lineCap = 'round'
         lineJoint = 'round'
-        onClick = {this.onClick}/>
+        onClick = {this.onClick}
+        onTap = {this.onClick}/>
     );
   }
 }

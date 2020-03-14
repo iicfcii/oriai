@@ -86,6 +86,7 @@ export class FaceView extends Component {
         closed = {true}
         fill = {color}
         onClick = {this.onClick}
+        onTap = {this.onClick}
         opacity = {opacity}/>
     );
   }
@@ -113,15 +114,12 @@ export class FaceView extends Component {
   render() {
     // Determine entire face opacity
     let opacity = 1;
-    // if (this.props.faceSelected.length > 0){
-    //   if(this.props.faceSelected.indexOf(this.props.face) === -1) {
-    //     return null;
-    //   }
-    // }
-    if (this.props.space > 0 && this.props.faceOver){
-      if(this.props.face !== this.props.faceOver) opacity = 0.1;
+    if (this.props.hideUnselectedFaces &&
+        this.props.faceSelected.length > 0){
+      if(this.props.faceSelected.indexOf(this.props.face) === -1) {
+        opacity = 0.1;
+      }
     }
-
     return (
       <Group>
         {this.renderFace(opacity)}

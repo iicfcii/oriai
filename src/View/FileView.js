@@ -1,4 +1,22 @@
 import React, { Component } from 'react';
+import Dog from '../Examples/Dog.json';
+import Cicada from '../Examples/Cicada.json';
+import Crane from '../Examples/Crane.json';
+import RabbitEarFold from '../Examples/RabbitEarFold.json';
+import Blank from '../Examples/Blank.json';
+
+import { Point } from '../Model/Point';
+import { Crease } from '../Model/Crease';
+import { Fold } from '../Model/Fold';
+import { Edge } from '../Model/Edge';
+
+const examples = {
+  Dog: Dog,
+  Cicada: Cicada,
+  Crane: Crane,
+  RabbitEarFold: RabbitEarFold,
+  Blank: Blank,
+}
 
 export class FileView extends Component {
   constructor(props) {
@@ -10,10 +28,18 @@ export class FileView extends Component {
       email: '',
       designer: '',
       json: '',
+      example: '',
     }
   }
 
-  update = () => {
+  update = (example) => {
+    this.props.update({
+      step: this.props.design.origamis.length-1,
+      pointSelected: [],
+      edgeSelected: [],
+      faceSelected: [],
+    });
+
     let getText = (text) => {
       return text?text:'';
     }
@@ -24,7 +50,16 @@ export class FileView extends Component {
       email: getText(this.props.design.email),
       designer: getText(this.props.design.designer),
       json: this.props.design.save(),
+      example: example,
     });
+  }
+
+  onExample = (event) => {
+    let example = event.target.value;
+    if (example === 'Upload') return; // Upload is not selectable
+    this.props.design.load(examples[example]);
+
+    this.update(example);
   }
 
   onSave = () => {
@@ -34,11 +69,8 @@ export class FileView extends Component {
   onFile = (event) => {
     let reader = new FileReader();
     reader.onload = () => {
-      console.log(reader.result);
-      this.props.design.load(reader.result);
-      this.props.update({step: this.props.design.origamis.length-1});
-
-      this.update();
+      this.props.design.load(JSON.parse(reader.result));
+      this.update('Upload');
     };
 
     if (event.target.files[0]) reader.readAsText(event.target.files[0]);
@@ -69,7 +101,9 @@ export class FileView extends Component {
   }
 
   componentDidMount(){
-    this.update();
+    let example = 'Dog';
+    this.props.design.load(examples[example]);
+    this.update(example);
   }
 
   render(){
@@ -77,6 +111,19 @@ export class FileView extends Component {
       <div style = {container}>
         <div style = {containerRow}>
           <b>File</b>
+        </div>
+        <div style = {containerRow}>
+          {'Examples '}
+          <select
+            value={this.state.example}
+            onChange={this.onExample}>
+            <option value='Dog'>Dog</option>
+            <option value='Cicada'>Cicada</option>
+            <option value='Crane'>Crane</option>
+            <option value='RabbitEarFold'>Rabbit Ear Fold</option>
+            <option value='Blank'>Blank</option>
+            <option value='Upload'>Upload</option>
+          </select>
         </div>
         <div style = {containerRow}>
           <a
@@ -154,5 +201,5 @@ const containerRow = {
 const textArea = {
   resize: 'none',
   width: 180,
-  height: 150,
+  height: 200,
 }

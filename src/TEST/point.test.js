@@ -1,5 +1,5 @@
-import { Point } from '../Model/point';
-import { Edge } from '../Model/edge';
+import { Point } from '../Model/Point';
+import { Edge } from '../Model/Edge';
 
 test('Should not be within if point is outside reactange formed by two points', () => {
   let p1 = new Point(0,0);
