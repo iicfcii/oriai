@@ -84,7 +84,7 @@ export class ViewView extends Component {
           <input
             type="range"
             min="0"
-            max="50"
+            max="200"
             value={this.props.space}
             step="10"
             onChange={this.onSpaceChange}/>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Cat from '../Examples/Cat.json';
 import Dog from '../Examples/Dog.json';
 import Cicada from '../Examples/Cicada.json';
 import Crane from '../Examples/Crane.json';
@@ -12,6 +13,7 @@ import { Fold } from '../Model/Fold';
 import { Edge } from '../Model/Edge';
 
 const examples = {
+  Cat: Cat,
   Dog: Dog,
   Cicada: Cicada,
   Crane: Crane,
@@ -103,7 +105,7 @@ export class FileView extends Component {
   }
 
   componentDidMount(){
-    let example = 'Dog';
+    let example = 'Cat';
     this.props.design.load(examples[example]);
     this.update(example);
   }
@@ -119,6 +121,7 @@ export class FileView extends Component {
           <select
             value={this.state.example}
             onChange={this.onExample}>
+            <option value='Cat'>Cat</option>
             <option value='Dog'>Dog</option>
             <option value='Cicada'>Cicada</option>
             <option value='Crane'>Crane</option>
