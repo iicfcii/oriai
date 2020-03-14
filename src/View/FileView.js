@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Dog from '../Examples/Dog.json';
 import Cicada from '../Examples/Cicada.json';
 import Crane from '../Examples/Crane.json';
+import SamuraiHat from '../Examples/SamuraiHat.json';
 import RabbitEarFold from '../Examples/RabbitEarFold.json';
 import Blank from '../Examples/Blank.json';
 
@@ -14,6 +15,7 @@ const examples = {
   Dog: Dog,
   Cicada: Cicada,
   Crane: Crane,
+  SamuraiHat: SamuraiHat,
   RabbitEarFold: RabbitEarFold,
   Blank: Blank,
 }
@@ -120,6 +122,7 @@ export class FileView extends Component {
             <option value='Dog'>Dog</option>
             <option value='Cicada'>Cicada</option>
             <option value='Crane'>Crane</option>
+            <option value='SamuraiHat'>SamuraiHat</option>
             <option value='RabbitEarFold'>Rabbit Ear Fold</option>
             <option value='Blank'>Blank</option>
             <option value='Upload'>Upload</option>

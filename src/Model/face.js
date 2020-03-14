@@ -272,7 +272,14 @@ export class Face {
       edge2Index = i;
     }
 
-    if (edge1Index !== null && edge2Index !== null) return new Edge(p1, p2);
+    if (edge1Index !== null && edge2Index !== null) {
+      let newEdge = new Edge(p1, p2);
+      // Even if infinite length
+      // collinear edge does not count as intersected
+      if(this.hasEdge(newEdge, true)) return null;
+
+      return newEdge;
+    }
 
     return null;
   }

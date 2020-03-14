@@ -18,6 +18,10 @@ export class Crease {
            this.crease.p2.x.toFixed(2) + ', '+ this.crease.p2.y.toFixed(2) + ')';
   }
 
+  isSuccessful(code){
+    return code === Crease.RESULT_SUCCESSFUL;
+  }
+
   getResult(code){
     switch(code){
       case Crease.RESULT_SUCCESSFUL:

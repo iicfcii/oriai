@@ -26,9 +26,7 @@ export class Design {
 
     let result = step.do(origami);
 
-    let successfulConst = Crease.RESULT_SUCCESSFUL;
-    if (step.directions) successfulConst = Fold.RESULT_SUCCESSFUL;
-    if (result === successfulConst) {
+    if (step.isSuccessful(result)) {
       this.origamis.push(origami);
       this.steps.push(step);
     }

@@ -19,6 +19,10 @@ export class Fold {
            ' up ' + this.directions + ' layers';
   }
 
+  isSuccessful(code){
+    return code === Fold.RESULT_SUCCESSFUL;
+  }
+
   getResult(code){
     switch(code){
       case Fold.RESULT_SUCCESSFUL:

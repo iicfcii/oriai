@@ -51,6 +51,18 @@ test('Should not intersect when one endpoints is not touching and not infinite l
   expect(e1).toBe(null);
 });
 
+test('Should not intersect when edge is infinite length but collinear with one of the edges of the face', () => {
+  let face = new Face(1); // Starting id is 1
+  face.addEdge(new Edge(new Point(0,0),new Point(1,0), face));
+  face.addEdge(new Edge(new Point(1,0),new Point(1,1), face));
+  face.addEdge(new Edge(new Point(1,1),new Point(0,1), face));
+  face.addEdge(new Edge(new Point(0,1),new Point(0,0), face));
+
+  let e1 = face.intersectEdge(new Edge(new Point(0,-1),new Point(0,2)), true);
+
+  expect(e1).toBe(null);
+});
+
 test('Should intersect correctly when not infinite length', () => {
   let face = new Face(1); // Starting id is 1
   face.addEdge(new Edge(new Point(0,0),new Point(1,0), face));

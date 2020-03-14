@@ -42,7 +42,7 @@ export class EditView extends Component {
                               new Edge(this.state.p1, this.state.p2));
         let result = this.props.design.addStep(step);
 
-        if (result !== step.RESULT_SUCCESSFUL){
+        if (!step.isSuccessful(result)){
           this.setState({result: step.getResult(result)});
           return;
         }
@@ -81,7 +81,7 @@ export class EditView extends Component {
                             this.state.directions);
         let result = this.props.design.addStep(step);
 
-        if (result !== step.RESULT_SUCCESSFUL){
+        if (!step.isSuccessful(result)){
           this.setState({result: step.getResult(result)});
           return;
         }
