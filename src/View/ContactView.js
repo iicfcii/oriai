@@ -28,7 +28,9 @@ export class ContactView extends Component {
         </p>
         <h2>Contact</h2>
         <p>
-         If you have any question or comments, send an email to iicfcii@gmail.com.
+         If you have any questions or comments, send an email
+         to <a href="mailto:iicfcii@gmail.com">iicfcii@gmail.com</a> or visit
+         project <a href="https://github.com/iicfcii/oriai">GitHub</a>.
         </p>
       </div>
     );
