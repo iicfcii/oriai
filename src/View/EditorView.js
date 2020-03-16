@@ -82,9 +82,13 @@ export class EditorView extends Component {
   }
 
   updateWindowDimension = () => {
+    // console.log('inner', window.innerWidth, window.innerHeight);
+    // console.log('client', document.documentElement.clientWidth, document.documentElement.clientHeight);
+    // console.log('offset', document.documentElement.offsetWidth, document.documentElement.offsetHeight);
+    // Client and offset width/height do not include scroll in desktop
     this.setState({
-      width: window.innerWidth,
-      height: window.innerHeight,
+      width: document.documentElement.clientWidth,
+      height: document.documentElement.clientHeight,
       shouldPortrait: window.innerWidth-600 < this.ORIGAMI_VIEW_MIN_WIDTH,
     });
   }
@@ -92,6 +96,9 @@ export class EditorView extends Component {
   componentDidMount() {
     this.updateWindowDimension();
     window.addEventListener('resize', this.updateWindowDimension);
+    // window.addEventListener("orientationchange", () => {
+    //   console.log("the orientation of the device is now " + window.screen.orientation.angle);
+    // });
   }
 
   componentWillUnmount() {
