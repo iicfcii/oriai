@@ -46,6 +46,39 @@ An 2D origami simulator for now.
 - Methods
   - do(origami)
 
+## Features List
+- Explore origami designs
+  - View a list of exisiting designs
+  - View information of the design
+  - View each step of the design
+  - View each layer of the step
+  - View information of ponints, lines, and faces
+  - Adjust space between layer
+  - Adjust which layer is centered
+  - Adjust size
+  - Adjust isometric or top view
+- Create origami designs
+  - Start from a plain paper
+  - Save design to local storage
+  - Save to the cloud
+  - Load design from local storage
+  - Load design from cloud
+  - Delete(hide) design from cloud given correct email
+  - Share the design with others
+- Edit origami designs
+  - Edit information
+  - Add crease and fold
+  - Edit crease and fold
+  - Delete crease and fold
+  - Select faces
+  - Select line by line, angle bisector, selecting two endpoints
+  - Select point by point, fraction of line, inputting values
+  - Set directions for each selected face if fold
+  - Preview selected line
+  - Preview folded face position
+- Learn about the project
+
+
 ## TODO List
 - Visuailize step to add: edge set, face selected
 - Edit existing steps
