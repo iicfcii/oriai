@@ -63,8 +63,9 @@ An 2D origami simulator for now.
   - Save to the cloud
   - Load design from local storage
   - Load design from cloud
+  - Can only start from own design
   - Delete(hide) design from cloud given correct email
-  - Share the design with others
+  - Share the design with others using a link to oriai.app/designs/XXXXXX
 - Edit origami designs
   - Edit information
   - Add crease and fold
