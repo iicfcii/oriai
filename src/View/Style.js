@@ -1,98 +1,26 @@
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
-import { Box, Text, CheckBox, TextInput, RadioButton } from 'grommet';
-import { FormClose, Edit } from 'grommet-icons';
+import {
+  Box,
+  Text,
+  CheckBox,
+  Stack,
+  TextInput,
+  RangeInput
+} from 'grommet';
+export { Slider } from './Style/Slider';
+export { Choose } from './Style/Choose';
+export { Button } from './Style/Button';
+export { Select } from './Style/Select';
 
-export const Button = (props) => {
-  const boxRef = useRef(null);
-
-  // No focus or hover for now
-  const [press, setPress] = useState(false);
-  const [textWidth, setTextWidth] = useState('0px');
-
-  useLayoutEffect(() => {
-    // Set correct size for text
-    let height = parseInt(window.getComputedStyle(boxRef.current).height,10);
-    let width = parseInt(window.getComputedStyle(boxRef.current).width,10);
-    setTextWidth((width-height)+'px');
-  }, [textWidth]);
-
-  return(
-    <Box
-      round={true}
-      width='medium'
-      elevation={press?'none':'paper'}>
-      <Box
-        ref={boxRef}
-        background='brand'
-        fill={true}
-        justify='center'
-        align='center'
-        pad='xsmall'
-        round={true}
-        focusIndicator={true}
-        onMouseDown={() => {setPress(true)}}
-        onMouseUp={() => {setPress(false)}}
-        onMouseOut={() => {setPress(false)}}
-        onTouchStart={() => {setPress(true)}}
-        onTouchEnd={() => {setPress(false)}}
-        onClick={props.onClick}>
-          <Text
-            textAlign='center'
-            color='dark2'
-            size='small'
-            style={{...noSelect,width:textWidth}}
-            truncate={true}>
-            {props.label}
-          </Text>
-      </Box>
-    </Box>
-  );
-}
-
-// Controllable with props from parents
-// Not controllable by own state, will be fixed soon.
-// https://github.com/grommet/grommet/issues/3855
 export const Toggle = (props) => {
   return(
     <CheckBox
-      checked={props.defaultValue}
+      checked={props.value}
       toggle={true}
       onChange={(event) => {
         props.onChange(event.target.checked);
       }}/>
   );
-}
-
-export const Choose = (props) => {
-  const [checked, setChecked] = useState(false);
-
-  useLayoutEffect(() => {
-    // console.log('Effect default', props.defaultValue);
-    setChecked(props.defaultValue);
-  }, [props.defaultValue]);
-
-  return(
-    <Box
-      background='light3'
-      justify='center'
-      align='center'
-      round={true}
-      width='xxsmall'
-      height='xxsmall'
-      onClick={() => {
-        props.onClick(!checked);
-        setChecked(!checked);
-      }}
-      focusIndicator={true}>
-      <Box
-        width='12px'
-        height='12px'
-        background={checked?'blue':'white'}
-        round={true}
-        focusIndicator={false}>
-      </Box>
-    </Box>
-  )
 }
 
 export const TextInputLine = (props) => {
@@ -104,6 +32,7 @@ export const TextInputLine = (props) => {
         style: 'solid',
         side: 'all'
       }}
+      round='4px'
       focusIndicator={false}>
       <TextInput
         size='small'
@@ -115,13 +44,6 @@ export const TextInputLine = (props) => {
   );
 }
 
-const noSelect = {
-  WebkitUserSelect: 'none',
-  MozUserSelect: 'none',
-  msUserSelect: 'none',
-  userSelect: 'none'
-}
-
 export const Theme = {
   global: {
     colors: {
@@ -129,6 +51,8 @@ export const Theme = {
       blue: '#7fd4ff',
       red: '#ff6b6b',
       yellow: '#ffe66d',
+      purple: '#ecb0e1',
+      green: '#abe188',
       white: '#ffffff',
       light1: '#f5f5f5',
       light2: '#e8e8e8',
@@ -147,9 +71,11 @@ export const Theme = {
     elevation: {
       light: {
         paper: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+        focus: '0px 0px 2px 2px rgba(0, 0, 0, 0.1)',
       },
       dark: {
         paper: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+        focus: '0px 0px 2px 2px rgba(0, 0, 0, 0.1)',
       },
     },
     font: {
@@ -247,5 +173,17 @@ export const Theme = {
     extend: 'padding: 4px 12px; color: #606060;' +
             'opacity: 1; font-weight: normal;' +
             'border: 0px;',
+  },
+  rangeInput: {
+    track: {
+      color: 'light3',
+      height: '6px',
+      extend: 'border-radius: 3px;'
+    },
+    thumb: {
+      color: 'blue',
+      extend: 'height: 32px; width: 32px; margin-top: -13px;',
+    },
+    extend: 'height: 36px; margin: 0px;'
   },
 };

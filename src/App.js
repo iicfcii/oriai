@@ -3,15 +3,16 @@ import { EditorView } from './View/EditorView';
 import { AboutView } from './View/AboutView';
 import { ContactView } from './View/ContactView';
 import { Box, Grommet } from 'grommet';
-import { Theme, Button, Choose, Toggle, TextInputLine } from './View/Style';
+import { Theme, Button, Choose, Toggle, TextInputLine, Slider, Select } from './View/Style';
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      value: '',
+      text: '',
       checked: false,
+      value: 10,
     }
   }
 
@@ -27,15 +28,13 @@ class App extends Component {
             gap='medium'
             width='large'>
             <Toggle
-              defaultValue={this.state.checked}
+              value={this.state.checked}
               onChange={(checked) => {
-                console.log('Toggle changes', checked)
                 this.setState({checked: checked});
               }}/>
             <Choose
-              defaultValue={!this.state.checked}
+              value={!this.state.checked}
               onClick={(checked) => {
-                console.log('Choose changes', checked)
                 this.setState({checked: !checked});
               }}/>
           </Box>
@@ -45,49 +44,54 @@ class App extends Component {
             width='xlarge'>
             <TextInputLine
               disabled={false}
-              value={this.state.value}
+              value={this.state.text}
               placeholder='type here'
               onChange={(event) => {
-                this.setState({value:event.target.value});
+                this.setState({text:event.target.value});
               }}/>
             <TextInputLine
               disabled={false}
-              value={this.state.value}
+              value={this.state.text}
               placeholder='type here'
               onChange={(event) => {
-                this.setState({value:event.target.value});
+                this.setState({text:event.target.value});
               }}/>
             <TextInputLine
               disabled={true}
-              value={this.state.value}
-              placeholder='type here'
+              value={this.state.text}
+              placeholder=''
               onChange={(event) => {
-                this.setState({value:event.target.value});
+                this.setState({text:event.target.value});
               }}/>
           </Box>
+          <Box
+            direction='row'
+            gap='medium'
+            width='xlarge'>
+            <Slider
+              min={0}
+              max={100}
+              step={10}
+              value={this.state.value}
+              onChange={(value) => {
+                this.setState({value:value});
+              }}/>
+            <Slider
+              min={0}
+              max={100}
+              step={10}
+              value={100-this.state.value}
+              onChange={(value) => {
+                this.setState({value:100-value});
+              }}/>
+          </Box>
+          <Select
+            onClick={() => {console.log('clicked')}}
+            label={'Save'}/>
         </Box>
       </Grommet>
     );
   }
 }
-
-const ChooseGroup = (props) => {
-  const [selected, setSelected] = useState(false);
-
-  return(
-    <Box
-      direction='row'
-      gap='medium'
-      width='large'>
-      <Choose
-        default={selected}
-        onClick={(checked) => {setSelected(selected)}}/>
-      <Choose
-        default={!selected}
-        onClick={(checked) => {setSelected(!selected)}}/>
-    </Box>
-  );
-}
-
 
 export default App;
