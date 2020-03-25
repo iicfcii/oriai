@@ -13,6 +13,7 @@ class App extends Component {
       text: '',
       checked: false,
       value: 10,
+      select: 'Select',
     }
   }
 
@@ -85,9 +86,18 @@ class App extends Component {
                 this.setState({value:100-value});
               }}/>
           </Box>
-          <Select
-            onClick={() => {console.log('clicked')}}
-            label={'Save'}/>
+          <Box
+            direction='row'
+            gap='medium'>
+            <Select
+              label={this.state.select}
+              options={['Select','Line', 'Bisector', 'Endpoint']}
+              onClick={(label)=>{this.setState({select:label});}}/>
+            <Select
+              label={this.state.select}
+              options={['Select','Line', 'Bisector', 'Endpoint']}
+              onClick={(label)=>{this.setState({select:label});}}/>
+          </Box>
         </Box>
       </Grommet>
     );
