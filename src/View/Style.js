@@ -11,6 +11,8 @@ export { Slider } from './Style/Slider';
 export { Choose } from './Style/Choose';
 export { Button } from './Style/Button';
 export { Select } from './Style/Select';
+export { DropMenu } from './Style/DropMenu';
+export { DropMenuContainer } from './Style/DropMenuContainer';
 
 export const Toggle = (props) => {
   return(
@@ -87,6 +89,7 @@ export const Theme = {
       xxsmall: '3px',
       xsmall: '6px',
       small: '12px',
+      smallp: '18px',
       medium: '24px',
       large: '36px',
       xlarge: '72px',
@@ -186,4 +189,7 @@ export const Theme = {
     },
     extend: 'height: 36px; margin: 0px;'
   },
+  accordion: {
+    border: undefined
+  }
 };

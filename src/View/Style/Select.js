@@ -39,6 +39,7 @@ export const Select = (props) => {
 
   return(
     <Box
+      flex={false}
       round='4px'
       width='medium'
       elevation={press?'none':'paper'}>

@@ -2,8 +2,19 @@ import React, { Component, useState } from "react";
 import { EditorView } from './View/EditorView';
 import { AboutView } from './View/AboutView';
 import { ContactView } from './View/ContactView';
-import { Box, Grommet } from 'grommet';
-import { Theme, Button, Choose, Toggle, TextInputLine, Slider, Select } from './View/Style';
+import { Accordion, Box, Grommet, Text } from 'grommet';
+import {
+  Theme,
+  Button,
+  Choose,
+  Toggle,
+  TextInputLine,
+  Slider,
+  Select,
+  DropMenu,
+  DropMenuContainer,
+ } from './View/Style';
+ // import './index.css';
 
 class App extends Component {
   constructor(props) {
@@ -21,13 +32,22 @@ class App extends Component {
     return (
       <Grommet theme={Theme} full>
         <Box fill={true} gap='medium'>
-          <Button
-            onClick={() => {console.log('clicked')}}
-            label={'Save too long'}/>
           <Box
+            flex={false}
             direction='row'
             gap='medium'
-            width='large'>
+            width='large'
+            align='center'>
+            <Button
+              onClick={() => {console.log('clicked')}}
+              label={'Save too long'}/>
+          </Box>
+          <Box
+            flex={false}
+            direction='row'
+            gap='medium'
+            width='large'
+            align='center'>
             <Toggle
               value={this.state.checked}
               onChange={(checked) => {
@@ -40,6 +60,7 @@ class App extends Component {
               }}/>
           </Box>
           <Box
+            flex={false}
             direction='row'
             gap='medium'
             width='xlarge'>
@@ -66,6 +87,7 @@ class App extends Component {
               }}/>
           </Box>
           <Box
+            flex={false}
             direction='row'
             gap='medium'
             width='xlarge'>
@@ -87,6 +109,7 @@ class App extends Component {
               }}/>
           </Box>
           <Box
+            flex={false}
             direction='row'
             gap='medium'>
             <Select
@@ -98,6 +121,36 @@ class App extends Component {
               options={['Select','Line', 'Bisector', 'Endpoint']}
               onClick={(label)=>{this.setState({select:label});}}/>
           </Box>
+          <Box
+            flex={false}
+            background='green'
+            width='large'
+            height='large'
+            overflow='auto'
+            pa={{vertical: 'medium'}}>
+            <DropMenuContainer>
+              <DropMenu label = 'Information'>
+                  <Text
+                    textAlign='start'
+                    color='dark2'
+                    size='small'>
+                    Content Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tortor posuere ac ut consequat.
+                  </Text>
+              </DropMenu>
+              <DropMenu label = 'Tools'>
+                <Text
+                  textAlign='start'
+                  color='dark2'
+                  size='small'>
+                  Content Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tortor posuere ac ut consequat.
+                </Text>
+              </DropMenu>
+            </DropMenuContainer>
+          </Box>
+          <div>
+            <div>
+            </div>
+          </div>
         </Box>
       </Grommet>
     );
