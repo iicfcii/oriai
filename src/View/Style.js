@@ -7,9 +7,11 @@ import {
   TextInput,
   RangeInput
 } from 'grommet';
+export { Logo } from './Style/Logo';
+export { Footer } from './Style/Footer';
 export { Slider } from './Style/Slider';
 export { Choose } from './Style/Choose';
-export { Button } from './Style/Button';
+export { Button, NavCard } from './Style/Button';
 export { Select } from './Style/Select';
 export { DropMenu } from './Style/DropMenu';
 export { DropMenuContainer } from './Style/DropMenuContainer';
@@ -73,10 +75,12 @@ export const Theme = {
     elevation: {
       light: {
         paper: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+        paperLeft: '4px 0px 4px rgba(0, 0, 0, 0.25)',
         focus: '0px 0px 2px 2px rgba(0, 0, 0, 0.1)',
       },
       dark: {
         paper: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+        paperLeft: '4px 0px 4px rgba(0, 0, 0, 0.25)',
         focus: '0px 0px 2px 2px rgba(0, 0, 0, 0.1)',
       },
     },
@@ -191,5 +195,10 @@ export const Theme = {
   },
   accordion: {
     border: undefined
-  }
+  },
+  anchor: {
+    hover: {
+      textDecoration: 'none',
+    },
+  },
 };
