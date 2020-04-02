@@ -11,7 +11,7 @@ export { Logo } from './Style/Logo';
 export { Footer } from './Style/Footer';
 export { Slider } from './Style/Slider';
 export { Choose } from './Style/Choose';
-export { Button, NavCard } from './Style/Button';
+export { Button, Icon, NavCard } from './Style/Button';
 export { Select } from './Style/Select';
 export { DropMenu } from './Style/DropMenu';
 export { DropMenuContainer } from './Style/DropMenuContainer';
@@ -106,6 +106,7 @@ export const Theme = {
       medium: '144px',
       large: '288px',
       xlarge: '576px',
+      xlargep: '864px',
       xxlarge: '1152px',
       full: '100%',
       origami: '192',

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useLayoutEffect } from 'react';
 import { Box, Text, Anchor } from 'grommet';
 import { Github, Youtube, Twitter} from 'grommet-icons';
+import { Icon } from '../Style';
 
 export const Footer = (props) => {
   return(
@@ -8,18 +9,27 @@ export const Footer = (props) => {
       flex={false}
       width='large'
       height='small'
-      justify='center'
+      justify='evenly'
       align='center'>
       <Box
         flex={false}
         direction='row'
-        height='xsmall'
+        height='xxsmall'
         gap='large'
         justify='center'
         align='center'>
-        <Anchor><Youtube color='dark2'/></Anchor>
-        <Anchor><Twitter color='dark2'/></Anchor>
-        <Anchor><Github color='dark2'/></Anchor>
+        <Icon
+          onClick={() => {}}>
+          <Youtube color='dark2'/>
+        </Icon>
+        <Icon
+          onClick={() => {}}>
+          <Twitter color='dark2'/>
+        </Icon>
+        <Icon
+          onClick={() => {}}>
+          <Github color='dark2'/>
+        </Icon>
       </Box>
       <Text
         textAlign='center'

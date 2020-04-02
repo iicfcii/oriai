@@ -1,27 +1,19 @@
 import React, { Component, useState } from "react";
-import { SidebarMain } from './View/SidebarMain';
-import { Accordion, Box, Grommet, Text } from 'grommet';
-import {
-  Theme,
-  Button,
-  Choose,
-  Toggle,
-  TextInputLine,
-  Slider,
-  Select,
-  DropMenu,
-  DropMenuContainer,
-  NavCard,
-  Logo,
- } from './View/Style';
+import { SideBarMain } from './View/SideBarMain';
+import { SideBarExplore } from './View/SideBarExplore';
+import { SideBarCreate } from './View/SideBarCreate';
+import { Editor } from './View/Editor';
+import { Box, Grommet } from 'grommet';
+import { Theme } from './View/Style';
  // import './index.css';
 
 
 const App = (props) => {
   return(
     <Grommet theme={Theme} full>
-      <Box fill>
-      <SidebarMain/>
+      <Box fill direction='row'>
+        <SideBarCreate/>
+        <Editor/>
       </Box>
     </Grommet>
   );

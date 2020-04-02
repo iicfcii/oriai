@@ -1,5 +1,5 @@
 import React, { useState, useRef, useLayoutEffect } from 'react';
-import { Box, Text, Anchor } from 'grommet';
+import { Box, Text } from 'grommet';
 
 export const Logo = (props) => {
   return(
@@ -9,11 +9,16 @@ export const Logo = (props) => {
       height='small'
       justify='center'
       align='center'>
-        <Anchor
-          color='blue'
-          size='xlarge'>
-          ORIAI
-        </Anchor>
+        <Box
+          flex={false}
+          onClick={() => {}}>
+          <Text
+            color='blue'
+            size='xlarge'
+            weight='bold'>
+            ORIAI
+          </Text>
+        </Box>
     </Box>
   );
 }

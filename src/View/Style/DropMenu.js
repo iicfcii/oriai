@@ -7,6 +7,7 @@ export const DropMenu = (props) => {
     <AccordionPanel
       header={
         <Box
+          responsive={false}
           direction='row'
           justify='between'
           align='center'

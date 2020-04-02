@@ -4,7 +4,7 @@ import { NavCard } from './Style';
 import { SideBar} from './SideBar';
 import { Folder, Edit, Info } from 'grommet-icons';
 
-export const SidebarMain = (props) => {
+export const SideBarMain = (props) => {
   const offset = 96; // px
 
   const [select, setSelect] = useState('explore');
@@ -58,7 +58,7 @@ export const SidebarMain = (props) => {
 
     if (select === 'explore'){
       return(
-        <div style={{position: 'relative'}}>
+        <div style={container}>
           {aboutButton}
           {createButton}
           {exploreButton}
@@ -66,7 +66,7 @@ export const SidebarMain = (props) => {
       );
     } else if (select === 'create'){
       return(
-        <div style={{position: 'relative'}}>
+        <div style={container}>
           {exploreButton}
           {aboutButton}
           {createButton}
@@ -74,7 +74,7 @@ export const SidebarMain = (props) => {
       );
     } else if (select === 'about'){
       return(
-        <div style={{position: 'relative'}}>
+        <div style={container}>
           {exploreButton}
           {createButton}
           {aboutButton}
@@ -91,3 +91,9 @@ export const SidebarMain = (props) => {
     </SideBar>
   );
 }
+
+const container = {
+  position: 'relative',
+  overflow: 'auto',
+  height: '100%'
+};

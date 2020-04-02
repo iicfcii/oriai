@@ -22,6 +22,7 @@ export const Button = (props) => {
       width='medium'
       elevation={press?'none':'paper'}>
       <Box
+        responsive={false} 
         ref={boxRef}
         background='brand'
         fill={true}
@@ -52,6 +53,18 @@ export const Button = (props) => {
   );
 }
 
+export const Icon = (props) => {
+  return(
+    <Box
+      flex={false}
+      width='xxsmall'
+      height='xxsmall'
+      onClick={props.onClick}>
+      {props.children}
+    </Box>
+  );
+}
+
 export const NavCard = (props) => {
   const boxRef = useRef(null);
 
@@ -65,6 +78,7 @@ export const NavCard = (props) => {
     setTextWidth((width-48)+'px');
   }, [textWidth]);
 
+  // gap does not work with responsive=false
   return(
     <Box
       flex={false}
