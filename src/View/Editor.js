@@ -103,10 +103,20 @@ export const Editor = (props) => {
         fill='horizontal'
         justify='between'
         align='stretch'>
-        <Box flex={false} width='medium' margin={{right:'large'}}>
+        <Box
+          responsive={false}
+          flex={false}
+          width='medium'
+          margin={{right:'large'}}>
         </Box>
         <StepView/>
-        <Box style={{zIndex: 100}} flex={false} width='medium' margin={{left:'large'}} align='end' >
+        <Box
+          responsive={false}
+          style={{zIndex: 100}}
+          flex={false} 
+          width='medium'
+          margin={{left:'large'}}
+          align='end' >
           <Button
             onClick={() => {console.log('clicked')}}
             label={'Reset'}/>

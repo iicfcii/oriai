@@ -4,7 +4,12 @@ import { Slider } from '../Style';
 
 export const StepView = (props) => {
   return(
-    <Box style={{zIndex: 100}} direction='row' width='xlargep' align='center'>
+    <Box
+      responsive={false}
+      style={{zIndex: 100}}
+      direction='row'
+      width='xlargep'
+      align='center'>
       <Text color='dark2' size='small'>
         step
       </Text>

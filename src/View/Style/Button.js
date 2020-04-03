@@ -22,9 +22,9 @@ export const Button = (props) => {
       width='medium'
       elevation={press?'none':'paper'}>
       <Box
-        responsive={false} 
+        responsive={false}
         ref={boxRef}
-        background='brand'
+        background={props.color?props.color:'blue'}
         fill={true}
         justify='center'
         align='center'

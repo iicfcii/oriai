@@ -4,7 +4,13 @@ import { Slider } from '../Style';
 
 export const SpaceView = (props) => {
   return(
-    <Box style={{zIndex: 100}} direction='column' height='xlargep' align='center' margin={{vertical:'large'}}>
+    <Box
+      responsive={false}
+      style={{zIndex: 100}}
+      direction='column'
+      height='xlargep'
+      align='center'
+      margin={{vertical:'large'}}>
       <Text color='dark2' size='small' alignSelf='center'>
         space
       </Text>

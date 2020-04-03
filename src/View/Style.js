@@ -31,7 +31,7 @@ export const TextInputLine = (props) => {
   return(
     <Box
       border={{
-        color: props.disabled?'dark2':'light2',
+        color: props.disabled?'dark2':'light1',
         size: 'small',
         style: 'solid',
         side: 'all'
@@ -65,7 +65,7 @@ export const Theme = {
       dark1: '#404040',
       dark2 :'#606060',
       dark3: '#808080',
-      placeholder: '#f5f5f5'
+      placeholder: '#808080'
     },
     focus: {
       border: {

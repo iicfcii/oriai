@@ -44,6 +44,7 @@ export const Select = (props) => {
       width='medium'
       elevation={press?'none':'paper'}>
       <Box
+        responsive={false}
         ref={boxRef}
         direction='row'
         background='brand'
@@ -79,6 +80,7 @@ export const Select = (props) => {
       </Box>
       {boxRef.current && showDrop && (
         <Drop
+          style={{zIndex: 1000}}
           plain={true}
           overflow='visible'
           elevation='none'
@@ -92,8 +94,7 @@ export const Select = (props) => {
               overflow={{vertical: 'auto', horizontal: 'hidden'}}
               elevation='paper'
               round='4px'
-              width='medium'
-              height='medium'>
+              width='medium'>
               {renderOptions()}
             </Box>
           </Box>
