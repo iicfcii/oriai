@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Line } from 'react-konva';
+import { Theme } from '../Style';
 
 export class EdgeView extends Component {
   constructor(props) {
@@ -42,11 +43,10 @@ export class EdgeView extends Component {
       <Line
         opacity = {this.props.opacity}
         points = {this.props.edge.scale(this.props.layout)}
-        stroke = {this.props.edge.isBoundary?'black':'red'}
-        strokeWidth = {isSelected?5:3}
-        hitStrokeWidth = {5}
+        stroke = {this.props.edge.isBoundary?Theme.global.colors.dark2:Theme.global.colors.blue}
+        strokeWidth = {isSelected?8:5}
+        hitStrokeWidth = {8}
         lineCap = 'round'
-        lineJoint = 'round'
         onClick = {this.onClick}
         onTap = {this.onClick}/>
     );

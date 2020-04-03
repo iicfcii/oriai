@@ -1,104 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Box, Text } from 'grommet';
-import { Logo, Footer, Icon, Slider, Button } from './Style';
-import { Toggle } from './Style';
+import { Logo, Footer, Icon, Slider, Button, Toggle } from './Style';
+import { OrigamiView } from './Editor/OrigamiView';
+import { InfoView } from './Editor/InfoView';
+import { ViewView } from './Editor/ViewView';
+import { LayerView } from './Editor/LayerView';
+import { SpaceView } from './Editor/SpaceView';
+import { StepView } from './Editor/StepView';
+import { Design } from '../Model/Design';
+import Cat from '../Examples/Cat.json';
 
 export const Editor = (props) => {
+  const design = new Design();
+  design.load(Cat);
 
-  const infoView = (
-    <Box
-      direction='row'
-      justify='end'
-      align='center'>
-      <Text
-        color='dark2'
-        size='small'
-        truncate={true}>
-        Info
-      </Text>
-    </Box>
-  );
+  const containerRef = useRef(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(0);
 
-  const viewView = (
-    <Box
-      flex={false}
-      direction='row'
-      justify='end'
-      align='center'>
-      <Text
-        color='dark2'
-        size='small'
-        margin={{right:'small'}}>
-        Isometric
-      </Text>
-      <Toggle
-        value={true}
-        onChange={(checked) => {console.log(checked)}}/>
-    </Box>
-  );
+  const dimension = {width: containerWidth, height: containerHeight};
+  const layout = {
+    ratio: dimension.width/2,
+    x: dimension.width/2,
+    y: dimension.height/2,
+    angle: 0,
+    isometric: true,
+  }
 
-  const layerView = (
-    <Box direction='column' height='xlargep' align='center' margin={{vertical:'large'}}>
-      <Text color='dark2' size='small' alignSelf='center'>
-        layer
-      </Text>
-      <Box flex={true}>
-        <Slider
-          vertical
-          min={0}
-          max={100}
-          step={10}
-          value={50}
-          onChange={(value) => {}}/>
-      </Box>
-      <Text color='dark2' size='small' alignSelf='center'>
-        05
-      </Text>
-    </Box>
-  );
+  const updateDimension = () => {
+    let w = parseInt(window.getComputedStyle(containerRef.current).width,10);
+    let h = parseInt(window.getComputedStyle(containerRef.current).height,10);
+    setContainerWidth(w);
+    setContainerHeight(h);
+  }
 
-  const spaceView = (
-    <Box direction='column' height='xlargep' align='center' margin={{vertical:'large'}}>
-      <Text color='dark2' size='small' alignSelf='center'>
-        space
-      </Text>
-      <Box flex={true}>
-        <Slider
-          vertical
-          min={0}
-          max={100}
-          step={10}
-          value={50}
-          onChange={(value) => {}}/>
-      </Box>
-      <Text color='dark2' size='small' alignSelf='center'>
-        10
-      </Text>
-    </Box>
-  );
+  useEffect(() => {
+    window.addEventListener('resize', updateDimension);
 
-  const stepView = (
-    <Box direction='row' width='xlargep' align='center'>
-      <Text color='dark2' size='small'>
-        step
-      </Text>
-      <Box flex={true}>
-        <Slider
-          min={0}
-          max={12}
-          step={1}
-          value={6}
-          onChange={(value) => {}}/>
-      </Box>
-      <Text color='dark2' size='small'>
-        08
-      </Text>
-    </Box>
-  );
+    return () => {window.removeEventListener('resize', updateDimension)}
+  },[]);
+
+  useLayoutEffect(() => {
+    updateDimension();
+  });
 
   return(
     <Box
-      style={{minWidth:'864px', minHeight: '576px'}}
+      style={{minWidth:'864px', minHeight: '576px', position: 'relative'}}
       basis='full'
       background='light1'
       flex={true}
@@ -106,6 +54,27 @@ export const Editor = (props) => {
       align='center'
       pad='large'
       responsive={false}>
+      <div style={{position: 'absolute', top: 0, left: 0, bottom: 0, right: 0,}}>
+        <Box
+          ref={containerRef}
+          responsive={false}
+          fill={true}
+          justify='center'
+          align='center'>
+          <OrigamiView
+            origami = {design.getOrigami(8)}
+            dimension = {dimension}
+            layout = {layout}
+            space = {0}
+            layer = {0}
+            hideUnselectedFaces = {false}
+            pointSelected = {[]}
+            edgeSelected = {[]}
+            faceSelected = {[]}
+            update = {() => {}}
+          />
+        </Box>
+      </div>
       <Box
         flex={false}
         direction='row'
@@ -113,8 +82,8 @@ export const Editor = (props) => {
         justify='between'
         align='center'
         height='xsmall'>
-        {infoView}
-        {viewView}
+        <InfoView/>
+        <ViewView/>
       </Box>
       <Box
         direction='row'
@@ -122,17 +91,10 @@ export const Editor = (props) => {
         justify='between'
         align='stretch'>
         <Box flex={false} fill='vertical' justify='center' align='center'>
-          {layerView}
-        </Box>
-        <Box
-          responsive={false}
-          flex={true}
-          justify='center'
-          align='center'
-          margin='large'>
+          <LayerView/>
         </Box>
         <Box flex={false} fill='vertical' justify='center' align='center'>
-          {spaceView}
+          <SpaceView/>
         </Box>
       </Box>
       <Box
@@ -143,8 +105,8 @@ export const Editor = (props) => {
         align='stretch'>
         <Box flex={false} width='medium' margin={{right:'large'}}>
         </Box>
-        {stepView}
-        <Box flex={false} width='medium' margin={{left:'large'}} align='end' >
+        <StepView/>
+        <Box style={{zIndex: 100}} flex={false} width='medium' margin={{left:'large'}} align='end' >
           <Button
             onClick={() => {console.log('clicked')}}
             label={'Reset'}/>

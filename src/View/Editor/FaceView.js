@@ -2,14 +2,15 @@ import React, { Component } from 'react';
 import { Line, Group, Text} from 'react-konva';
 import { EdgeView } from './EdgeView';
 import { PointView } from './PointView';
+import { Theme } from '../Style';
 
 // Visuailize Face
 export class FaceView extends Component {
   constructor(props) {
     super(props);
 
-    this.ID_WIDTH = 20;
-    this.ID_HEIGHT = 10;
+    this.ID_WIDTH = 28;
+    this.ID_HEIGHT = 14;
   }
 
   onClick = () => {
@@ -84,7 +85,7 @@ export class FaceView extends Component {
       <Line
         points = {this.props.face.scale(this.props.layout)}
         closed = {true}
-        fill = {color}
+        fill = {Theme.global.colors.red}
         onClick = {this.onClick}
         onTap = {this.onClick}
         opacity = {opacity}/>
@@ -97,7 +98,9 @@ export class FaceView extends Component {
 
     return(
       <Text
-        fontStyle = {fontStyle}
+        fill = {Theme.global.colors.dark2}
+        fontFamily={'Josefin Sans'}
+        fontSize={'14'}
         x = {this.props.face.centroid.scale(this.props.layout)[0]-this.ID_WIDTH/2}
         y = {this.props.face.centroid.scale(this.props.layout)[1]-this.ID_HEIGHT/2}
         width = {this.ID_WIDTH}

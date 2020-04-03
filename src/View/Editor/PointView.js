@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Circle } from 'react-konva';
+import { Theme } from '../Style';
 
 export class PointView extends Component {
   constructor(props) {
@@ -41,9 +42,9 @@ export class PointView extends Component {
         opacity = {this.props.opacity}
         x = {point[0]}
         y = {point[1]}
-        radius = {isSelected?5:3}
-        fill = {'red'}
-        hitStrokeWidth = {5}
+        radius = {isSelected?4:3}
+        fill = {Theme.global.colors.yellow}
+        hitStrokeWidth = {8}
         onClick = {this.onClick}
         onTap = {this.onClick}/>
     );

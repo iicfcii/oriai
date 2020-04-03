@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import { Layer, Stage, Rect, Text, Line, Circle } from 'react-konva';
-import { FaceView } from './FaceView'
-import { Point } from '../Model/Point'
+import { FaceView } from './FaceView';
+import { Point } from '../../Model/Point';
+import { Theme } from '../Style';
 
-// Visuailize Face
 export class OrigamiView extends Component {
   constructor(props) {
     super(props);
 
     this.LABEL_WIDTH = 50;
-    this.LABEL_HEIGHT = 12;
-    this.LABEL_OFFSET = 5;
+    this.LABEL_HEIGHT = 14;
+    this.LABEL_OFFSET = 10;
   }
 
   onClick = () => {
+    console.log('clicked origami canvas');
     this.props.update({
       info: '',
       pointSelected: [],
@@ -73,42 +74,45 @@ export class OrigamiView extends Component {
           y = {0}
           width = {this.props.dimension.width}
           height = {this.props.dimension.height}
-          fill = '#f0f0f0'
           onClick = {this.onClick}
           preventDefault={false}>
         </Rect>
         <Line
+          lineCap = 'round'
+          lineJoin = 'round'
           points = {frame}
           closed = {true}
-          stroke = {'black'}
-          strokeWidth = {1}
+          stroke = {Theme.global.colors.light3}
+          strokeWidth = {5}
           listening = {false}/>
         <Circle
           x = {frame[0]}
           y = {frame[1]}
-          radius = {2}
-          fill = {'black'}/>
+          radius = {3}
+          fill = {Theme.global.colors.light3}/>
         <Circle
           x = {frame[2]}
           y = {frame[3]}
-          radius = {2}
-          fill = {'black'}/>
+          radius = {3}
+          fill = {Theme.global.colors.light3}/>
         <Circle
           x = {frame[4]}
           y = {frame[5]}
-          radius = {2}
-          fill = {'black'}/>
+          radius = {3}
+          fill = {Theme.global.colors.light3}/>
         <Circle
           x = {frame[6]}
           y = {frame[7]}
-          radius = {2}
-          fill = {'black'}/>
+          radius = {3}
+          fill = {Theme.global.colors.light3}/>
         <Text
           x = {frame[0]-this.LABEL_WIDTH/2}
           y = {frame[1]-this.LABEL_HEIGHT-this.LABEL_OFFSET}
           width = {this.LABEL_WIDTH}
           height = {this.LABEL_HEIGHT}
-          fill = {'black'}
+          fill = {Theme.global.colors.dark2}
+          fontFamily={'Josefin Sans'}
+          fontSize={'14'}
           text = {'(0, 0)'}
           align = {'center'}
           verticalAlign = {'middle'}
@@ -118,7 +122,9 @@ export class OrigamiView extends Component {
           y = {frame[3]-this.LABEL_HEIGHT/2}
           width = {this.LABEL_WIDTH}
           height = {this.LABEL_HEIGHT}
-          fill = {'black'}
+          fill = {Theme.global.colors.dark2}
+          fontFamily={'Josefin Sans'}
+          fontSize={'14'}
           text = {'(1, 0)'}
           align = {'left'}
           verticalAlign = {'middle'}
@@ -128,7 +134,9 @@ export class OrigamiView extends Component {
           y = {frame[5]+this.LABEL_OFFSET}
           width = {this.LABEL_WIDTH}
           height = {this.LABEL_HEIGHT}
-          fill = {'black'}
+          fill = {Theme.global.colors.dark2}
+          fontFamily={'Josefin Sans'}
+          fontSize={'14'}
           text = {'(1, 1)'}
           align = {'center'}
           verticalAlign = {'middle'}
@@ -138,7 +146,9 @@ export class OrigamiView extends Component {
           y = {frame[7]-this.LABEL_HEIGHT/2}
           width = {this.LABEL_WIDTH}
           height = {this.LABEL_HEIGHT}
-          fill = {'black'}
+          fill = {Theme.global.colors.dark2}
+          fontFamily={'Josefin Sans'}
+          fontSize={'14'}
           text = {'(0, 1)'}
           align = {'right'}
           verticalAlign = {'middle'}
