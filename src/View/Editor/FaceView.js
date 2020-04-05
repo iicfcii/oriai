@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Konva from 'konva';
 import { Line, Group, Text} from 'react-konva';
 import { EdgeView } from './EdgeView';
 import { PointView } from './PointView';
@@ -11,10 +12,11 @@ export class FaceView extends Component {
 
     this.ID_WIDTH = 28;
     this.ID_HEIGHT = 14;
+    this.faceRef = React.createRef();
   }
 
   onClick = () => {
-    let index = this.props.faceSelected.indexOf(this.props.face);
+    let index = this.faceIndex();
     let newFaceSelected = this.props.faceSelected.slice();
     if (index !== -1) {
       // Already selected, deselect
@@ -30,27 +32,25 @@ export class FaceView extends Component {
       info = 'Multiple faces selected';
     } else {
     }
-    this.props.update({
-      info: info,
-      faceSelected: newFaceSelected,
-    });
+
+    this.props.setInfo(info);
+    this.props.setFaceSelected(newFaceSelected);
   }
 
   renderEdges = (opacity) => {
     // Prepare edges
     let edges = [];
     this.props.face.edges.forEach((edge) => {
-      // if(edgeOver){
-      //   isOver = edge === edgeOver || edge === edgeOver.twin;
-      // }
       edges.push(
         <EdgeView
           key = {edge.key}
           edge = {edge}
           edgeSelected = {this.props.edgeSelected}
+          setEdgeSelected = {this.props.setEdgeSelected}
           opacity = {opacity}
           layout = {this.props.layout}
-          update = {this.props.update}/>
+          update = {this.props.update}
+          setInfo = {this.props.setInfo}/>
       );
     });
 
@@ -63,11 +63,14 @@ export class FaceView extends Component {
       points.push(
         <PointView
           key = {edge.parentFace1.id+edge.p1.key}
+          faceId = {this.props.face.id}
           point = {edge.p1}
           pointSelected = {this.props.pointSelected}
+          setPointSelected = {this.props.setPointSelected}
           opacity = {opacity}
           layout = {this.props.layout}
-          update = {this.props.update}/>
+          update = {this.props.update}
+          setInfo = {this.props.setInfo}/>
       );
     });
 
@@ -75,14 +78,10 @@ export class FaceView extends Component {
   }
 
   renderFace = (opacity) => {
-    // Determine face color
-    let color = 'white';
-    if (this.props.faceSelected){
-      if(this.props.faceSelected.indexOf(this.props.face) !== -1) color = 'yellow';
-    }
-
     return(
       <Line
+        filters={[Konva.Filters.Brighten]}
+        ref={this.faceRef}
         points = {this.props.face.scale(this.props.layout)}
         closed = {true}
         fill = {Theme.global.colors.red}
@@ -114,12 +113,37 @@ export class FaceView extends Component {
     );
   }
 
+  faceIndex= () => {
+    // Object seems to chagne with hook
+    let index = -1;
+    this.props.faceSelected.forEach((face, i) => {
+      if (face.id === this.props.face.id) index = i;
+    });
+    return index
+  }
+
+  componentDidUpdate () {
+    // Determine face color
+    let isSelected = this.faceIndex() !== -1;
+    if (this.faceRef.current){
+      this.faceRef.current.cache();
+      if (isSelected && !this.props.highlight) {
+        this.faceRef.current.brightness(0.2);
+      } else {
+        this.faceRef.current.brightness(0);
+      }
+      this.faceRef.current.getLayer().batchDraw();
+    }
+  }
+
   render() {
+    let isSelected = this.faceIndex() !== -1;
+
     // Determine entire face opacity
     let opacity = 1;
-    if (this.props.hideUnselectedFaces &&
+    if (this.props.highlight &&
         this.props.faceSelected.length > 0){
-      if(this.props.faceSelected.indexOf(this.props.face) === -1) {
+      if(this.faceIndex() === -1) {
         opacity = 0.1;
       }
     }

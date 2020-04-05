@@ -12,7 +12,7 @@ export const InfoView = (props) => {
         color='dark2'
         size='small'
         truncate={true}>
-        Info
+        {props.info}
       </Text>
     </Box>
   );

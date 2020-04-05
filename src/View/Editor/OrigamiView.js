@@ -14,13 +14,10 @@ export class OrigamiView extends Component {
   }
 
   onClick = () => {
-    console.log('clicked origami canvas');
-    this.props.update({
-      info: '',
-      pointSelected: [],
-      edgeSelected: [],
-      faceSelected: [],
-    });
+    this.props.setInfo('');
+    this.props.setFaceSelected([]);
+    this.props.setEdgeSelected([]);
+    this.props.setPointSelected([]);
   }
 
   renderFaces =() => {
@@ -43,10 +40,14 @@ export class OrigamiView extends Component {
           face = {face}
           layout = {layout}
           space = {this.props.space}
-          hideUnselectedFaces = {this.props.hideUnselectedFaces}
+          highlight = {this.props.highlight}
           faceSelected = {this.props.faceSelected}
+          setFaceSelected = {this.props.setFaceSelected}
           edgeSelected = {this.props.edgeSelected}
+          setEdgeSelected = {this.props.setEdgeSelected}
           pointSelected = {this.props.pointSelected}
+          setPointSelected = {this.props.setPointSelected}
+          setInfo = {this.props.setInfo}
           update = {this.props.update}/>
       );
     });

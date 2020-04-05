@@ -155,14 +155,14 @@ export const Theme = {
     color: {
       light: 'blue'
     },
-    size: '36px',
+    size: '24px',
     toggle: {
       color: {
         light: 'white'
       },
       background: 'light3',
-      size: '66px',
-      radius: '36px',
+      size: '42px',
+      radius: '24px',
       knob: {
         extend: 'border: 3px solid #dcdcdc'
       },

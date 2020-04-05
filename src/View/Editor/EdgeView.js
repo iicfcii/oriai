@@ -8,7 +8,7 @@ export class EdgeView extends Component {
   }
 
   onClick = () => {
-    let index = this.props.edgeSelected.indexOf(this.props.edge);
+    let index = this.edgeIndex();
     let newEdgeSelected = this.props.edgeSelected.slice(); // Make a copy
     if (index !== -1) {
       // Already selected, deselect
@@ -24,20 +24,29 @@ export class EdgeView extends Component {
           info = 'Crease connects face ' + twin.parentFace1.id +
                  ' and ' + twin.parentFace2.id;
         } else {
-          info = 'Edge';
+          info = 'Edge of paper';
         }
     } else if (newEdgeSelected.length > 1){
       info = 'Multiple edges selected';
     } else {
     }
-    this.props.update({
-      info: info,
-      edgeSelected: newEdgeSelected,
-    });
+    this.props.setInfo(info);
+    this.props.setEdgeSelected(newEdgeSelected);
   }
 
+  edgeIndex= () => {
+    // Object seems to chagne with hook
+    let index = -1;
+    this.props.edgeSelected.forEach((edge, i) => {
+      if (edge.parentFace1.id === this.props.edge.parentFace1.id &&
+          edge.isEqual(this.props.edge)) index = i;
+    });
+    return index
+  }
+
+
   render() {
-    let isSelected = this.props.edgeSelected.indexOf(this.props.edge) !== -1;
+    let isSelected = this.edgeIndex() !== -1;
 
     return (
       <Line

@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Box, Text } from 'grommet';
-import { Logo, Footer, Icon, Slider, Button, Toggle } from './Style';
-import { OrigamiView } from './Editor/OrigamiView';
-import { InfoView } from './Editor/InfoView';
-import { ViewView } from './Editor/ViewView';
-import { LayerView } from './Editor/LayerView';
-import { SpaceView } from './Editor/SpaceView';
-import { StepView } from './Editor/StepView';
-import { Design } from '../Model/Design';
-import Cat from '../Examples/Cat.json';
+import { Logo, Footer, Icon, Slider, Button, Toggle } from '../Style';
+import { OrigamiView } from './OrigamiView';
+import { InfoView } from './InfoView';
+import { ViewView } from './ViewView';
+import { LayerView } from './LayerView';
+import { SpaceView, space2Px } from './SpaceView';
+import { StepView } from './StepView';
+import { Design } from '../../Model/Design';
+import Cat from '../../Examples/Cat.json';
 
 export const Editor = (props) => {
   const design = new Design();
@@ -17,14 +17,23 @@ export const Editor = (props) => {
   const containerRef = useRef(null);
   const [containerWidth, setContainerWidth] = useState(0);
   const [containerHeight, setContainerHeight] = useState(0);
+  const [step, setStep] = useState(design.origamis.length-1);
+  const [isometric, setIsometric] = useState(true);
+  const [space, setSpace] = useState(0);
+  const [layer, setLayer] = useState(0);
+  const [info, setInfo] = useState('');
+  const [highlight, setHighlight] = useState(false);
+  const [pointSelected, setPointSelected] = useState([]);
+  const [edgeSelected, setEdgeSelected] = useState([]);
+  const [faceSelected, setFaceSelected] = useState([]);
 
   const dimension = {width: containerWidth, height: containerHeight};
   const layout = {
-    ratio: dimension.width/2,
+    ratio: dimension.width/2.5,
     x: dimension.width/2,
-    y: dimension.height/2,
+    y: dimension.height/2+layer*space2Px(space),
     angle: 0,
-    isometric: true,
+    isometric: isometric,
   }
 
   const updateDimension = () => {
@@ -62,16 +71,21 @@ export const Editor = (props) => {
           justify='center'
           align='center'>
           <OrigamiView
-            origami = {design.getOrigami(8)}
+            origami = {design.origamis[step]}
             dimension = {dimension}
             layout = {layout}
-            space = {0}
-            layer = {0}
-            hideUnselectedFaces = {false}
-            pointSelected = {[]}
-            edgeSelected = {[]}
-            faceSelected = {[]}
+            space = {space2Px(space)}
+            layer = {layer}
+            highlight = {highlight}
+            pointSelected = {pointSelected}
+            setPointSelected={setPointSelected}
+            edgeSelected={edgeSelected}
+            setEdgeSelected={setEdgeSelected}
+            faceSelected={faceSelected}
+            setFaceSelected={setFaceSelected}
             update = {() => {}}
+            info={info}
+            setInfo={setInfo}
           />
         </Box>
       </div>
@@ -80,10 +94,13 @@ export const Editor = (props) => {
         direction='row'
         fill='horizontal'
         justify='between'
-        align='center'
-        height='xsmall'>
-        <InfoView/>
-        <ViewView/>
+        align='center'>
+        <InfoView info={info}/>
+        <ViewView
+          isometric={isometric}
+          setIsometric={setIsometric}
+          highlight={highlight}
+          setHighlight={setHighlight}/>
       </Box>
       <Box
         direction='row'
@@ -91,10 +108,10 @@ export const Editor = (props) => {
         justify='between'
         align='stretch'>
         <Box flex={false} fill='vertical' justify='center' align='center'>
-          <LayerView/>
+          <LayerView layer={layer} setLayer={setLayer} max={design.origamis[step].layers.length-1}/>
         </Box>
         <Box flex={false} fill='vertical' justify='center' align='center'>
-          <SpaceView/>
+          <SpaceView space={space} setSpace={setSpace}/>
         </Box>
       </Box>
       <Box
@@ -109,11 +126,11 @@ export const Editor = (props) => {
           width='medium'
           margin={{right:'large'}}>
         </Box>
-        <StepView/>
+        <StepView step={step} setStep={setStep} max={design.origamis.length-1}/>
         <Box
           responsive={false}
           style={{zIndex: 100}}
-          flex={false} 
+          flex={false}
           width='medium'
           margin={{left:'large'}}
           align='end' >

@@ -2,7 +2,7 @@ import React, { Component, useState } from "react";
 import { SideBarMain } from './View/SideBarMain';
 import { SideBarExplore } from './View/SideBarExplore';
 import { SideBarCreate } from './View/SideBarCreate/SideBarCreate';
-import { Editor } from './View/Editor';
+import { Editor } from './View/Editor/Editor';
 import { Box, Grommet } from 'grommet';
 import { Theme } from './View/Style';
  // import './index.css';

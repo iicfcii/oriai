@@ -10,6 +10,7 @@ export const Slider = (props) => {
   const thumbSize = 32;
   const trackHeight = 6;
   const offset = (thumbSizeMax/2-trackHeight/2); // Actual origin x
+  const maxStep = Math.floor((props.max-props.min)/props.step);
 
   const [length, setLength] = useState(0);
   const [padStart, setPadStart] = useState(0);
@@ -20,7 +21,7 @@ export const Slider = (props) => {
 
   const step2Pad = (step) => {
     // Avoid divided by 0
-    if (props.max-props.min < 1e-6) return 0
+    if (props.max-props.min < 1e-6) return props.vertical?(length-thumbSizeMax):0
 
     let percent = step*props.step/(props.max-props.min);
     if (percent > 1) percent = 1;
@@ -55,7 +56,6 @@ export const Slider = (props) => {
     let rect = boxRef.current.getBoundingClientRect();
     let l = props.vertical?event2ClientXY(event).y-rect.top:event2ClientXY(event).x-rect.left;
     let step = Math.round((l-offset)/(length-offset*2)*(props.max-props.min)/props.step);
-    let maxStep = Math.floor((props.max-props.min)/props.step)
     if (step < 0) step = 0;
     if (step > maxStep) step = maxStep;
     return step;
@@ -66,6 +66,7 @@ export const Slider = (props) => {
     event.stopPropagation();
     let step = event2Step(event);
     let newValue = step*props.step;
+    if (props.vertical) newValue = (maxStep-step)*props.step;
 
     if (newValue !== valueRef.current) {
       valueRef.current = newValue;
@@ -85,6 +86,8 @@ export const Slider = (props) => {
   const onPress = (event) => {
     let step = event2Step(event);
     let newValue = step*props.step;
+    if (props.vertical) newValue = (maxStep-step)*props.step;
+
     props.onChange(newValue);
 
     setSelected(true);
@@ -104,7 +107,9 @@ export const Slider = (props) => {
     setLength(props.vertical?h:w);
     // Calc pad when length ready
     if (length === 0) return;
-    let pad = step2Pad(value2Step(props.value));
+    let step = value2Step(props.value);
+    if (props.vertical) step = maxStep-step;
+    let pad = step2Pad(step);
     if (props.value > props.max) valueRef.current = props.max;
     if (props.value < props.min) valueRef.current = props.min;
     valueRef.current = props.value;

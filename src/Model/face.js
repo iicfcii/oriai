@@ -284,4 +284,10 @@ export class Face {
     return null;
   }
 
+  isEqual(face){
+    if (this.edges.length !== face.edges.length) return false;
+    return this.edges.every((edge, i) => {
+      return edge.isEqual(face.edges[i]);
+    });
+  }
 }

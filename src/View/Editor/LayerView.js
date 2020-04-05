@@ -8,7 +8,7 @@ export const LayerView = (props) => {
       responsive={false}
       style={{zIndex: 100}}
       direction='column'
-      height='xlargep' 
+      height='xlargep'
       align='center'
       margin={{vertical:'large'}}>
       <Text color='dark2' size='small' alignSelf='center'>
@@ -18,13 +18,13 @@ export const LayerView = (props) => {
         <Slider
           vertical
           min={0}
-          max={100}
-          step={10}
-          value={50}
-          onChange={(value) => {}}/>
+          max={props.max}
+          step={1}
+          value={props.layer}
+          onChange={(value) => {props.setLayer(value)}}/>
       </Box>
       <Text color='dark2' size='small' alignSelf='center'>
-        05
+        {props.layer+''}
       </Text>
     </Box>
   );

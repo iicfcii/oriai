@@ -18,14 +18,20 @@ export const SpaceView = (props) => {
         <Slider
           vertical
           min={0}
-          max={100}
-          step={10}
-          value={50}
-          onChange={(value) => {}}/>
+          max={6}
+          step={1}
+          value={props.space}
+          onChange={(value) => {props.setSpace(value)}}/>
       </Box>
       <Text color='dark2' size='small' alignSelf='center'>
-        10
+        {space2Px(props.space)+''}
       </Text>
     </Box>
   );
+}
+
+export const space2Px = (space) => {
+  if (space === 0) return 0;
+
+  return Math.pow(3, space);
 }
