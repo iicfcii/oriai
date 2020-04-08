@@ -31,7 +31,7 @@ export const Editor = (props) => {
   const layout = {
     ratio: dimension.width/2.5,
     x: dimension.width/2,
-    y: dimension.height/2+layer*space2Px(space),
+    y: dimension.height/2+(isometric?layer*space2Px(space):0),
     angle: 0,
     isometric: isometric,
   }
@@ -126,7 +126,7 @@ export const Editor = (props) => {
           width='medium'
           margin={{right:'large'}}>
         </Box>
-        <StepView step={step} setStep={setStep} max={design.origamis.length-1}/>
+        <StepView step={step} setStep={setStep} setLayer={setLayer} max={design.origamis.length-1}/>
         <Box
           responsive={false}
           style={{zIndex: 100}}

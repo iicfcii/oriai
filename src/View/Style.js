@@ -37,7 +37,8 @@ export const TextInputLine = (props) => {
         side: 'all'
       }}
       round='4px'
-      focusIndicator={false}>
+      focusIndicator={false}
+      onClick={() => {console.log('clicked')}}>
       <TextInput
         size='small'
         value={props.value}

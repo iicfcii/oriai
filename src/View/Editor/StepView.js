@@ -22,7 +22,10 @@ export const StepView = (props) => {
           max={props.max}
           step={1}
           value={props.step}
-          onChange={(value) => {props.setStep(value)}}/>
+          onChange={(value) => {
+            props.setStep(value);
+            props.setLayer(0);
+          }}/>
       </Box>
       <Box width='48px' align='start'>
       <Text color='dark2' size='small'>

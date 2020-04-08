@@ -1,6 +1,7 @@
 import React, { useState, useRef, useLayoutEffect } from 'react';
 import { Box, Text } from 'grommet';
-import { TextInputLine, Choose, Button, Select } from '../Style';
+import { TextInputLine, Choose, Button, Select, Icon } from '../Style';
+import { Add, Checkmark } from 'grommet-icons';
 
 export const StepView = (props) => {
   return(
@@ -16,6 +17,16 @@ export const StepView = (props) => {
         <Button
           onClick={() => {console.log('clicked')}}
           label={'Select'}/>
+      </Box>
+      <Box
+        responsive={false}
+        direction='row'
+        justify='between'
+        align='center'
+        margin={{left: 'small'}}>
+        <Text textAlign='start' color='dark2' size='small'>
+          {'Selected faces 1, 2'}
+        </Text>
       </Box>
       <Box direction='row' justify='start' align='center'>
         <Text textAlign='start' color='dark2' size='small' weight='bold'>
@@ -61,9 +72,14 @@ export const StepView = (props) => {
           Line
         </Text>
         <Select
-          label={'Select'}
-          options={['Select','Line', 'Bisector', 'Endpoint']}
+          label={'Line'}
+          options={['Line', 'Bisector', 'Endpoint']}
           onClick={(label)=>{}}/>
+      </Box>
+      <Box direction='row' justify='center' align='center'>
+        <Button
+          onClick={() => {console.log('clicked')}}
+          label={'Add'}/>
       </Box>
       <Box
         responsive={false}
@@ -82,11 +98,24 @@ export const StepView = (props) => {
             onChange={(event) => {}}/>
         </Box>
       </Box>
-      <Box direction='row' justify='center' align='center'>
+      <Box
+        responsive={false}
+        direction='row'
+        justify='between'
+        align='center'
+        margin={{left: 'small'}}>
+        <Text textAlign='start' color='dark2' size='small'>
+          Type
+        </Text>
         <Select
           label={'Point'}
           options={['Point', 'Fraction', 'Input']}
           onClick={(label)=>{}}/>
+      </Box>
+      <Box direction='row' justify='center' align='center'>
+        <Button
+          onClick={() => {console.log('clicked')}}
+          label={'Add'}/>
       </Box>
       <Box
         responsive={false}
@@ -105,11 +134,24 @@ export const StepView = (props) => {
             onChange={(event) => {}}/>
         </Box>
       </Box>
-      <Box direction='row' justify='center' align='center'>
+      <Box
+        responsive={false}
+        direction='row'
+        justify='between'
+        align='center'
+        margin={{left: 'small'}}>
+        <Text textAlign='start' color='dark2' size='small'>
+          Type
+        </Text>
         <Select
           label={'Point'}
           options={['Point', 'Fraction', 'Input']}
           onClick={(label)=>{}}/>
+      </Box>
+      <Box direction='row' justify='center' align='center'>
+        <Button
+          onClick={() => {console.log('clicked')}}
+          label={'Add'}/>
       </Box>
       <Box
         responsive={false}
@@ -118,8 +160,9 @@ export const StepView = (props) => {
         justify='center'
         align='center'>
         <Button
+          color='yellow'
           onClick={() => {console.log('clicked')}}
-          label={props.edit?'Edit':'Add'}/>
+          label={'Finish'}/>
       </Box>
     </Box>
   );

@@ -27,7 +27,6 @@ export const EditView = (props) => {
           </Text>
         </Box>
       </Box>
-      <StepView fold={true} edit={true}/>
     </Box>
   );
 }
