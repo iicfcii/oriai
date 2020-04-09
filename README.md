@@ -1,6 +1,8 @@
 # Oriai
 Fold Origami Online
 
+[Visit website](https://oriai.app/)
+
 ## Introduction
 Oriai is an online editor that simulates folding of origami. This may seem like a stupid idea since paper is everywhere. There is no need to use a software for people to enjoy origami. However, this project aims to build a database of origami designs. All designs are saved in a standard format. This morden database will make searching, learning, and sharing origami easier. Furthermore, the data collected is valuable for origami research. Ultimately, I would like to use the data to build an AI that can create origami design given a shape or a name.
 
